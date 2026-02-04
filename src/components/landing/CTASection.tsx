@@ -1,64 +1,82 @@
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ArrowRight, Sparkles } from "lucide-react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Sparkles, Shield, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function CTASection() {
-  const [email, setEmail] = useState("");
-  const navigate = useNavigate();
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    navigate(`/signup?email=${encodeURIComponent(email)}`);
-  };
-
   return (
     <section className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-background via-card/50 to-background" />
-      <div className="absolute inset-0 bg-grid opacity-30" />
+      <div className="absolute inset-0 bg-grid opacity-5" />
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-3xl mx-auto">
+        <motion.div 
+          className="max-w-3xl mx-auto"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
           <div className="glass-strong rounded-3xl p-8 md:p-12 border-2 border-gold/30 relative overflow-hidden">
             {/* Glow Effects */}
             <div className="absolute top-0 left-1/4 w-64 h-64 bg-gold/10 rounded-full blur-3xl" />
             <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
 
             <div className="relative z-10 text-center space-y-6">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 border border-gold/30">
-                <Sparkles className="h-4 w-4 text-gold" />
-                <span className="text-sm font-medium text-gold">Free to start</span>
-              </div>
+              <motion.div 
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 border border-gold/30"
+                animate={{ 
+                  boxShadow: [
+                    "0 0 0 0 rgba(255, 184, 0, 0)",
+                    "0 0 0 8px rgba(255, 184, 0, 0.1)",
+                    "0 0 0 0 rgba(255, 184, 0, 0)"
+                  ]
+                }}
+                transition={{ duration: 3, repeat: Infinity }}
+              >
+                <span className="text-lg">🇷🇴</span>
+                <span className="text-sm font-medium text-gold">Pentru piața din România</span>
+              </motion.div>
 
-              <h2 className="text-3xl md:text-5xl font-bold">
-                Ready to see your <span className="text-gradient-gold">AI visibility?</span>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
+                Verifică-ți vizibilitatea AI{" "}
+                <span className="text-gradient-gold">acum</span>
               </h2>
+              
               <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-                Join 500+ brands already optimizing their presence in ChatGPT, Perplexity, and more.
+                Primele 3 scanări sunt gratuite. Descoperă dacă AI-ul te recomandă.
               </p>
 
-              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 bg-background/50 border-border focus:border-gold"
-                  required
-                />
-                <Button type="submit" variant="gold" size="lg" className="shrink-0">
-                  Get Started
-                  <ArrowRight className="h-4 w-4 ml-2" />
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Button variant="gold" size="xl" className="group" asChild>
+                  <Link to="/signup">
+                    <Sparkles className="h-5 w-5 mr-2 group-hover:animate-pulse" />
+                    Începe Analiza Gratuită
+                  </Link>
                 </Button>
-              </form>
+              </motion.div>
 
-              <p className="text-xs text-muted-foreground">
-                No credit card required • 3 free scans • Cancel anytime
-              </p>
+              {/* Trust badges */}
+              <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground pt-4">
+                <span className="flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-success" />
+                  Date securizate
+                </span>
+                <span className="flex items-center gap-2">
+                  <span>🇷🇴</span>
+                  Pentru piața din România
+                </span>
+                <span className="flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-gold" />
+                  Rezultate în 60 secunde
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
