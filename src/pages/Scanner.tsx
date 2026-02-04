@@ -152,7 +152,7 @@ export default function Scanner() {
                   disabled={!isFormValid || isScanning}
                 >
                   <Sparkles className="h-5 w-5 mr-2" />
-                  Începe Chirurgia
+                  Începe
                 </Button>
 
                 <p className="text-center text-xs text-muted-foreground">
