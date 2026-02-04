@@ -24,19 +24,19 @@ import {
 
 // Mock data - will be replaced with real data from Supabase
 const mockScoreData = [
-  { date: "Jan 1", score: 45 },
-  { date: "Jan 8", score: 52 },
-  { date: "Jan 15", score: 48 },
-  { date: "Jan 22", score: 58 },
-  { date: "Jan 29", score: 65 },
-  { date: "Feb 5", score: 72 },
-  { date: "Feb 12", score: 78 },
+  { date: "1 Ian", score: 45 },
+  { date: "8 Ian", score: 52 },
+  { date: "15 Ian", score: 48 },
+  { date: "22 Ian", score: 58 },
+  { date: "29 Ian", score: 65 },
+  { date: "5 Feb", score: 72 },
+  { date: "12 Feb", score: 78 },
 ];
 
 const mockRecentScans = [
-  { id: 1, date: "Feb 12, 2024", score: 78, platforms: 4, status: "completed" },
-  { id: 2, date: "Feb 5, 2024", score: 72, platforms: 4, status: "completed" },
-  { id: 3, date: "Jan 29, 2024", score: 65, platforms: 3, status: "completed" },
+  { id: 1, date: "12 Feb 2024", score: 78, platforms: 4, status: "completed" },
+  { id: 2, date: "5 Feb 2024", score: 72, platforms: 4, status: "completed" },
+  { id: 3, date: "29 Ian 2024", score: 65, platforms: 3, status: "completed" },
 ];
 
 export default function Dashboard() {
@@ -50,11 +50,11 @@ export default function Dashboard() {
         {/* Welcome Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold">Welcome back, John</h1>
+            <h1 className="text-3xl font-bold">Bine ai revenit, John</h1>
             <p className="text-muted-foreground mt-1">
               <span className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
-                Last scan: Feb 12, 2024
+                Ultima scanare: 12 Feb 2024
               </span>
             </p>
           </div>
@@ -62,13 +62,13 @@ export default function Dashboard() {
             <Button variant="outline" asChild>
               <Link to="/companies">
                 <Plus className="h-4 w-4 mr-2" />
-                Add Company
+                Adaugă Companie
               </Link>
             </Button>
             <Button variant="gold" asChild>
               <Link to="/scanner">
                 <Radar className="h-4 w-4 mr-2" />
-                Run New Scan
+                Scanare Nouă
               </Link>
             </Button>
           </div>
@@ -79,25 +79,25 @@ export default function Dashboard() {
           {/* Surgical Score Card */}
           <div className="lg:col-span-1">
             <div className="glass rounded-2xl p-8 text-center h-full flex flex-col items-center justify-center">
-              <h3 className="text-sm font-medium text-muted-foreground mb-6">Your Surgical Score™</h3>
+              <h3 className="text-sm font-medium text-muted-foreground mb-6">Scorul Tău Surgical™</h3>
               <SurgicalScore score={currentScore} size="lg" />
               <div className="mt-6 flex items-center gap-2">
                 {scoreChange > 0 ? (
                   <>
                     <TrendingUp className="h-4 w-4 text-success" />
-                    <span className="text-success font-medium">+{scoreChange} from last scan</span>
+                    <span className="text-success font-medium">+{scoreChange} față de ultima scanare</span>
                   </>
                 ) : (
                   <>
                     <TrendingUp className="h-4 w-4 text-error rotate-180" />
-                    <span className="text-error font-medium">{scoreChange} from last scan</span>
+                    <span className="text-error font-medium">{scoreChange} față de ultima scanare</span>
                   </>
                 )}
               </div>
               <Button variant="gold" className="mt-6 w-full" asChild>
                 <Link to="/scanner">
                   <Sparkles className="h-4 w-4 mr-2" />
-                  Improve Your Score
+                  Îmbunătățește Scorul
                 </Link>
               </Button>
             </div>
@@ -106,7 +106,7 @@ export default function Dashboard() {
           {/* Platform Status Grid */}
           <div className="lg:col-span-2">
             <div className="glass rounded-2xl p-6">
-              <h3 className="text-lg font-semibold mb-4">Platform Status</h3>
+              <h3 className="text-lg font-semibold mb-4">Status Platforme</h3>
               <div className="grid grid-cols-2 gap-4">
                 <PlatformStatusCard
                   name="ChatGPT"
@@ -139,8 +139,8 @@ export default function Dashboard() {
           <div className="lg:col-span-2">
             <div className="glass rounded-2xl p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold">Score Trend</h3>
-                <span className="text-sm text-muted-foreground">Last 30 days</span>
+                <h3 className="text-lg font-semibold">Evoluția Scorului</h3>
+                <span className="text-sm text-muted-foreground">Ultimele 30 de zile</span>
               </div>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
@@ -181,7 +181,7 @@ export default function Dashboard() {
           <div className="lg:col-span-1 space-y-6">
             {/* Quick Actions */}
             <div className="glass rounded-2xl p-6">
-              <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+              <h3 className="text-lg font-semibold mb-4">Acțiuni Rapide</h3>
               <div className="space-y-3">
                 <Link
                   to="/scanner"
@@ -189,7 +189,7 @@ export default function Dashboard() {
                 >
                   <span className="flex items-center gap-3">
                     <Radar className="h-5 w-5 text-primary" />
-                    <span className="font-medium">Run Full Scan</span>
+                    <span className="font-medium">Scanare Completă</span>
                   </span>
                   <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
                 </Link>
@@ -199,7 +199,7 @@ export default function Dashboard() {
                 >
                   <span className="flex items-center gap-3">
                     <Lightbulb className="h-5 w-5 text-gold" />
-                    <span className="font-medium">View Recommendations</span>
+                    <span className="font-medium">Vezi Recomandări</span>
                   </span>
                   <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
                 </Link>
@@ -208,7 +208,7 @@ export default function Dashboard() {
 
             {/* Recent Scans */}
             <div className="glass rounded-2xl p-6">
-              <h3 className="text-lg font-semibold mb-4">Recent Scans</h3>
+              <h3 className="text-lg font-semibold mb-4">Scanări Recente</h3>
               <div className="space-y-3">
                 {mockRecentScans.map((scan) => (
                   <Link
@@ -219,7 +219,7 @@ export default function Dashboard() {
                     <div>
                       <p className="font-medium">{scan.date}</p>
                       <p className="text-xs text-muted-foreground">
-                        {scan.platforms} platforms
+                        {scan.platforms} platforme
                       </p>
                     </div>
                     <span className="text-lg font-bold font-mono text-gradient-gold">
@@ -239,15 +239,15 @@ export default function Dashboard() {
             <div className="text-center md:text-left">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/10 border border-gold/30 mb-3">
                 <Sparkles className="h-4 w-4 text-gold" />
-                <span className="text-sm font-medium text-gold">Pro Feature</span>
+                <span className="text-sm font-medium text-gold">Funcție Pro</span>
               </div>
-              <h3 className="text-xl font-bold mb-2">Unlock Unlimited Scans</h3>
+              <h3 className="text-xl font-bold mb-2">Deblochează Scanări Nelimitate</h3>
               <p className="text-muted-foreground">
-                Get unlimited scans, historical tracking, and PDF reports with Pro.
+                Obține scanări nelimitate, istoric și rapoarte PDF cu Pro.
               </p>
             </div>
             <Button variant="gold" size="lg">
-              Upgrade to Pro
+              Treci la Pro
             </Button>
           </div>
         </div>

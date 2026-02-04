@@ -25,62 +25,62 @@ const mockRecommendations = [
   {
     id: "1",
     priority: "critical",
-    category: "Content",
-    title: "Add structured data to your website",
+    category: "Conținut",
+    title: "Adaugă date structurate pe website",
     description:
-      "AI systems rely heavily on structured data (Schema.org markup) to understand your business.",
-    impact: "High impact on AI understanding of your business",
+      "Sistemele AI se bazează foarte mult pe datele structurate (Schema.org markup) pentru a înțelege afacerea ta.",
+    impact: "Impact ridicat asupra înțelegerii AI a afacerii tale",
     steps: [
-      "Add Organization schema to your homepage",
-      "Include Product/Service schema for offerings",
-      "Add FAQ schema for common questions",
-      "Validate with Google's Rich Results Test",
+      "Adaugă schema Organization pe pagina principală",
+      "Include schema Product/Service pentru oferte",
+      "Adaugă schema FAQ pentru întrebări frecvente",
+      "Validează cu Google Rich Results Test",
     ],
     completed: false,
   },
   {
     id: "2",
     priority: "high",
-    category: "Authority",
-    title: "Build more quality backlinks",
+    category: "Autoritate",
+    title: "Construiește mai multe backlink-uri de calitate",
     description:
-      "AI models often reference authoritative sources. Increase your domain authority through quality backlinks.",
-    impact: "Medium-high impact on AI mentions",
+      "Modelele AI fac adesea referire la surse autoritare. Crește autoritatea domeniului prin backlink-uri de calitate.",
+    impact: "Impact mediu-ridicat asupra mențiunilor AI",
     steps: [
-      "Identify industry publications and blogs",
-      "Create linkable content (research, guides)",
-      "Reach out for guest posting opportunities",
-      "Monitor and respond to brand mentions",
+      "Identifică publicații și bloguri din industrie",
+      "Creează conținut linkabil (cercetări, ghiduri)",
+      "Contactează pentru oportunități de guest posting",
+      "Monitorizează și răspunde la mențiunile brandului",
     ],
     completed: false,
   },
   {
     id: "3",
     priority: "medium",
-    category: "Content",
-    title: "Create comprehensive product documentation",
+    category: "Conținut",
+    title: "Creează documentație completă pentru produse",
     description:
-      "Detailed documentation helps AI understand and recommend your products accurately.",
-    impact: "Medium impact on product recommendations",
+      "Documentația detaliată ajută AI să înțeleagă și să recomande produsele tale corect.",
+    impact: "Impact mediu asupra recomandărilor de produse",
     steps: [
-      "Document all product features thoroughly",
-      "Include use cases and examples",
-      "Add comparison guides with alternatives",
-      "Keep content regularly updated",
+      "Documentează toate funcționalitățile produsului în detaliu",
+      "Include cazuri de utilizare și exemple",
+      "Adaugă ghiduri comparative cu alternative",
+      "Menține conținutul actualizat regulat",
     ],
     completed: true,
   },
   {
     id: "4",
     priority: "low",
-    category: "Social Proof",
-    title: "Encourage customer reviews on third-party sites",
-    description: "Reviews on platforms like G2, Capterra help build AI trust signals.",
-    impact: "Low-medium impact on trust signals",
+    category: "Dovadă Socială",
+    title: "Încurajează recenzii pe site-uri terțe",
+    description: "Recenziile pe platforme precum G2, Capterra ajută la construirea semnalelor de încredere AI.",
+    impact: "Impact scăzut-mediu asupra semnalelor de încredere",
     steps: [
-      "Ask satisfied customers for reviews",
-      "Respond to existing reviews professionally",
-      "Showcase reviews on your website",
+      "Cere recenzii de la clienții mulțumiți",
+      "Răspunde profesionist la recenziile existente",
+      "Afișează recenziile pe website-ul tău",
     ],
     completed: false,
   },
@@ -102,7 +102,7 @@ export default function Recommendations() {
           color: "text-error",
           bg: "bg-error/10",
           border: "border-error/30",
-          label: "Critical",
+          label: "Critic",
         };
       case "high":
         return {
@@ -110,7 +110,7 @@ export default function Recommendations() {
           color: "text-warning",
           bg: "bg-warning/10",
           border: "border-warning/30",
-          label: "High",
+          label: "Ridicat",
         };
       case "medium":
         return {
@@ -118,7 +118,7 @@ export default function Recommendations() {
           color: "text-primary",
           bg: "bg-primary/10",
           border: "border-primary/30",
-          label: "Medium",
+          label: "Mediu",
         };
       default:
         return {
@@ -126,8 +126,19 @@ export default function Recommendations() {
           color: "text-muted-foreground",
           bg: "bg-muted",
           border: "border-muted-foreground/30",
-          label: "Low",
+          label: "Scăzut",
         };
+    }
+  };
+
+  const getFilterLabel = (f: string) => {
+    switch (f) {
+      case "all": return "Toate";
+      case "critical": return "Critice";
+      case "high": return "Ridicate";
+      case "medium": return "Medii";
+      case "low": return "Scăzute";
+      default: return f;
     }
   };
 
@@ -150,15 +161,15 @@ export default function Recommendations() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold">Recommendations</h1>
+            <h1 className="text-3xl font-bold">Recomandări</h1>
             <p className="text-muted-foreground mt-1">
-              Actionable steps to improve your AI visibility
+              Pași acționabili pentru a-ți îmbunătăți vizibilitatea AI
             </p>
           </div>
           <Button variant="outline" asChild>
             <Link to="/scanner">
               <Radar className="h-4 w-4 mr-2" />
-              Run New Scan
+              Scanare Nouă
             </Link>
           </Button>
         </div>
@@ -166,9 +177,9 @@ export default function Recommendations() {
         {/* Progress Card */}
         <div className="glass rounded-2xl p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold">Your Progress</h3>
+            <h3 className="font-semibold">Progresul Tău</h3>
             <span className="text-sm text-muted-foreground">
-              {completedCount} of {mockRecommendations.length} completed
+              {completedCount} din {mockRecommendations.length} completate
             </span>
           </div>
           <Progress value={progress} className="h-3" />
@@ -184,7 +195,7 @@ export default function Recommendations() {
               onClick={() => setFilter(f)}
               className={filter === f ? "bg-primary/10 text-primary" : ""}
             >
-              {f.charAt(0).toUpperCase() + f.slice(1)}
+              {getFilterLabel(f)}
             </Button>
           ))}
         </div>
@@ -228,7 +239,7 @@ export default function Recommendations() {
                       {rec.completed && (
                         <div className="flex items-center gap-1 text-success">
                           <Check className="h-4 w-4" />
-                          <span className="text-sm font-medium">Done</span>
+                          <span className="text-sm font-medium">Gata</span>
                         </div>
                       )}
                       <ChevronRight className="h-5 w-5 text-muted-foreground" />
@@ -242,14 +253,14 @@ export default function Recommendations() {
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
                 <Lightbulb className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-xl font-bold mb-2">No recommendations yet</h3>
+              <h3 className="text-xl font-bold mb-2">Nicio recomandare încă</h3>
               <p className="text-muted-foreground mb-6">
-                Run a scan to get personalized recommendations for improving your AI visibility
+                Rulează o scanare pentru a primi recomandări personalizate de îmbunătățire a vizibilității AI
               </p>
               <Button variant="gold" asChild>
                 <Link to="/scanner">
                   <Radar className="h-4 w-4 mr-2" />
-                  Start First Scan
+                  Începe Prima Scanare
                 </Link>
               </Button>
             </div>
@@ -284,7 +295,7 @@ export default function Recommendations() {
                 </div>
 
                 <div>
-                  <h4 className="font-semibold mb-4">Action Steps</h4>
+                  <h4 className="font-semibold mb-4">Pași de Acțiune</h4>
                   <div className="space-y-3">
                     {selectedRec.steps.map((step, index) => (
                       <label
@@ -312,9 +323,9 @@ export default function Recommendations() {
 
               <div className="flex justify-end gap-3 mt-4">
                 <Button variant="outline" onClick={() => setSelectedRec(null)}>
-                  Close
+                  Închide
                 </Button>
-                <Button variant="gold">Mark as Complete</Button>
+                <Button variant="gold">Marchează ca Finalizat</Button>
               </div>
             </DialogContent>
           )}
