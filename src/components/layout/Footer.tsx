@@ -5,9 +5,9 @@ export function Footer() {
   return (
     <footer className="bg-card/50 border-t border-border/50 py-16">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
           {/* Column 1: Brand */}
-          <div className="space-y-4">
+          <div className="space-y-4 lg:col-span-1">
             <Link to="/" className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-gradient-gold flex items-center justify-center">
                 <Target className="h-5 w-5 text-gold-foreground" />
@@ -46,7 +46,7 @@ export function Footer() {
             <h4 className="font-semibold mb-4">Resurse</h4>
             <ul className="space-y-3 text-sm">
               <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Blog</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Ghid AEO/GEO</a></li>
+              <li><Link to="/ghid-aeo-geo" className="text-muted-foreground hover:text-foreground transition-colors">Ghid AEO/GEO</Link></li>
               <li><a href="#faq" className="text-muted-foreground hover:text-foreground transition-colors">FAQ</a></li>
               <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Status</a></li>
             </ul>
@@ -56,18 +56,46 @@ export function Footer() {
           <div>
             <h4 className="font-semibold mb-4">Legal</h4>
             <ul className="space-y-3 text-sm">
-              <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Politica de Confidențialitate</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Termeni și Condiții</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">GDPR</a></li>
+              <li><Link to="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Politica de Confidențialitate</Link></li>
+              <li><Link to="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Termeni și Condiții</Link></li>
+              <li><Link to="/gdpr" className="text-muted-foreground hover:text-foreground transition-colors">GDPR</Link></li>
               <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Contact</a></li>
             </ul>
+          </div>
+
+          {/* Column 5: Ghid AEO/GEO Info */}
+          <div>
+            <h4 className="font-semibold mb-4">Ghid AEO/GEO</h4>
+            <p className="text-sm text-muted-foreground mb-3">
+              Optimizarea pentru motoarele de răspuns AI reprezintă viitorul vizibilității online.
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li className="flex items-center gap-2 text-muted-foreground">
+                <span className="text-primary">•</span>
+                Answer Engine Optimization
+              </li>
+              <li className="flex items-center gap-2 text-muted-foreground">
+                <span className="text-primary">•</span>
+                Generative Engine Optimization
+              </li>
+              <li className="flex items-center gap-2 text-muted-foreground">
+                <span className="text-primary">•</span>
+                Strategii pentru ChatGPT, Gemini
+              </li>
+            </ul>
+            <Link 
+              to="/ghid-aeo-geo" 
+              className="inline-block mt-4 text-sm text-primary hover:underline font-medium"
+            >
+              Află mai multe →
+            </Link>
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="border-t border-border/50 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            © 2025 Surgical.AI. Toate drepturile rezervate.
+            © 2026 Surgical.AI. Toate drepturile rezervate.
           </p>
           <p className="text-sm text-muted-foreground flex items-center gap-1">
             Făcut cu <span className="text-error">🤍</span> în România

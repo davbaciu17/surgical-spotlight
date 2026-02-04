@@ -13,6 +13,10 @@ import Companies from "./pages/Companies";
 import Recommendations from "./pages/Recommendations";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import GDPR from "./pages/GDPR";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
+import GhidAEOGEO from "./pages/GhidAEOGEO";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +36,10 @@ const App = () => (
           <Route path="/companies" element={<Companies />} />
           <Route path="/recommendations" element={<Recommendations />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/gdpr" element={<GDPR />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/ghid-aeo-geo" element={<GhidAEOGEO />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
