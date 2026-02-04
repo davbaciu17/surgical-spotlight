@@ -29,10 +29,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const navigate = useNavigate();
 
   const navigation = [
-    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Panou", href: "/dashboard", icon: LayoutDashboard },
     { name: "Scanner", href: "/scanner", icon: Radar },
-    { name: "Companies", href: "/companies", icon: Building2 },
-    { name: "Recommendations", href: "/recommendations", icon: Lightbulb },
+    { name: "Companii", href: "/companies", icon: Building2 },
+    { name: "Recomandări", href: "/recommendations", icon: Lightbulb },
   ];
 
   const isActive = (href: string) => location.pathname === href;
@@ -91,19 +91,19 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <DropdownMenuItem asChild>
                 <Link to="/settings" className="cursor-pointer">
                   <Settings className="h-4 w-4 mr-2" />
-                  Settings
+                  Setări
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link to="/settings/billing" className="cursor-pointer">
                   <CreditCard className="h-4 w-4 mr-2" />
-                  Billing
+                  Facturare
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-error">
                 <LogOut className="h-4 w-4 mr-2" />
-                Logout
+                Deconectare
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

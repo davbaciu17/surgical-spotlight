@@ -24,7 +24,7 @@ import {
 const mockResults = {
   score: 78,
   previousScore: 72,
-  date: "Feb 12, 2024",
+  date: "12 Feb 2024",
   company: "Acme Corp",
   platforms: [
     {
@@ -32,7 +32,7 @@ const mockResults = {
       name: "ChatGPT",
       icon: "🤖",
       mentioned: true,
-      quote: "Acme Corp is a leading provider of enterprise solutions, known for their innovative approach to business automation.",
+      quote: "Acme Corp este un furnizor de top de soluții enterprise, cunoscut pentru abordarea inovatoare în automatizarea afacerilor.",
       sentiment: "positive",
       confidence: 0.92,
     },
@@ -41,7 +41,7 @@ const mockResults = {
       name: "Perplexity",
       icon: "🔮",
       mentioned: true,
-      quote: "According to recent reviews, Acme Corp offers reliable enterprise software with excellent customer support.",
+      quote: "Conform recenziilor recente, Acme Corp oferă software enterprise fiabil cu suport excelent pentru clienți.",
       sentiment: "positive",
       confidence: 0.88,
     },
@@ -59,7 +59,7 @@ const mockResults = {
       name: "Bing Copilot",
       icon: "💬",
       mentioned: true,
-      quote: "Acme Corp provides business solutions. Some users report satisfaction with their products.",
+      quote: "Acme Corp oferă soluții de business. Unii utilizatori raportează satisfacție cu produsele lor.",
       sentiment: "neutral",
       confidence: 0.75,
     },
@@ -73,11 +73,11 @@ export default function ScanResults() {
   const getSentimentDisplay = (sentiment: string | null) => {
     switch (sentiment) {
       case "positive":
-        return { icon: TrendingUp, color: "text-success", label: "Positive" };
+        return { icon: TrendingUp, color: "text-success", label: "Pozitiv" };
       case "negative":
-        return { icon: TrendingDown, color: "text-error", label: "Negative" };
+        return { icon: TrendingDown, color: "text-error", label: "Negativ" };
       default:
-        return { icon: Minus, color: "text-muted-foreground", label: "Neutral" };
+        return { icon: Minus, color: "text-muted-foreground", label: "Neutru" };
     }
   };
 
@@ -94,16 +94,16 @@ export default function ScanResults() {
               className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-2"
             >
               <ArrowLeft className="h-4 w-4" />
-              Back to Scanner
+              Înapoi la Scanner
             </Link>
-            <h1 className="text-3xl font-bold">Scan Results</h1>
+            <h1 className="text-3xl font-bold">Rezultatele Scanării</h1>
             <p className="text-muted-foreground">
               {mockResults.company} • {mockResults.date}
             </p>
           </div>
           <Button variant="goldOutline" disabled>
             <Download className="h-4 w-4 mr-2" />
-            Download Report
+            Descarcă Raport
             <span className="ml-2 text-xs bg-gold/20 px-2 py-0.5 rounded">Pro</span>
           </Button>
         </div>
@@ -118,21 +118,21 @@ export default function ScanResults() {
                   <>
                     <TrendingUp className="h-5 w-5 text-success" />
                     <span className="text-lg font-medium text-success">
-                      +{scoreChange} points from previous scan
+                      +{scoreChange} puncte față de scanarea anterioară
                     </span>
                   </>
                 ) : scoreChange < 0 ? (
                   <>
                     <TrendingDown className="h-5 w-5 text-error" />
                     <span className="text-lg font-medium text-error">
-                      {scoreChange} points from previous scan
+                      {scoreChange} puncte față de scanarea anterioară
                     </span>
                   </>
                 ) : (
                   <>
                     <Minus className="h-5 w-5 text-muted-foreground" />
                     <span className="text-lg font-medium text-muted-foreground">
-                      No change from previous scan
+                      Nicio schimbare față de scanarea anterioară
                     </span>
                   </>
                 )}
@@ -140,13 +140,13 @@ export default function ScanResults() {
               <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                 <div className="px-4 py-2 rounded-lg bg-success/10 border border-success/30">
                   <p className="text-2xl font-bold text-success">{mentionedCount}</p>
-                  <p className="text-xs text-muted-foreground">Platforms Mentioned</p>
+                  <p className="text-xs text-muted-foreground">Platforme cu Mențiuni</p>
                 </div>
                 <div className="px-4 py-2 rounded-lg bg-error/10 border border-error/30">
                   <p className="text-2xl font-bold text-error">
                     {mockResults.platforms.length - mentionedCount}
                   </p>
-                  <p className="text-xs text-muted-foreground">Not Found</p>
+                  <p className="text-xs text-muted-foreground">Negăsite</p>
                 </div>
               </div>
             </div>
@@ -155,7 +155,7 @@ export default function ScanResults() {
 
         {/* Platform Results */}
         <div className="glass rounded-2xl p-6 mb-8">
-          <h2 className="text-xl font-bold mb-6">Platform Breakdown</h2>
+          <h2 className="text-xl font-bold mb-6">Detalii pe Platforme</h2>
           <Accordion type="single" collapsible className="space-y-4">
             {mockResults.platforms.map((platform) => {
               const sentiment = getSentimentDisplay(platform.sentiment);
@@ -176,7 +176,7 @@ export default function ScanResults() {
                             : "bg-error/10 text-error"
                         }`}
                       >
-                        {platform.mentioned ? "Mentioned" : "Not Found"}
+                        {platform.mentioned ? "Menționat" : "Negăsit"}
                       </span>
                     </div>
                   </AccordionTrigger>
@@ -207,7 +207,7 @@ export default function ScanResults() {
                           <div className="flex items-center gap-2">
                             <Sparkles className="h-4 w-4 text-primary" />
                             <span className="text-sm">
-                              <span className="text-muted-foreground">Confidence:</span>{" "}
+                              <span className="text-muted-foreground">Încredere:</span>{" "}
                               <span className="font-medium">
                                 {Math.round((platform.confidence || 0) * 100)}%
                               </span>
@@ -218,11 +218,11 @@ export default function ScanResults() {
                     ) : (
                       <div className="p-4 rounded-lg bg-error/5 border border-error/20">
                         <p className="text-sm text-muted-foreground mb-2">
-                          Your brand was not found in responses from this platform.
+                          Brandul tău nu a fost găsit în răspunsurile de pe această platformă.
                         </p>
                         <p className="text-sm font-medium">
-                          Why this matters: This platform serves millions of users daily. Improving
-                          your visibility here could significantly increase brand awareness.
+                          De ce contează: Această platformă servește milioane de utilizatori zilnic. 
+                          Îmbunătățirea vizibilității aici poate crește semnificativ notorietatea brandului.
                         </p>
                       </div>
                     )}
@@ -238,13 +238,13 @@ export default function ScanResults() {
           <Button variant="gold" size="lg" className="flex-1" asChild>
             <Link to="/recommendations">
               <Lightbulb className="h-4 w-4 mr-2" />
-              View Recommendations
+              Vezi Recomandări
             </Link>
           </Button>
           <Button variant="outline" size="lg" className="flex-1" asChild>
             <Link to="/scanner">
               <Radar className="h-4 w-4 mr-2" />
-              Run Another Scan
+              Rulează Altă Scanare
             </Link>
           </Button>
         </div>

@@ -26,21 +26,21 @@ export default function Settings() {
   return (
     <DashboardLayout>
       <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <h1 className="text-3xl font-bold mb-8">Settings</h1>
+        <h1 className="text-3xl font-bold mb-8">Setări</h1>
 
         <Tabs defaultValue="profile" className="space-y-8">
           <TabsList className="glass p-1">
             <TabsTrigger value="profile" className="gap-2">
               <User className="h-4 w-4" />
-              Profile
+              Profil
             </TabsTrigger>
             <TabsTrigger value="notifications" className="gap-2">
               <Bell className="h-4 w-4" />
-              Notifications
+              Notificări
             </TabsTrigger>
             <TabsTrigger value="billing" className="gap-2">
               <CreditCard className="h-4 w-4" />
-              Billing
+              Facturare
             </TabsTrigger>
             <TabsTrigger value="api" className="gap-2">
               <Key className="h-4 w-4" />
@@ -52,7 +52,7 @@ export default function Settings() {
           <TabsContent value="profile">
             <div className="glass rounded-2xl p-6 space-y-8">
               <div>
-                <h2 className="text-xl font-semibold mb-6">Profile Settings</h2>
+                <h2 className="text-xl font-semibold mb-6">Setări Profil</h2>
 
                 {/* Avatar */}
                 <div className="flex items-center gap-6 mb-8">
@@ -64,10 +64,10 @@ export default function Settings() {
                   <div>
                     <Button variant="outline" size="sm">
                       <Upload className="h-4 w-4 mr-2" />
-                      Upload Photo
+                      Încarcă Foto
                     </Button>
                     <p className="text-xs text-muted-foreground mt-2">
-                      JPG, PNG or GIF. Max 2MB.
+                      JPG, PNG sau GIF. Max 2MB.
                     </p>
                   </div>
                 </div>
@@ -75,24 +75,24 @@ export default function Settings() {
                 {/* Form */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="fullName">Full Name</Label>
+                    <Label htmlFor="fullName">Nume Complet</Label>
                     <Input id="fullName" defaultValue="John Doe" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
                     <Input id="email" defaultValue="john@example.com" disabled />
                     <p className="text-xs text-muted-foreground">
-                      Contact support to change email
+                      Contactează suportul pentru schimbarea emailului
                     </p>
                   </div>
                   <div className="space-y-2 md:col-span-2">
-                    <Label htmlFor="company">Company Name</Label>
+                    <Label htmlFor="company">Numele Companiei</Label>
                     <Input id="company" defaultValue="Acme Corp" />
                   </div>
                 </div>
 
                 <Button variant="gold" className="mt-6">
-                  Save Changes
+                  Salvează Modificările
                 </Button>
               </div>
             </div>
@@ -102,33 +102,33 @@ export default function Settings() {
           <TabsContent value="notifications">
             <div className="glass rounded-2xl p-6 space-y-8">
               <div>
-                <h2 className="text-xl font-semibold mb-6">Notification Preferences</h2>
+                <h2 className="text-xl font-semibold mb-6">Preferințe Notificări</h2>
 
                 <div className="space-y-6">
                   {[
                     {
-                      title: "Scan Complete",
-                      description: "Get notified when a scan finishes",
+                      title: "Scanare Completă",
+                      description: "Primește notificare când o scanare se termină",
                       defaultOn: true,
                     },
                     {
-                      title: "Score Changes",
-                      description: "Alerts when your score increases or decreases significantly",
+                      title: "Modificări Scor",
+                      description: "Alerte când scorul tău crește sau scade semnificativ",
                       defaultOn: true,
                     },
                     {
-                      title: "Weekly Summary",
-                      description: "Weekly email with your visibility stats",
+                      title: "Sumar Săptămânal",
+                      description: "Email săptămânal cu statisticile tale de vizibilitate",
                       defaultOn: false,
                     },
                     {
-                      title: "New Recommendations",
-                      description: "When new recommendations are available",
+                      title: "Recomandări Noi",
+                      description: "Când sunt disponibile recomandări noi",
                       defaultOn: true,
                     },
                     {
-                      title: "Product Updates",
-                      description: "News about new features and improvements",
+                      title: "Actualizări Produs",
+                      description: "Noutăți despre funcții și îmbunătățiri noi",
                       defaultOn: false,
                     },
                   ].map((item) => (
@@ -154,24 +154,24 @@ export default function Settings() {
               {/* Current Plan */}
               <div className="glass rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold">Current Plan</h2>
+                  <h2 className="text-xl font-semibold">Planul Curent</h2>
                   <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
-                    Free
+                    Gratuit
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                   <div className="p-4 rounded-lg bg-card border border-border">
-                    <p className="text-sm text-muted-foreground">Scans Used</p>
+                    <p className="text-sm text-muted-foreground">Scanări Folosite</p>
                     <p className="text-2xl font-bold">2 / 3</p>
-                    <p className="text-xs text-muted-foreground">Resets monthly</p>
+                    <p className="text-xs text-muted-foreground">Se resetează lunar</p>
                   </div>
                   <div className="p-4 rounded-lg bg-card border border-border">
-                    <p className="text-sm text-muted-foreground">Companies</p>
+                    <p className="text-sm text-muted-foreground">Companii</p>
                     <p className="text-2xl font-bold">2 / 1</p>
                   </div>
                   <div className="p-4 rounded-lg bg-card border border-border">
-                    <p className="text-sm text-muted-foreground">Next Billing</p>
+                    <p className="text-sm text-muted-foreground">Următoarea Facturare</p>
                     <p className="text-2xl font-bold">—</p>
                   </div>
                 </div>
@@ -179,22 +179,22 @@ export default function Settings() {
                 <div className="p-6 rounded-xl bg-gradient-to-r from-gold/10 to-gold/5 border border-gold/30">
                   <div className="flex items-center gap-2 mb-2">
                     <Sparkles className="h-5 w-5 text-gold" />
-                    <h3 className="font-semibold">Upgrade to Pro</h3>
+                    <h3 className="font-semibold">Treci la Pro</h3>
                   </div>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Get unlimited scans, 5 companies, historical tracking, and PDF reports.
+                    Obține scanări nelimitate, 5 companii, istoric și rapoarte PDF.
                   </p>
                   <Button variant="gold">
-                    Upgrade for $49/month
+                    Upgrade pentru 49€/lună
                   </Button>
                 </div>
               </div>
 
               {/* Billing History */}
               <div className="glass rounded-2xl p-6">
-                <h3 className="font-semibold mb-4">Billing History</h3>
+                <h3 className="font-semibold mb-4">Istoric Facturare</h3>
                 <p className="text-sm text-muted-foreground">
-                  No billing history available on the free plan.
+                  Nu există istoric de facturare pentru planul gratuit.
                 </p>
               </div>
             </div>
@@ -206,16 +206,16 @@ export default function Settings() {
               <div className="flex items-center gap-2 p-4 rounded-lg bg-gold/10 border border-gold/30">
                 <Sparkles className="h-5 w-5 text-gold" />
                 <p className="text-sm font-medium">
-                  API access requires Pro or Agency plan
+                  Accesul API necesită planul Pro sau Agency
                 </p>
               </div>
 
               <div>
-                <h2 className="text-xl font-semibold mb-6">API Keys</h2>
+                <h2 className="text-xl font-semibold mb-6">Chei API</h2>
 
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label>Your API Key</Label>
+                    <Label>Cheia Ta API</Label>
                     <div className="flex gap-2">
                       <div className="relative flex-1">
                         <Input
@@ -242,22 +242,22 @@ export default function Settings() {
                       </Button>
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Upgrade to access your API key
+                      Fă upgrade pentru a accesa cheia API
                     </p>
                   </div>
 
                   <Button variant="outline" disabled>
-                    Regenerate Key
+                    Regenerează Cheia
                   </Button>
                 </div>
               </div>
 
               {/* Usage Stats */}
               <div>
-                <h3 className="font-semibold mb-4">API Usage</h3>
+                <h3 className="font-semibold mb-4">Utilizare API</h3>
                 <div className="p-4 rounded-lg bg-card border border-border">
                   <p className="text-muted-foreground text-sm">
-                    Upgrade to view API usage statistics
+                    Fă upgrade pentru a vedea statisticile de utilizare API
                   </p>
                 </div>
               </div>
