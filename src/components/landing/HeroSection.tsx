@@ -47,7 +47,7 @@ const aiPlatforms = [
 
 function OrbitingLogos() {
   const radius = 120;
-  const orbitDuration = 4; // seconds for one full orbit
+  const orbitDuration = 8; // slower orbit (was 4)
   const [logoIndices, setLogoIndices] = useState([0, 2]); // Start with ChatGPT and Claude
   
   // Shuffle to next logo when particle goes behind
@@ -55,7 +55,6 @@ function OrbitingLogos() {
     const interval = setInterval(() => {
       setLogoIndices(prev => {
         const nextIndices = [...prev];
-        // Alternate which particle changes
         const particleToChange = Math.random() > 0.5 ? 0 : 1;
         let newIndex;
         do {
@@ -64,7 +63,7 @@ function OrbitingLogos() {
         nextIndices[particleToChange] = newIndex;
         return nextIndices;
       });
-    }, orbitDuration * 500); // Change halfway through orbit (when behind)
+    }, orbitDuration * 500);
     
     return () => clearInterval(interval);
   }, []);
@@ -75,66 +74,79 @@ function OrbitingLogos() {
       <div className="absolute w-64 h-64 bg-primary/20 rounded-full blur-3xl animate-pulse" />
       <div className="absolute w-48 h-48 bg-gold/10 rounded-full blur-2xl" />
       
-      {/* Orbit path indicator */}
+      {/* Tilted orbit container for diagonal effect */}
       <div 
-        className="absolute border border-primary/10 rounded-full"
-        style={{ width: radius * 2 + 60, height: radius * 2 + 60 }}
-      />
-      
-      {/* Orbiting particles - 2 electrons */}
-      {[0, 1].map((particleIndex) => {
-        const platform = aiPlatforms[logoIndices[particleIndex]];
-        const startAngle = particleIndex * 180; // Opposite sides
+        className="absolute"
+        style={{ 
+          transformStyle: 'preserve-3d',
+          transform: 'rotateX(60deg) rotateZ(-20deg)',
+        }}
+      >
+        {/* Orbit path indicator */}
+        <div 
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border border-primary/10 rounded-full"
+          style={{ width: radius * 2 + 60, height: radius * 2 + 60 }}
+        />
         
-        return (
-          <motion.div
-            key={particleIndex}
-            className="absolute"
-            style={{
-              transformStyle: 'preserve-3d',
-            }}
-            animate={{
-              rotateY: [startAngle, startAngle + 360],
-            }}
-            transition={{
-              duration: orbitDuration,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          >
+        {/* Orbiting particles - 2 electrons */}
+        {[0, 1].map((particleIndex) => {
+          const platform = aiPlatforms[logoIndices[particleIndex]];
+          const startAngle = particleIndex * 180; // Opposite sides
+          
+          return (
             <motion.div
+              key={particleIndex}
+              className="absolute left-1/2 top-1/2"
               style={{
-                transform: `translateZ(${radius}px)`,
+                transformStyle: 'preserve-3d',
+              }}
+              animate={{
+                rotate: [startAngle, startAngle + 360],
+              }}
+              transition={{
+                duration: orbitDuration,
+                repeat: Infinity,
+                ease: "linear",
               }}
             >
               <motion.div
-                className="glass-strong rounded-xl p-3 md:p-4 border border-primary/30 shadow-lg"
                 style={{
-                  boxShadow: `0 0 20px ${platform.color}30, 0 0 40px ${platform.color}15`
-                }}
-                animate={{
-                  scale: [1, 1.05, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
+                  transform: `translateX(${radius}px)`,
+                  transformStyle: 'preserve-3d',
                 }}
               >
-                <div 
-                  className="w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center transition-colors duration-300"
-                  style={{ 
-                    backgroundColor: `${platform.color}15`,
-                    color: platform.color,
-                  }}
-                >
-                  {platform.icon}
+                {/* Counter-rotate to keep logos upright and facing viewer */}
+                <div style={{ transform: 'rotateZ(20deg) rotateX(-60deg)' }}>
+                  <motion.div
+                    className="glass-strong rounded-xl p-3 md:p-4 border border-primary/30 shadow-lg"
+                    style={{
+                      boxShadow: `0 0 20px ${platform.color}30, 0 0 40px ${platform.color}15`
+                    }}
+                    animate={{
+                      scale: [1, 1.05, 1],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <div 
+                      className="w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center transition-colors duration-300"
+                      style={{ 
+                        backgroundColor: `${platform.color}15`,
+                        color: platform.color,
+                      }}
+                    >
+                      {platform.icon}
+                    </div>
+                  </motion.div>
                 </div>
               </motion.div>
             </motion.div>
-          </motion.div>
-        );
-      })}
+          );
+        })}
+      </div>
       
       {/* Central Score Circle */}
       <motion.div 
