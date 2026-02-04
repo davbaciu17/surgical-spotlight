@@ -1,9 +1,10 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
-// AI Platform logos data with SVG paths
+// AI Platform logos data - only 4 platforms for atom-style orbit
 const aiPlatforms = [
   { 
     name: "ChatGPT", 
@@ -42,109 +43,98 @@ const aiPlatforms = [
       </svg>
     )
   },
-  { 
-    name: "Copilot", 
-    color: "#00BCF2",
-    icon: (
-      <svg viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6" fill="currentColor">
-        <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.707 7.707l-5 5a1 1 0 01-1.414 0l-2.5-2.5a1 1 0 111.414-1.414L11 12.586l4.293-4.293a1 1 0 111.414 1.414z"/>
-      </svg>
-    )
-  },
-  { 
-    name: "Google AI", 
-    color: "#EA4335",
-    icon: (
-      <svg viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6" fill="currentColor">
-        <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/>
-      </svg>
-    )
-  },
 ];
 
 function OrbitingLogos() {
-  const radius = 140;
+  const radius = 120;
+  const orbitDuration = 4; // seconds for one full orbit
+  const [logoIndices, setLogoIndices] = useState([0, 2]); // Start with ChatGPT and Claude
+  
+  // Shuffle to next logo when particle goes behind
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLogoIndices(prev => {
+        const nextIndices = [...prev];
+        // Alternate which particle changes
+        const particleToChange = Math.random() > 0.5 ? 0 : 1;
+        let newIndex;
+        do {
+          newIndex = Math.floor(Math.random() * aiPlatforms.length);
+        } while (newIndex === prev[0] || newIndex === prev[1]);
+        nextIndices[particleToChange] = newIndex;
+        return nextIndices;
+      });
+    }, orbitDuration * 500); // Change halfway through orbit (when behind)
+    
+    return () => clearInterval(interval);
+  }, []);
   
   return (
-    <div className="relative w-full h-[400px] md:h-[500px] flex items-center justify-center">
+    <div className="relative w-full h-[400px] md:h-[500px] flex items-center justify-center" style={{ perspective: '800px' }}>
       {/* Background glow */}
       <div className="absolute w-64 h-64 bg-primary/20 rounded-full blur-3xl animate-pulse" />
       <div className="absolute w-48 h-48 bg-gold/10 rounded-full blur-2xl" />
       
-      {/* Orbiting container - rotates the whole system */}
-      <motion.div
-        className="absolute"
-        animate={{ rotate: 360 }}
-        transition={{
-          duration: 40,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-        style={{ width: radius * 2 + 80, height: radius * 2 + 80 }}
-      >
-        {/* Orbiting logos */}
-        {aiPlatforms.map((platform, index) => {
-          const angle = (index * 360) / aiPlatforms.length;
-          const x = Math.cos((angle - 90) * (Math.PI / 180)) * radius;
-          const y = Math.sin((angle - 90) * (Math.PI / 180)) * radius;
-          
-          return (
+      {/* Orbit path indicator */}
+      <div 
+        className="absolute border border-primary/10 rounded-full"
+        style={{ width: radius * 2 + 60, height: radius * 2 + 60 }}
+      />
+      
+      {/* Orbiting particles - 2 electrons */}
+      {[0, 1].map((particleIndex) => {
+        const platform = aiPlatforms[logoIndices[particleIndex]];
+        const startAngle = particleIndex * 180; // Opposite sides
+        
+        return (
+          <motion.div
+            key={particleIndex}
+            className="absolute"
+            style={{
+              transformStyle: 'preserve-3d',
+            }}
+            animate={{
+              rotateY: [startAngle, startAngle + 360],
+            }}
+            transition={{
+              duration: orbitDuration,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          >
             <motion.div
-              key={platform.name}
-              className="absolute left-1/2 top-1/2"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{
-                opacity: { duration: 0.5, delay: index * 0.1 },
-                scale: { duration: 0.5, delay: index * 0.1 },
-              }}
               style={{
-                x: x - 28,
-                y: y - 28,
+                transform: `translateZ(${radius}px)`,
               }}
             >
-              {/* Counter-rotate to keep logos upright */}
               <motion.div
-                animate={{ rotate: -360 }}
+                className="glass-strong rounded-xl p-3 md:p-4 border border-primary/30 shadow-lg"
+                style={{
+                  boxShadow: `0 0 20px ${platform.color}30, 0 0 40px ${platform.color}15`
+                }}
+                animate={{
+                  scale: [1, 1.05, 1],
+                }}
                 transition={{
-                  duration: 40,
+                  duration: 2,
                   repeat: Infinity,
-                  ease: "linear",
+                  ease: "easeInOut",
                 }}
               >
-                <motion.div
-                  className="glass-strong rounded-xl p-3 md:p-4 border border-primary/30 shadow-lg cursor-pointer"
-                  style={{
-                    boxShadow: `0 0 20px ${platform.color}20, 0 0 40px ${platform.color}10`
-                  }}
-                  whileHover={{ scale: 1.1, borderColor: platform.color }}
-                  animate={{
-                    y: [0, -6, 0],
-                  }}
-                  transition={{
-                    y: {
-                      duration: 3,
-                      repeat: Infinity,
-                      delay: index * 0.4,
-                      ease: "easeInOut"
-                    }
+                <div 
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center transition-colors duration-300"
+                  style={{ 
+                    backgroundColor: `${platform.color}15`,
+                    color: platform.color,
                   }}
                 >
-                  <div 
-                    className="w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center"
-                    style={{ 
-                      backgroundColor: `${platform.color}15`,
-                      color: platform.color,
-                    }}
-                  >
-                    {platform.icon}
-                  </div>
-                </motion.div>
+                  {platform.icon}
+                </div>
               </motion.div>
             </motion.div>
-          );
-        })}
-      </motion.div>
+          </motion.div>
+        );
+      })}
       
       {/* Central Score Circle */}
       <motion.div 
@@ -165,37 +155,6 @@ function OrbitingLogos() {
           </motion.span>
           <span className="text-xs md:text-sm text-muted-foreground mt-1">Surgical Score™</span>
         </div>
-        
-        {/* Connecting lines animation */}
-        <svg className="absolute inset-0 w-full h-full -z-10" style={{ transform: 'scale(3)' }}>
-          {aiPlatforms.map((_, index) => {
-            const angle = (index * 360 / aiPlatforms.length) * (Math.PI / 180);
-            const x2 = 50 + Math.cos(angle - Math.PI/2) * 35;
-            const y2 = 50 + Math.sin(angle - Math.PI/2) * 35;
-            
-            return (
-              <motion.line
-                key={index}
-                x1="50%"
-                y1="50%"
-                x2={`${x2}%`}
-                y2={`${y2}%`}
-                stroke="url(#lineGradient)"
-                strokeWidth="0.5"
-                strokeDasharray="4 4"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: 0.3 }}
-                transition={{ duration: 1, delay: 0.8 + index * 0.1 }}
-              />
-            );
-          })}
-          <defs>
-            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="hsl(var(--primary))" />
-              <stop offset="100%" stopColor="hsl(var(--gold))" />
-            </linearGradient>
-          </defs>
-        </svg>
       </motion.div>
     </div>
   );
