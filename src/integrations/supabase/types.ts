@@ -14,7 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      scan_runs: {
+        Row: {
+          business_name: string
+          competition: string | null
+          created_at: string
+          id: string
+          ideal_client: string | null
+          niche: string | null
+          request_id: string
+          status: string
+          target_market: string | null
+          updated_at: string
+          user_id: string
+          website: string | null
+        }
+        Insert: {
+          business_name: string
+          competition?: string | null
+          created_at?: string
+          id?: string
+          ideal_client?: string | null
+          niche?: string | null
+          request_id: string
+          status?: string
+          target_market?: string | null
+          updated_at?: string
+          user_id: string
+          website?: string | null
+        }
+        Update: {
+          business_name?: string
+          competition?: string | null
+          created_at?: string
+          id?: string
+          ideal_client?: string | null
+          niche?: string | null
+          request_id?: string
+          status?: string
+          target_market?: string | null
+          updated_at?: string
+          user_id?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
