@@ -15,23 +15,14 @@ import {
   Radar,
   Sparkles,
   Loader2,
-  Check,
-  Clock,
   AlertTriangle,
   RefreshCw,
 } from "lucide-react";
 import { useScanStatus, type ScanStatus } from "@/hooks/useScanStatus";
+import { ScanLoadingScreen } from "@/components/scan/ScanLoadingScreen";
 import { useScanResults } from "@/hooks/useScanResults";
 import { format } from "date-fns";
 import { ro } from "date-fns/locale";
-
-const statusSteps: { key: ScanStatus; label: string }[] = [
-  { key: "pending", label: "Inițializare" },
-  { key: "generating", label: "Generare Întrebări" },
-  { key: "testing", label: "Testare Platforme" },
-  { key: "scoring", label: "Calculare Scor" },
-  { key: "completed", label: "Complet" },
-];
 
 const statusOrder: Record<ScanStatus, number> = {
   pending: 0,
@@ -148,98 +139,13 @@ export default function ScanResults() {
 
   // In-progress state
   if (isInProgress) {
-    const currentStepIndex = statusOrder[scan.status] ?? 0;
-
     return (
       <DashboardLayout>
-        <div className="container mx-auto px-4 py-8 max-w-2xl">
-          {/* Header */}
-          <div className="mb-8">
-            <Link
-              to="/dashboard"
-              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-4"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Înapoi la Dashboard
-            </Link>
-            <h1 className="text-3xl font-bold mb-2">Analiză în Progres</h1>
-            <p className="text-muted-foreground">
-              {scan.business_name} •{" "}
-              {format(new Date(scan.created_at), "d MMM yyyy, HH:mm", {
-                locale: ro,
-              })}
-            </p>
-          </div>
-
-          {/* Animated Logo */}
-          <div className="text-center mb-8">
-            <div className="relative w-24 h-24 mx-auto">
-              <div className="absolute inset-0 rounded-full bg-gradient-gold opacity-20 animate-ping" />
-              <div className="relative w-full h-full rounded-full bg-gradient-gold flex items-center justify-center">
-                <Radar className="h-12 w-12 text-gold-foreground animate-pulse" />
-              </div>
-            </div>
-          </div>
-
-          {/* Status Stepper */}
-          <div className="glass rounded-2xl p-8 mb-8">
-            <div className="space-y-4">
-              {statusSteps.map((step, i) => {
-                const isComplete = i < currentStepIndex;
-                const isCurrent = i === currentStepIndex;
-
-                return (
-                  <div key={step.key} className="flex items-center gap-4">
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
-                        isComplete
-                          ? "bg-success text-success-foreground"
-                          : isCurrent
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      {isComplete ? (
-                        <Check className="h-5 w-5" />
-                      ) : isCurrent ? (
-                        <Loader2 className="h-5 w-5 animate-spin" />
-                      ) : (
-                        <Clock className="h-4 w-4" />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <p
-                        className={`font-medium ${
-                          isCurrent
-                            ? "text-foreground"
-                            : isComplete
-                            ? "text-muted-foreground"
-                            : "text-muted-foreground/50"
-                        }`}
-                      >
-                        {step.label}
-                      </p>
-                      {isCurrent && (
-                        <p className="text-sm text-primary">Se procesează...</p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <p className="text-center text-sm text-muted-foreground mt-6 pt-6 border-t border-border">
-              Timp estimat: 8-22 minute. Poți părăsi această pagină — te vom
-              notifica.
-            </p>
-          </div>
-
-          <div className="text-center">
-            <Button variant="outline" asChild>
-              <Link to="/dashboard">Înapoi la Dashboard</Link>
-            </Button>
-          </div>
-        </div>
+        <ScanLoadingScreen
+          status={scan.status}
+          businessName={scan.business_name}
+          createdAt={scan.created_at}
+        />
       </DashboardLayout>
     );
   }
