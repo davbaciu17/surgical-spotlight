@@ -19,11 +19,13 @@ export type Database = {
           business_name: string
           competition: string | null
           created_at: string
+          grade: string | null
           id: string
           ideal_client: string | null
           niche: string | null
           request_id: string
           status: string
+          surgical_score: number | null
           target_market: string | null
           updated_at: string
           user_id: string
@@ -33,11 +35,13 @@ export type Database = {
           business_name: string
           competition?: string | null
           created_at?: string
+          grade?: string | null
           id?: string
           ideal_client?: string | null
           niche?: string | null
           request_id: string
           status?: string
+          surgical_score?: number | null
           target_market?: string | null
           updated_at?: string
           user_id: string
@@ -47,11 +51,13 @@ export type Database = {
           business_name?: string
           competition?: string | null
           created_at?: string
+          grade?: string | null
           id?: string
           ideal_client?: string | null
           niche?: string | null
           request_id?: string
           status?: string
+          surgical_score?: number | null
           target_market?: string | null
           updated_at?: string
           user_id?: string
