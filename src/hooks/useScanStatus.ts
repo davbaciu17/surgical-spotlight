@@ -18,7 +18,25 @@ export interface ScanStatusData {
   surgical_score: number | null;
   grade: string | null;
   created_at: string;
-  updated_at: string;
+}
+
+// Map DB statuses to UI statuses
+function mapDbStatus(dbStatus: string): ScanStatus {
+  switch (dbStatus) {
+    case "pending":
+      return "pending";
+    case "running":
+    case "generating_queries":
+      return "generating";
+    case "testing":
+      return "testing";
+    case "completed":
+      return "completed";
+    case "failed":
+      return "failed";
+    default:
+      return "pending";
+  }
 }
 
 export function useScanStatus(scanId: string | undefined) {
@@ -28,14 +46,18 @@ export function useScanStatus(scanId: string | undefined) {
     queryKey: ["scan-status", scanId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("surgical_scans")
+        .from("scan_runs")
         .select(
-          "id, request_id, status, business_name, surgical_score, grade, created_at, updated_at"
+          "id, request_id, status, business_name, surgical_score, grade, created_at"
         )
         .eq("id", scanId!)
         .single();
       if (error) throw error;
-      return data as ScanStatusData;
+      return {
+        ...data,
+        business_name: data.business_name ?? "Scanare",
+        status: mapDbStatus(data.status ?? "pending"),
+      } as ScanStatusData;
     },
     enabled: !!scanId,
     refetchInterval: (query) => {
@@ -56,7 +78,7 @@ export function useScanStatus(scanId: string | undefined) {
         {
           event: "UPDATE",
           schema: "public",
-          table: "surgical_scans",
+          table: "scan_runs",
           filter: `id=eq.${scanId}`,
         },
         () => {

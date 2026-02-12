@@ -15,9 +15,9 @@ export async function createScan(
 ): Promise<{ scanId: string; requestId: string }> {
   const requestId = `scan-${userId.slice(0, 8)}-${Date.now()}`;
 
-  // Step 1: Insert scan record into surgical_scans
+  // Step 1: Insert scan record into scan_runs
   const { data: scan, error: insertError } = await supabase
-    .from("surgical_scans")
+    .from("scan_runs")
     .insert({
       user_id: userId,
       request_id: requestId,
@@ -54,14 +54,13 @@ export async function createScan(
       target_market: data.target_market,
       ideal_client: data.ideal_client,
       competition: data.competition,
-      callback_url: `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/surgical_scans?request_id=eq.${requestId}`,
     }),
   });
 
   if (!response.ok) {
     // Mark scan as failed
     await supabase
-      .from("surgical_scans")
+      .from("scan_runs")
       .update({ status: "failed" })
       .eq("id", scan.id);
     throw new Error(`Eroare la trimiterea către n8n: ${response.status}`);

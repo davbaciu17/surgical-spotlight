@@ -42,13 +42,14 @@ const statusOrder: Record<ScanStatus, number> = {
   failed: -1,
 };
 
-const categories = [
+// Map 10 n8n query_types → 5 display categories
+const DISPLAY_CATEGORIES = [
   "DISCOVERY",
   "COMPARISON",
   "REPUTATION",
   "EXPERTISE",
   "TRANSACTIONAL",
-];
+] as const;
 
 const categoryLabels: Record<string, string> = {
   DISCOVERY: "Descoperire",
@@ -57,6 +58,30 @@ const categoryLabels: Record<string, string> = {
   EXPERTISE: "Expertiză",
   TRANSACTIONAL: "Tranzacțional",
 };
+
+const queryTypeToCategory: Record<string, string> = {
+  local_search: "DISCOVERY",
+  service_search: "DISCOVERY",
+  comparison: "COMPARISON",
+  price_focused: "COMPARISON",
+  recommendation: "REPUTATION",
+  review_based: "REPUTATION",
+  quality_focused: "EXPERTISE",
+  problem_solution: "EXPERTISE",
+  product_specific: "TRANSACTIONAL",
+  delivery_focused: "TRANSACTIONAL",
+};
+
+function getDisplayCategory(queryType: string): string {
+  return queryTypeToCategory[queryType] ?? "DISCOVERY";
+}
+
+// mentions_business is a string in DB: "none" | "mentioned" | "recommended" etc.
+function isMentioned(mentions: string | null | boolean): boolean {
+  if (typeof mentions === "boolean") return mentions;
+  if (!mentions) return false;
+  return mentions !== "none";
+}
 
 export default function ScanResults() {
   const { id } = useParams();
@@ -224,22 +249,24 @@ export default function ScanResults() {
     locale: ro,
   });
 
-  // Group queries by category
-  const queriesByCategory = categories.reduce(
+  // Group queries by display category (mapped from query_type)
+  const queriesByCategory = DISPLAY_CATEGORIES.reduce(
     (acc, cat) => {
-      acc[cat] = queries.filter((q: any) => q.category === cat);
+      acc[cat] = queries.filter(
+        (q: any) => getDisplayCategory(q.query_type) === cat
+      );
       return acc;
     },
     {} as Record<string, any[]>
   );
 
   // Category scores
-  const categoryScores = categories.map((cat) => {
+  const categoryScores = DISPLAY_CATEGORIES.map((cat) => {
     const catQueries = queriesByCategory[cat] || [];
     if (catQueries.length === 0)
       return { category: cat, score: 0, total: 0, mentioned: 0 };
-    const mentioned = catQueries.filter(
-      (q: any) => q.mentions_business
+    const mentioned = catQueries.filter((q: any) =>
+      isMentioned(q.mentions_business)
     ).length;
     return {
       category: cat,
@@ -248,8 +275,8 @@ export default function ScanResults() {
     };
   });
 
-  const totalMentioned = queries.filter(
-    (q: any) => q.mentions_business
+  const totalMentioned = queries.filter((q: any) =>
+    isMentioned(q.mentions_business)
   ).length;
   const totalQueries = queries.length;
 
@@ -367,44 +394,46 @@ export default function ScanResults() {
               Detalii Întrebări ({queries.length})
             </h2>
             <Accordion type="single" collapsible className="space-y-4">
-              {categories
-                .filter((cat) => (queriesByCategory[cat] || []).length > 0)
-                .map((cat) => {
-                  const catQueries = queriesByCategory[cat] || [];
-                  const catMentioned = catQueries.filter(
-                    (q: any) => q.mentions_business
-                  ).length;
-                  return (
-                    <AccordionItem
-                      key={cat}
-                      value={cat}
-                      className="border border-border rounded-xl px-6 overflow-hidden"
-                    >
-                      <AccordionTrigger className="hover:no-underline py-4">
-                        <div className="flex items-center gap-4 flex-1">
-                          <span className="font-semibold">
-                            {categoryLabels[cat] || cat}
-                          </span>
-                          <span className="ml-auto mr-4 text-sm text-muted-foreground">
-                            {catMentioned}/{catQueries.length} mențiuni
-                          </span>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="pb-6">
-                        <div className="space-y-3">
-                          {catQueries.map((q: any, i: number) => (
+              {DISPLAY_CATEGORIES.filter(
+                (cat) => (queriesByCategory[cat] || []).length > 0
+              ).map((cat) => {
+                const catQueries = queriesByCategory[cat] || [];
+                const catMentioned = catQueries.filter((q: any) =>
+                  isMentioned(q.mentions_business)
+                ).length;
+                return (
+                  <AccordionItem
+                    key={cat}
+                    value={cat}
+                    className="border border-border rounded-xl px-6 overflow-hidden"
+                  >
+                    <AccordionTrigger className="hover:no-underline py-4">
+                      <div className="flex items-center gap-4 flex-1">
+                        <span className="font-semibold">
+                          {categoryLabels[cat] || cat}
+                        </span>
+                        <span className="ml-auto mr-4 text-sm text-muted-foreground">
+                          {catMentioned}/{catQueries.length} mențiuni
+                        </span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-6">
+                      <div className="space-y-3">
+                        {catQueries.map((q: any, i: number) => {
+                          const mentioned = isMentioned(q.mentions_business);
+                          return (
                             <div
                               key={i}
                               className="flex items-start gap-3 p-3 rounded-lg bg-card border border-border"
                             >
                               <span
                                 className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 ${
-                                  q.mentions_business
+                                  mentioned
                                     ? "bg-success/20 text-success"
                                     : "bg-error/20 text-error"
                                 }`}
                               >
-                                {q.mentions_business ? "✓" : "✗"}
+                                {mentioned ? "\u2713" : "\u2717"}
                               </span>
                               <div className="flex-1 min-w-0">
                                 <p className="text-sm">{q.query_text}</p>
@@ -426,7 +455,7 @@ export default function ScanResults() {
                                         : "Neutru"}
                                     </span>
                                   )}
-                                  {q.position_rank && (
+                                  {q.position_rank > 0 && (
                                     <span className="text-xs text-muted-foreground">
                                       Poziția #{q.position_rank}
                                     </span>
@@ -434,12 +463,13 @@ export default function ScanResults() {
                                 </div>
                               </div>
                             </div>
-                          ))}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  );
-                })}
+                          );
+                        })}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
             </Accordion>
           </div>
         )}

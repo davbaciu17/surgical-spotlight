@@ -18,63 +18,138 @@ export type Database = {
           email: string | null
           full_name: string | null
           company_name: string | null
-          created_at: string
-          updated_at: string
+          plan_tier: string | null
+          stripe_customer_id: string | null
+          subscription_status: string | null
+          subscription_end_date: string | null
+          created_at: string | null
+          updated_at: string | null
         }
         Insert: {
           id: string
           email?: string | null
           full_name?: string | null
           company_name?: string | null
-          created_at?: string
-          updated_at?: string
+          plan_tier?: string | null
+          stripe_customer_id?: string | null
+          subscription_status?: string | null
+          subscription_end_date?: string | null
+          created_at?: string | null
+          updated_at?: string | null
         }
         Update: {
           email?: string | null
           full_name?: string | null
           company_name?: string | null
-          updated_at?: string
+          plan_tier?: string | null
+          stripe_customer_id?: string | null
+          subscription_status?: string | null
+          subscription_end_date?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
-      surgical_scans: {
+      businesses: {
         Row: {
           id: string
           user_id: string
-          request_id: string
-          business_name: string
+          name: string
+          website: string | null
           niche: string
-          website: string
           target_market: string
-          ideal_client: string
-          competition: string
-          status: string
-          surgical_score: number | null
-          grade: string | null
-          created_at: string
-          updated_at: string
+          ideal_client: string | null
+          competition: string | null
+          is_active: boolean | null
+          last_scanned_at: string | null
+          created_at: string | null
+          updated_at: string | null
         }
         Insert: {
           id?: string
           user_id: string
-          request_id: string
-          business_name: string
+          name: string
+          website?: string | null
           niche: string
-          website: string
           target_market: string
-          ideal_client: string
-          competition: string
-          status?: string
-          surgical_score?: number | null
-          grade?: string | null
-          created_at?: string
-          updated_at?: string
+          ideal_client?: string | null
+          competition?: string | null
+          is_active?: boolean | null
+          last_scanned_at?: string | null
+          created_at?: string | null
+          updated_at?: string | null
         }
         Update: {
-          status?: string
+          name?: string
+          website?: string | null
+          niche?: string
+          target_market?: string
+          ideal_client?: string | null
+          competition?: string | null
+          is_active?: boolean | null
+          last_scanned_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      scan_runs: {
+        Row: {
+          id: string
+          request_id: string
+          business_id: string | null
+          user_id: string
+          run_type: string | null
+          status: string | null
+          queries_tested: number | null
+          queries_total: number | null
+          error_message: string | null
+          started_at: string | null
+          completed_at: string | null
+          created_at: string | null
+          business_name: string | null
+          niche: string | null
+          website: string | null
+          target_market: string | null
+          ideal_client: string | null
+          competition: string | null
+          surgical_score: number | null
+          grade: string | null
+        }
+        Insert: {
+          id?: string
+          request_id: string
+          business_id?: string | null
+          user_id: string
+          run_type?: string | null
+          status?: string | null
+          queries_tested?: number | null
+          queries_total?: number | null
+          error_message?: string | null
+          started_at?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          business_name?: string | null
+          niche?: string | null
+          website?: string | null
+          target_market?: string | null
+          ideal_client?: string | null
+          competition?: string | null
           surgical_score?: number | null
           grade?: string | null
-          updated_at?: string
+        }
+        Update: {
+          status?: string | null
+          queries_tested?: number | null
+          queries_total?: number | null
+          error_message?: string | null
+          completed_at?: string | null
+          business_name?: string | null
+          niche?: string | null
+          website?: string | null
+          target_market?: string | null
+          ideal_client?: string | null
+          competition?: string | null
+          surgical_score?: number | null
+          grade?: string | null
         }
         Relationships: []
       }
@@ -82,43 +157,42 @@ export type Database = {
         Row: {
           id: string
           request_id: string
-          query_number: number | null
-          category: string | null
-          query_text: string | null
-          mentions_business: boolean | null
+          business_name: string
+          query_number: number
+          query_type: string
+          query_text: string
+          llm_response: string | null
+          mentions_business: string | null
           sentiment: string | null
           position_rank: number | null
           surgical_score_contribution: number | null
-          llm_response: string | null
-          user_id: string | null
           business_id: string | null
+          user_id: string | null
           created_at: string | null
         }
         Insert: {
           id?: string
           request_id: string
-          query_number?: number | null
-          category?: string | null
-          query_text?: string | null
-          mentions_business?: boolean | null
+          business_name: string
+          query_number: number
+          query_type: string
+          query_text: string
+          llm_response?: string | null
+          mentions_business?: string | null
           sentiment?: string | null
           position_rank?: number | null
           surgical_score_contribution?: number | null
-          llm_response?: string | null
-          user_id?: string | null
           business_id?: string | null
+          user_id?: string | null
         }
         Update: {
-          query_number?: number | null
-          category?: string | null
-          query_text?: string | null
-          mentions_business?: boolean | null
+          llm_response?: string | null
+          mentions_business?: string | null
           sentiment?: string | null
           position_rank?: number | null
           surgical_score_contribution?: number | null
-          llm_response?: string | null
-          user_id?: string | null
           business_id?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -126,34 +200,90 @@ export type Database = {
         Row: {
           id: string
           request_id: string
-          surgical_score: number | null
-          grade: string | null
+          business_name: string
+          surgical_score: number
+          grade: string
+          category_breakdown: Json
+          top_competitors: Json | null
           total_mentioned: number | null
           total_recommended: number | null
-          top_competitors: Json | null
-          category_scores: Json | null
+          business_id: string | null
           user_id: string | null
           created_at: string | null
         }
         Insert: {
           id?: string
           request_id: string
-          surgical_score?: number | null
-          grade?: string | null
+          business_name: string
+          surgical_score: number
+          grade: string
+          category_breakdown: Json
+          top_competitors?: Json | null
           total_mentioned?: number | null
           total_recommended?: number | null
-          top_competitors?: Json | null
-          category_scores?: Json | null
+          business_id?: string | null
           user_id?: string | null
+        }
+        Update: {
+          surgical_score?: number
+          grade?: string
+          category_breakdown?: Json
+          top_competitors?: Json | null
+          total_mentioned?: number | null
+          total_recommended?: number | null
+          business_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      analytics_snapshots: {
+        Row: {
+          id: string
+          business_id: string
+          snapshot_date: string
+          llm_provider: string
+          surgical_score: number | null
+          grade: string | null
+          visibility_percentage: number | null
+          total_queries_tested: number | null
+          total_mentioned: number | null
+          total_recommended: number | null
+          positive_sentiment_count: number | null
+          neutral_sentiment_count: number | null
+          negative_sentiment_count: number | null
+          top_competitors: Json | null
+          request_id: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          business_id: string
+          snapshot_date: string
+          llm_provider?: string
+          surgical_score?: number | null
+          grade?: string | null
+          visibility_percentage?: number | null
+          total_queries_tested?: number | null
+          total_mentioned?: number | null
+          total_recommended?: number | null
+          positive_sentiment_count?: number | null
+          neutral_sentiment_count?: number | null
+          negative_sentiment_count?: number | null
+          top_competitors?: Json | null
+          request_id?: string | null
         }
         Update: {
           surgical_score?: number | null
           grade?: string | null
+          visibility_percentage?: number | null
+          total_queries_tested?: number | null
           total_mentioned?: number | null
           total_recommended?: number | null
+          positive_sentiment_count?: number | null
+          neutral_sentiment_count?: number | null
+          negative_sentiment_count?: number | null
           top_competitors?: Json | null
-          category_scores?: Json | null
-          user_id?: string | null
+          request_id?: string | null
         }
         Relationships: []
       }

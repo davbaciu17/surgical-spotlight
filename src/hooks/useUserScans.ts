@@ -3,6 +3,25 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { ScanStatus } from "./useScanStatus";
 
+// Map DB statuses to UI statuses
+function mapDbStatus(dbStatus: string | null): ScanStatus {
+  switch (dbStatus) {
+    case "pending":
+      return "pending";
+    case "running":
+    case "generating_queries":
+      return "generating";
+    case "testing":
+      return "testing";
+    case "completed":
+      return "completed";
+    case "failed":
+      return "failed";
+    default:
+      return "pending";
+  }
+}
+
 export interface UserScan {
   id: string;
   request_id: string;
@@ -11,7 +30,6 @@ export interface UserScan {
   surgical_score: number | null;
   grade: string | null;
   created_at: string;
-  updated_at: string;
 }
 
 export function useUserScans(userId: string | undefined) {
@@ -21,14 +39,18 @@ export function useUserScans(userId: string | undefined) {
     queryKey: ["user-scans", userId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("surgical_scans")
+        .from("scan_runs")
         .select(
-          "id, request_id, business_name, status, surgical_score, grade, created_at, updated_at"
+          "id, request_id, business_name, status, surgical_score, grade, created_at"
         )
         .eq("user_id", userId!)
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data as UserScan[];
+      return (data ?? []).map((row) => ({
+        ...row,
+        business_name: row.business_name ?? "Scanare",
+        status: mapDbStatus(row.status),
+      })) as UserScan[];
     },
     enabled: !!userId,
   });
@@ -44,7 +66,7 @@ export function useUserScans(userId: string | undefined) {
         {
           event: "*",
           schema: "public",
-          table: "surgical_scans",
+          table: "scan_runs",
           filter: `user_id=eq.${userId}`,
         },
         () => {

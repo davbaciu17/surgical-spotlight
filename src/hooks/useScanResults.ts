@@ -7,7 +7,9 @@ export function useScanResults(requestId: string | undefined) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("surgical_results")
-        .select("*")
+        .select(
+          "id, request_id, business_name, surgical_score, grade, category_breakdown, top_competitors, total_mentioned, total_recommended"
+        )
         .eq("request_id", requestId!)
         .single();
       if (error) throw error;
@@ -22,7 +24,7 @@ export function useScanResults(requestId: string | undefined) {
       const { data, error } = await supabase
         .from("surgical_queries")
         .select(
-          "query_number, category, query_text, mentions_business, sentiment, position_rank, surgical_score_contribution"
+          "query_number, query_type, query_text, mentions_business, sentiment, position_rank, surgical_score_contribution"
         )
         .eq("request_id", requestId!)
         .order("query_number");
