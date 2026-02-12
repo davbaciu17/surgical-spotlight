@@ -98,7 +98,7 @@ export default function Scanner() {
     setIsSubmitting(true);
 
     try {
-      const { scanId } = await createScan(user.id, data);
+      const { scanId } = await createScan(user.id, data as import("@/services/scanService").ScanRequest);
       toast({
         title: "Scanare inițiată!",
         description: "Procesarea durează 8-22 minute. Te notificăm când este gata.",

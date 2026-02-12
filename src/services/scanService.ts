@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 
-interface ScanRequest {
+export interface ScanRequest {
   business_name: string;
   niche: string;
   website: string;
@@ -13,41 +13,21 @@ export async function createScan(
   userId: string,
   data: ScanRequest
 ): Promise<{ scanId: string; requestId: string }> {
-  const requestId = `scan-${userId.slice(0, 8)}-${Date.now()}`;
+  const { data: sessionData } = await supabase.auth.getSession();
+  const token = sessionData?.session?.access_token;
 
-  // Step 1: Insert scan record into scan_runs
-  const { data: scan, error: insertError } = await supabase
-    .from("scan_runs")
-    .insert({
-      user_id: userId,
-      request_id: requestId,
-      business_name: data.business_name,
-      niche: data.niche,
-      website: data.website,
-      target_market: data.target_market,
-      ideal_client: data.ideal_client,
-      competition: data.competition,
-      status: "pending",
-    })
-    .select("id")
-    .single();
-
-  if (insertError) {
-    throw new Error(`Eroare la crearea scanării: ${insertError.message}`);
+  if (!token) {
+    throw new Error("Nu ești autentificat");
   }
 
-  // Step 2: Call n8n webhook
-  const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL;
-  if (!webhookUrl) {
-    throw new Error("Webhook URL nu este configurat");
-  }
-
-  const response = await fetch(webhookUrl, {
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const response = await fetch(`${supabaseUrl}/functions/v1/trigger-scan`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
     body: JSON.stringify({
-      request_id: requestId,
-      user_id: userId,
       business_name: data.business_name,
       niche: data.niche,
       website: data.website,
@@ -58,13 +38,10 @@ export async function createScan(
   });
 
   if (!response.ok) {
-    // Mark scan as failed
-    await supabase
-      .from("scan_runs")
-      .update({ status: "failed" })
-      .eq("id", scan.id);
-    throw new Error(`Eroare la trimiterea către n8n: ${response.status}`);
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || `Eroare la scanare: ${response.status}`);
   }
 
-  return { scanId: scan.id, requestId };
+  const result = await response.json();
+  return { scanId: result.scanId, requestId: result.requestId };
 }

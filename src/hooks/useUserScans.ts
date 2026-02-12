@@ -38,7 +38,7 @@ export function useUserScans(userId: string | undefined) {
   const query = useQuery({
     queryKey: ["user-scans", userId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("scan_runs")
         .select(
           "id, request_id, business_name, status, surgical_score, grade, created_at"
