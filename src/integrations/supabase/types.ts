@@ -7,14 +7,156 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.1"
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          id: string
+          email: string | null
+          full_name: string | null
+          company_name: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          email?: string | null
+          full_name?: string | null
+          company_name?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          email?: string | null
+          full_name?: string | null
+          company_name?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      surgical_scans: {
+        Row: {
+          id: string
+          user_id: string
+          request_id: string
+          business_name: string
+          niche: string
+          website: string
+          target_market: string
+          ideal_client: string
+          competition: string
+          status: string
+          surgical_score: number | null
+          grade: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          request_id: string
+          business_name: string
+          niche: string
+          website: string
+          target_market: string
+          ideal_client: string
+          competition: string
+          status?: string
+          surgical_score?: number | null
+          grade?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          status?: string
+          surgical_score?: number | null
+          grade?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      surgical_queries: {
+        Row: {
+          id: string
+          request_id: string
+          query_number: number | null
+          category: string | null
+          query_text: string | null
+          mentions_business: boolean | null
+          sentiment: string | null
+          position_rank: number | null
+          surgical_score_contribution: number | null
+          llm_response: string | null
+          user_id: string | null
+          business_id: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          request_id: string
+          query_number?: number | null
+          category?: string | null
+          query_text?: string | null
+          mentions_business?: boolean | null
+          sentiment?: string | null
+          position_rank?: number | null
+          surgical_score_contribution?: number | null
+          llm_response?: string | null
+          user_id?: string | null
+          business_id?: string | null
+        }
+        Update: {
+          query_number?: number | null
+          category?: string | null
+          query_text?: string | null
+          mentions_business?: boolean | null
+          sentiment?: string | null
+          position_rank?: number | null
+          surgical_score_contribution?: number | null
+          llm_response?: string | null
+          user_id?: string | null
+          business_id?: string | null
+        }
+        Relationships: []
+      }
+      surgical_results: {
+        Row: {
+          id: string
+          request_id: string
+          surgical_score: number | null
+          grade: string | null
+          total_mentioned: number | null
+          total_recommended: number | null
+          top_competitors: Json | null
+          category_scores: Json | null
+          user_id: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          request_id: string
+          surgical_score?: number | null
+          grade?: string | null
+          total_mentioned?: number | null
+          total_recommended?: number | null
+          top_competitors?: Json | null
+          category_scores?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          surgical_score?: number | null
+          grade?: string | null
+          total_mentioned?: number | null
+          total_recommended?: number | null
+          top_competitors?: Json | null
+          category_scores?: Json | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

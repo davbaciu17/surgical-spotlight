@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,10 +8,17 @@ import { Zap, Eye, EyeOff, Loader2, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Signup() {
+  const { user, isLoading: authLoading } = useAuth();
   const [searchParams] = useSearchParams();
   const initialEmail = searchParams.get("email") || "";
+
+  // Redirect if already authenticated
+  if (!authLoading && user) {
+    return <Navigate to="/dashboard" replace />;
+  }
   
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState(initialEmail);

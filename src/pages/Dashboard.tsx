@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { SurgicalScore } from "@/components/dashboard/SurgicalScore";
-import { PlatformStatusCard } from "@/components/dashboard/PlatformStatusCard";
+import { ScanProgressBanner } from "@/components/dashboard/ScanProgressBanner";
 import { Button } from "@/components/ui/button";
 import {
   Radar,
@@ -11,6 +11,7 @@ import {
   Calendar,
   ArrowUpRight,
   Sparkles,
+  Loader2,
 } from "lucide-react";
 import {
   LineChart,
@@ -21,28 +22,95 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useAuth } from "@/contexts/AuthContext";
+import { useUserScans } from "@/hooks/useUserScans";
+import { format } from "date-fns";
+import { ro } from "date-fns/locale";
 
-// Mock data - will be replaced with real data from Supabase
-const mockScoreData = [
-  { date: "1 Ian", score: 45 },
-  { date: "8 Ian", score: 52 },
-  { date: "15 Ian", score: 48 },
-  { date: "22 Ian", score: 58 },
-  { date: "29 Ian", score: 65 },
-  { date: "5 Feb", score: 72 },
-  { date: "12 Feb", score: 78 },
-];
-
-const mockRecentScans = [
-  { id: 1, date: "12 Feb 2024", score: 78, platforms: 4, status: "completed" },
-  { id: 2, date: "5 Feb 2024", score: 72, platforms: 4, status: "completed" },
-  { id: 3, date: "29 Ian 2024", score: 65, platforms: 3, status: "completed" },
-];
+const gradeColor = (grade: string | null) => {
+  switch (grade) {
+    case "A":
+    case "A+":
+      return "text-success";
+    case "B":
+    case "B+":
+      return "text-primary";
+    case "C":
+      return "text-warning";
+    default:
+      return "text-error";
+  }
+};
 
 export default function Dashboard() {
-  const currentScore = 78;
-  const previousScore = 72;
-  const scoreChange = currentScore - previousScore;
+  const { user, profile } = useAuth();
+  const { scans, isLoading } = useUserScans(user?.id);
+
+  const firstName = profile?.full_name?.split(" ")[0] || "Utilizator";
+
+  // Derive scores from completed scans
+  const completedScans = scans.filter((s) => s.status === "completed");
+  const inProgressScans = scans.filter(
+    (s) => s.status !== "completed" && s.status !== "failed"
+  );
+
+  const currentScore = completedScans[0]?.surgical_score ?? null;
+  const previousScore = completedScans[1]?.surgical_score ?? null;
+  const scoreChange =
+    currentScore !== null && previousScore !== null
+      ? currentScore - previousScore
+      : null;
+
+  const lastScanDate = scans[0]?.created_at
+    ? format(new Date(scans[0].created_at), "d MMM yyyy", { locale: ro })
+    : null;
+
+  // Build score trend from completed scans (most recent 7, reversed for chronological order)
+  const scoreData = completedScans
+    .slice(0, 7)
+    .reverse()
+    .map((s) => ({
+      date: format(new Date(s.created_at), "d MMM", { locale: ro }),
+      score: s.surgical_score ?? 0,
+    }));
+
+  if (isLoading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // Empty state — no scans yet
+  if (scans.length === 0) {
+    return (
+      <DashboardLayout>
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-lg mx-auto text-center">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-gold mb-6">
+              <Radar className="h-10 w-10 text-gold-foreground" />
+            </div>
+            <h1 className="text-3xl font-bold mb-3">
+              Bine ai venit, {firstName}!
+            </h1>
+            <p className="text-muted-foreground mb-8 text-lg">
+              Începe prima ta scanare de vizibilitate AI pentru a descoperi cum
+              apare brandul tău în platformele AI.
+            </p>
+            <Button variant="gold" size="lg" asChild>
+              <Link to="/scanner">
+                <Sparkles className="h-5 w-5 mr-2" />
+                Începe Prima Scanare
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
@@ -50,13 +118,15 @@ export default function Dashboard() {
         {/* Welcome Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold">Bine ai revenit, John</h1>
-            <p className="text-muted-foreground mt-1">
-              <span className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                Ultima scanare: 12 Feb 2024
-              </span>
-            </p>
+            <h1 className="text-3xl font-bold">Bine ai revenit, {firstName}</h1>
+            {lastScanDate && (
+              <p className="text-muted-foreground mt-1">
+                <span className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4" />
+                  Ultima scanare: {lastScanDate}
+                </span>
+              </p>
+            )}
           </div>
           <div className="flex gap-3">
             <Button variant="outline" asChild>
@@ -74,26 +144,53 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* In-Progress Scan Banners */}
+        {inProgressScans.map((scan) => (
+          <div key={scan.id} className="mb-6">
+            <ScanProgressBanner scan={scan} />
+          </div>
+        ))}
+
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Surgical Score Card */}
           <div className="lg:col-span-1">
             <div className="glass rounded-2xl p-8 text-center h-full flex flex-col items-center justify-center">
-              <h3 className="text-sm font-medium text-muted-foreground mb-6">Scorul Tău Surgical™</h3>
-              <SurgicalScore score={currentScore} size="lg" />
-              <div className="mt-6 flex items-center gap-2">
-                {scoreChange > 0 ? (
-                  <>
-                    <TrendingUp className="h-4 w-4 text-success" />
-                    <span className="text-success font-medium">+{scoreChange} față de ultima scanare</span>
-                  </>
-                ) : (
-                  <>
-                    <TrendingUp className="h-4 w-4 text-error rotate-180" />
-                    <span className="text-error font-medium">{scoreChange} față de ultima scanare</span>
-                  </>
-                )}
-              </div>
+              <h3 className="text-sm font-medium text-muted-foreground mb-6">
+                Scorul Tău Surgical™
+              </h3>
+              {currentScore !== null ? (
+                <>
+                  <SurgicalScore score={currentScore} size="lg" />
+                  {scoreChange !== null && (
+                    <div className="mt-6 flex items-center gap-2">
+                      {scoreChange > 0 ? (
+                        <>
+                          <TrendingUp className="h-4 w-4 text-success" />
+                          <span className="text-success font-medium">
+                            +{scoreChange} față de ultima scanare
+                          </span>
+                        </>
+                      ) : scoreChange < 0 ? (
+                        <>
+                          <TrendingUp className="h-4 w-4 text-error rotate-180" />
+                          <span className="text-error font-medium">
+                            {scoreChange} față de ultima scanare
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-muted-foreground font-medium">
+                          Nicio schimbare
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <p className="text-muted-foreground">
+                  Niciun scor disponibil încă
+                </p>
+              )}
               <Button variant="gold" className="mt-6 w-full" asChild>
                 <Link to="/scanner">
                   <Sparkles className="h-4 w-4 mr-2" />
@@ -103,82 +200,65 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Platform Status Grid */}
-          <div className="lg:col-span-2">
-            <div className="glass rounded-2xl p-6">
-              <h3 className="text-lg font-semibold mb-4">Status Platforme</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <PlatformStatusCard
-                  name="ChatGPT"
-                  icon={<span className="text-lg">🤖</span>}
-                  status="mentioned"
-                  score={82}
-                />
-                <PlatformStatusCard
-                  name="Perplexity"
-                  icon={<span className="text-lg">🔮</span>}
-                  status="mentioned"
-                  score={75}
-                />
-                <PlatformStatusCard
-                  name="Google AI"
-                  icon={<span className="text-lg">🔍</span>}
-                  status="not-found"
-                />
-                <PlatformStatusCard
-                  name="Bing Copilot"
-                  icon={<span className="text-lg">💬</span>}
-                  status="mentioned"
-                  score={78}
-                />
-              </div>
-            </div>
-          </div>
-
           {/* Score Trend Chart */}
           <div className="lg:col-span-2">
             <div className="glass rounded-2xl p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold">Evoluția Scorului</h3>
-                <span className="text-sm text-muted-foreground">Ultimele 30 de zile</span>
+                <span className="text-sm text-muted-foreground">
+                  Ultimele scanări
+                </span>
               </div>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={mockScoreData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis
-                      dataKey="date"
-                      stroke="hsl(var(--muted-foreground))"
-                      fontSize={12}
-                    />
-                    <YAxis
-                      stroke="hsl(var(--muted-foreground))"
-                      fontSize={12}
-                      domain={[0, 100]}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "hsl(var(--card))",
-                        border: "1px solid hsl(var(--border))",
-                        borderRadius: "8px",
-                      }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="score"
-                      stroke="hsl(var(--primary))"
-                      strokeWidth={3}
-                      dot={{ fill: "hsl(var(--gold))", strokeWidth: 2, r: 5 }}
-                      activeDot={{ r: 8, fill: "hsl(var(--gold))" }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
+              {scoreData.length > 1 ? (
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={scoreData}>
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke="hsl(var(--border))"
+                      />
+                      <XAxis
+                        dataKey="date"
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
+                      />
+                      <YAxis
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
+                        domain={[0, 100]}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "hsl(var(--card))",
+                          border: "1px solid hsl(var(--border))",
+                          borderRadius: "8px",
+                        }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="score"
+                        stroke="hsl(var(--primary))"
+                        strokeWidth={3}
+                        dot={{
+                          fill: "hsl(var(--gold))",
+                          strokeWidth: 2,
+                          r: 5,
+                        }}
+                        activeDot={{ r: 8, fill: "hsl(var(--gold))" }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <div className="h-64 flex items-center justify-center text-muted-foreground">
+                  Graficul apare după cel puțin 2 scanări completate.
+                </div>
+              )}
             </div>
           </div>
 
           {/* Quick Actions & Recent Scans */}
-          <div className="lg:col-span-1 space-y-6">
+          <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Quick Actions */}
             <div className="glass rounded-2xl p-6">
               <h3 className="text-lg font-semibold mb-4">Acțiuni Rapide</h3>
@@ -210,21 +290,47 @@ export default function Dashboard() {
             <div className="glass rounded-2xl p-6">
               <h3 className="text-lg font-semibold mb-4">Scanări Recente</h3>
               <div className="space-y-3">
-                {mockRecentScans.map((scan) => (
+                {scans.slice(0, 5).map((scan) => (
                   <Link
                     key={scan.id}
                     to={`/scanner/results/${scan.id}`}
                     className="flex items-center justify-between p-3 rounded-lg hover:bg-card/80 transition-colors"
                   >
                     <div>
-                      <p className="font-medium">{scan.date}</p>
+                      <p className="font-medium">{scan.business_name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {scan.platforms} platforme
+                        {format(new Date(scan.created_at), "d MMM yyyy", {
+                          locale: ro,
+                        })}
+                        {scan.status !== "completed" &&
+                          scan.status !== "failed" && (
+                            <span className="ml-2 text-primary">
+                              • În progres
+                            </span>
+                          )}
+                        {scan.status === "failed" && (
+                          <span className="ml-2 text-error">• Eșuat</span>
+                        )}
                       </p>
                     </div>
-                    <span className="text-lg font-bold font-mono text-gradient-gold">
-                      {scan.score}
-                    </span>
+                    {scan.surgical_score !== null ? (
+                      <div className="text-right">
+                        <span className="text-lg font-bold font-mono text-gradient-gold">
+                          {scan.surgical_score}
+                        </span>
+                        {scan.grade && (
+                          <p
+                            className={`text-xs font-medium ${gradeColor(
+                              scan.grade
+                            )}`}
+                          >
+                            {scan.grade}
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <span className="text-sm text-muted-foreground">—</span>
+                    )}
                   </Link>
                 ))}
               </div>
@@ -239,9 +345,13 @@ export default function Dashboard() {
             <div className="text-center md:text-left">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/10 border border-gold/30 mb-3">
                 <Sparkles className="h-4 w-4 text-gold" />
-                <span className="text-sm font-medium text-gold">Funcție Pro</span>
+                <span className="text-sm font-medium text-gold">
+                  Funcție Pro
+                </span>
               </div>
-              <h3 className="text-xl font-bold mb-2">Deblochează Scanări Nelimitate</h3>
+              <h3 className="text-xl font-bold mb-2">
+                Deblochează Scanări Nelimitate
+              </h3>
               <p className="text-muted-foreground">
                 Obține scanări nelimitate, istoric și rapoarte PDF cu Pro.
               </p>

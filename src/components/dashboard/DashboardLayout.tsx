@@ -19,6 +19,7 @@ import {
   User,
   CreditCard,
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -27,6 +28,7 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, profile, signOut } = useAuth();
 
   const navigation = [
     { name: "Panou", href: "/dashboard", icon: LayoutDashboard },
@@ -37,10 +39,19 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const isActive = (href: string) => location.pathname === href;
 
-  const handleLogout = () => {
-    // Will be replaced with Supabase auth
+  const handleLogout = async () => {
+    await signOut();
     navigate("/login");
   };
+
+  const displayName = profile?.full_name || user?.email?.split("@")[0] || "Utilizator";
+  const displayEmail = user?.email || "";
+  const initials = (profile?.full_name || "U")
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 
   return (
     <div className="min-h-screen bg-background">
@@ -76,16 +87,16 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="gap-2">
                 <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
-                  <User className="h-4 w-4 text-primary" />
+                  <span className="text-xs font-medium text-primary">{initials}</span>
                 </div>
-                <span className="hidden sm:inline">John Doe</span>
+                <span className="hidden sm:inline">{displayName}</span>
                 <ChevronDown className="h-4 w-4 text-muted-foreground" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
               <div className="px-2 py-1.5">
-                <p className="text-sm font-medium">John Doe</p>
-                <p className="text-xs text-muted-foreground">john@example.com</p>
+                <p className="text-sm font-medium">{displayName}</p>
+                <p className="text-xs text-muted-foreground">{displayEmail}</p>
               </div>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
