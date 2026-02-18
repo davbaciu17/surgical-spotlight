@@ -45,7 +45,7 @@ export function useScanStatus(scanId: string | undefined) {
   const query = useQuery({
     queryKey: ["scan-status", scanId],
     queryFn: async () => {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from("scan_runs")
         .select(
           "id, request_id, status, business_name, surgical_score, grade, created_at"
