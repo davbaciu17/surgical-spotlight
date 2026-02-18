@@ -1,3 +1,4 @@
+// Surgical AEO/GEO Dashboard
 import { Link } from "react-router-dom";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { SurgicalScore } from "@/components/dashboard/SurgicalScore";
