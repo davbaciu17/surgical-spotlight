@@ -46,11 +46,29 @@ export function useUserScans(userId: string | undefined) {
         .eq("user_id", userId!)
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return (data ?? []).map((row) => ({
-        ...row,
-        business_name: row.business_name ?? "Scanare",
-        status: mapDbStatus(row.status),
-      })) as UserScan[];
+
+      const TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes
+      const now = Date.now();
+
+      return (data ?? []).map((row) => {
+        let status = mapDbStatus(row.status);
+
+        // If a scan has been in-progress for more than 10 minutes, treat it as failed
+        const inProgress =
+          status !== "completed" && status !== "failed";
+        if (inProgress) {
+          const age = now - new Date(row.created_at).getTime();
+          if (age > TIMEOUT_MS) {
+            status = "failed";
+          }
+        }
+
+        return {
+          ...row,
+          business_name: row.business_name ?? "Scanare",
+          status,
+        };
+      }) as UserScan[];
     },
     enabled: !!userId,
   });

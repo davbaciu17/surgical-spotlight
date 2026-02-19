@@ -53,10 +53,23 @@ export function useScanStatus(scanId: string | undefined) {
         .eq("id", scanId!)
         .single();
       if (error) throw error;
+
+      let status = mapDbStatus(data.status ?? "pending");
+
+      // If a scan has been in-progress for more than 10 minutes, treat it as failed
+      const TIMEOUT_MS = 10 * 60 * 1000;
+      const inProgress = status !== "completed" && status !== "failed";
+      if (inProgress) {
+        const age = Date.now() - new Date(data.created_at).getTime();
+        if (age > TIMEOUT_MS) {
+          status = "failed";
+        }
+      }
+
       return {
         ...data,
         business_name: data.business_name ?? "Scanare",
-        status: mapDbStatus(data.status ?? "pending"),
+        status,
       } as ScanStatusData;
     },
     enabled: !!scanId,

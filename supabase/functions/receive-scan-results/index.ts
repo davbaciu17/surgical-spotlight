@@ -35,17 +35,26 @@ serve(async (req) => {
       });
     }
 
-    const finalStatus = status ?? "completed";
+    // Accept "failed", "error", or "stopped" from n8n as a failure signal
+    const FAILURE_STATUSES = ["failed", "error", "stopped", "cancelled"];
+    const isFailed = FAILURE_STATUSES.includes(status?.toLowerCase?.());
+    const finalStatus = isFailed ? "failed" : (status ?? "completed");
 
     // Update scan_runs
+    const updatePayload: Record<string, unknown> = {
+      status: finalStatus,
+      updated_at: new Date().toISOString(),
+    };
+
+    // Only set score/grade if not a failure
+    if (!isFailed) {
+      updatePayload.surgical_score = surgical_score ?? null;
+      updatePayload.grade = grade ?? null;
+    }
+
     const { error: updateError } = await supabase
       .from("scan_runs")
-      .update({
-        status: finalStatus,
-        surgical_score: surgical_score ?? null,
-        grade: grade ?? null,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updatePayload)
       .eq("request_id", request_id);
 
     if (updateError) {
