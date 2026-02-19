@@ -65,6 +65,45 @@ export type Database = {
         }
         Relationships: []
       }
+      surgical_queries: {
+        Row: {
+          created_at: string
+          id: string
+          mentions_business: string
+          position_rank: number
+          query_number: number
+          query_text: string
+          query_type: string
+          request_id: string
+          sentiment: string | null
+          surgical_score_contribution: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          mentions_business?: string
+          position_rank?: number
+          query_number: number
+          query_text?: string
+          query_type?: string
+          request_id: string
+          sentiment?: string | null
+          surgical_score_contribution?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          mentions_business?: string
+          position_rank?: number
+          query_number?: number
+          query_text?: string
+          query_type?: string
+          request_id?: string
+          sentiment?: string | null
+          surgical_score_contribution?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
