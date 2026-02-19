@@ -6,9 +6,10 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const N8N_WEBHOOK_URL = Deno.env.get("VITE_N8N_WEBHOOK_URL") || "https://cnick.app.n8n.cloud/webhook/surgical-aeo-analysis-v2";
+const N8N_WEBHOOK_URL = Deno.env.get("VITE_N8N_WEBHOOK_URL") || Deno.env.get("N8N_WEBHOOK_URL") || "https://cnick.app.n8n.cloud/webhook/surgical-aeo-analysis-v2";
 
 serve(async (req) => {
+  console.log("N8N_WEBHOOK_URL being used:", N8N_WEBHOOK_URL);
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
