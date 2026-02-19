@@ -9,10 +9,7 @@ export interface ScanRequest {
   competition: string;
 }
 
-export async function createScan(
-  userId: string,
-  data: ScanRequest
-): Promise<{ scanId: string; requestId: string }> {
+export async function createScan(userId: string, data: ScanRequest): Promise<{ scanId: string; requestId: string }> {
   const { data: sessionData } = await supabase.auth.getSession();
   const token = sessionData?.session?.access_token;
 
@@ -21,11 +18,11 @@ export async function createScan(
   }
 
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const response = await fetch(`${supabaseUrl}/functions/v1/trigger-scan`, {
+  const response = await fetch(`${supabaseUrl}/functions/v1/start-scan`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       business_name: data.business_name,
