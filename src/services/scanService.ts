@@ -1,5 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 
+const SUPABASE_URL = "https://hyavwkytezwjipyeggzf.supabase.co";
+
 export interface ScanRequest {
   business_name: string;
   niche: string;
@@ -17,8 +19,7 @@ export async function createScan(userId: string, data: ScanRequest): Promise<{ s
     throw new Error("Nu ești autentificat");
   }
 
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const response = await fetch(`${supabaseUrl}/functions/v1/trigger-scan`, {
+  const response = await fetch(`${SUPABASE_URL}/functions/v1/trigger-scan`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
