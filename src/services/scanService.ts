@@ -18,7 +18,7 @@ export async function createScan(userId: string, data: ScanRequest): Promise<{ s
   }
 
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const response = await fetch(`${supabaseUrl}/functions/v1/start-scan`, {
+  const response = await fetch(`${supabaseUrl}/functions/v1/trigger-scan`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
