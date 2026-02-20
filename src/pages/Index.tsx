@@ -1,12 +1,9 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/landing/HeroSection";
-import { SocialProofSection } from "@/components/landing/SocialProofSection";
-import { ProblemSection } from "@/components/landing/ProblemSection";
-import { FeaturesSection } from "@/components/landing/FeaturesSection";
 import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
-import { PricingSection } from "@/components/landing/PricingSection";
-import { FAQSection } from "@/components/landing/FAQSection";
+import { WhatWeMeasureSection } from "@/components/landing/WhatWeMeasureSection";
+import { SocialProofSection } from "@/components/landing/SocialProofSection";
 import { CTASection } from "@/components/landing/CTASection";
 
 const Index = () => {
@@ -15,12 +12,9 @@ const Index = () => {
       <Header />
       <main>
         <HeroSection />
-        <SocialProofSection />
-        <ProblemSection />
         <HowItWorksSection />
-        <FeaturesSection />
-        <PricingSection />
-        <FAQSection />
+        <WhatWeMeasureSection />
+        <SocialProofSection />
         <CTASection />
       </main>
       <Footer />

@@ -3,9 +3,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Check, Radar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
-import { ro } from "date-fns/locale";
-import type { ScanStatus } from "@/hooks/useScanStatus";
+import type { ScanStatus } from "@/hooks/useAnalysisPolling";
 
 interface ScanLoadingScreenProps {
   status: ScanStatus;
@@ -14,24 +12,21 @@ interface ScanLoadingScreenProps {
 }
 
 const statusLabels: Record<string, string> = {
-  pending: "Se inițializează analiza...",
-  generating: "Se generează 100+ întrebări AI...",
-  testing: "Se testează pe ChatGPT, Gemini, Perplexity...",
-  scoring: "Se calculează Scorul Surgical™...",
+  pending: "Se initializeaza analiza...",
+  generating: "Se genereaza 50 de intrebari AI...",
+  testing: "Se testeaza pe ChatGPT...",
 };
 
 const statusProgress: Record<string, number> = {
   pending: 5,
   generating: 25,
   testing: 60,
-  scoring: 85,
 };
 
 const statusSteps = [
-  { key: "pending", label: "Inițializare" },
+  { key: "pending", label: "Initializare" },
   { key: "generating", label: "Generare" },
   { key: "testing", label: "Testare" },
-  { key: "scoring", label: "Scoring" },
   { key: "completed", label: "Complet" },
 ];
 
@@ -39,41 +34,33 @@ const statusOrder: Record<string, number> = {
   pending: 0,
   generating: 1,
   testing: 2,
-  scoring: 3,
-  completed: 4,
+  completed: 3,
 };
 
 const feedMessages: Record<string, string[]> = {
   pending: [
     "Conectare la motoarele AI...",
-    "Verificare configurare analiză...",
-    "Inițializare sesiune de scanare...",
-    "Pregătire pipeline de date...",
+    "Verificare configurare analiza...",
+    "Initializare sesiune de scanare...",
+    "Pregatire pipeline de date...",
   ],
   generating: [
-    "Categorie DISCOVERY — 20 întrebări generate",
-    "Categorie COMPARISON — analiză competitori",
-    "Categorie REPUTATION — evaluare recenzii",
-    "Categorie EXPERTISE — verificare autoritate",
-    "Categorie TRANSACTIONAL — intenții de cumpărare",
-    "Optimizare formulări pentru context local...",
-    "Generare variante de întrebări...",
+    "Cautari Locale — intrebari generate",
+    "Comparatii — analiza competitori",
+    "Recomandari — evaluare recenzii",
+    "Solutii la Probleme — verificare autoritate",
+    "Produse Specifice — intentii de cumparare",
+    "Optimizare formulari pentru context local...",
+    "Generare variante de intrebari...",
   ],
   testing: [
-    "Testare ChatGPT-4o — procesare răspunsuri...",
-    "Testare Google Gemini — query în progres...",
-    "Testare Perplexity AI — analiză în curs...",
-    "Testare Claude — analiza menționărilor...",
-    "Verificare poziție în răspunsuri AI...",
-    "Extragere mențiuni din context...",
-    "Comparare rezultate între platforme...",
-  ],
-  scoring: [
-    "Calculare scor DISCOVERY: procesare...",
-    "Calculare scor COMPARISON: procesare...",
-    "Calculare scor REPUTATION: procesare...",
-    "Agregare date din toate platformele...",
-    "Generare notă finală Surgical™...",
+    "Testare ChatGPT — procesare raspunsuri...",
+    "Analiza intrebare #12 din 50...",
+    "Verificare pozitie in raspunsuri AI...",
+    "Extragere mentiuni din context...",
+    "Analiza intrebare #28 din 50...",
+    "Detectare competitori mentionati...",
+    "Analiza intrebare #41 din 50...",
   ],
 };
 
@@ -94,7 +81,7 @@ function FloatingParticle({ delay, duration, x, y, size }: { delay: number; dura
   );
 }
 
-export function ScanLoadingScreen({ status, businessName, createdAt }: ScanLoadingScreenProps) {
+export function ScanLoadingScreen({ status, businessName }: ScanLoadingScreenProps) {
   const [feedLines, setFeedLines] = useState<{ id: number; text: string; time: string }[]>([]);
   const feedIdRef = useRef(0);
   const currentStepIndex = statusOrder[status] ?? 0;
@@ -140,19 +127,9 @@ export function ScanLoadingScreen({ status, businessName, createdAt }: ScanLoadi
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
       {/* Header */}
-      <div className="mb-8">
-        <Link
-          to="/dashboard"
-          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-4"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Înapoi la Dashboard
-        </Link>
-        <h1 className="text-3xl font-bold mb-2">Analiză în Progres</h1>
-        <p className="text-muted-foreground">
-          {businessName} •{" "}
-          {format(new Date(createdAt), "d MMM yyyy, HH:mm", { locale: ro })}
-        </p>
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-bold mb-2">Analiza in Progres</h1>
+        <p className="text-muted-foreground">{businessName}</p>
       </div>
 
       {/* Central Radar Visualization */}
@@ -183,12 +160,7 @@ export function ScanLoadingScreen({ status, businessName, createdAt }: ScanLoadi
           />
 
           {/* Radar sweep */}
-          <div
-            className="absolute inset-6 rounded-full overflow-hidden"
-            style={{
-              background: "transparent",
-            }}
-          >
+          <div className="absolute inset-6 rounded-full overflow-hidden">
             <motion.div
               className="absolute inset-0 rounded-full"
               style={{
@@ -202,27 +174,18 @@ export function ScanLoadingScreen({ status, businessName, createdAt }: ScanLoadi
           {/* Inner glow circle */}
           <div className="absolute inset-12 rounded-full bg-card border border-border/50 flex items-center justify-center glow-blue">
             <motion.div
-              animate={{
-                scale: [1, 1.1, 1],
-              }}
+              animate={{ scale: [1, 1.1, 1] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
-              <Radar
-                className={`h-14 w-14 ${
-                  status === "scoring" ? "text-gold" : "text-primary"
-                } transition-colors duration-1000`}
-              />
+              <Radar className="h-14 w-14 text-primary transition-colors duration-1000" />
             </motion.div>
           </div>
 
-          {/* Status-dependent outer ring glow */}
+          {/* Outer ring glow */}
           <motion.div
             className="absolute -inset-2 rounded-full pointer-events-none"
             style={{
-              background:
-                status === "scoring"
-                  ? "radial-gradient(circle, hsl(43 100% 50% / 0.08) 0%, transparent 70%)"
-                  : "radial-gradient(circle, hsl(217 100% 50% / 0.08) 0%, transparent 70%)",
+              background: "radial-gradient(circle, hsl(217 100% 50% / 0.08) 0%, transparent 70%)",
             }}
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity }}
@@ -241,7 +204,7 @@ export function ScanLoadingScreen({ status, businessName, createdAt }: ScanLoadi
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
           >
-            {statusLabels[status] || "Se procesează..."}
+            {statusLabels[status] || "Se proceseaza..."}
           </motion.p>
         </AnimatePresence>
       </div>
@@ -249,7 +212,7 @@ export function ScanLoadingScreen({ status, businessName, createdAt }: ScanLoadi
       {/* Progress Bar */}
       <div className="glass rounded-2xl p-6 mb-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-muted-foreground">Progres analiză</span>
+          <span className="text-sm text-muted-foreground">Progres analiza</span>
           <span className="font-mono text-sm font-semibold text-primary">
             {progress}%
           </span>
@@ -264,7 +227,6 @@ export function ScanLoadingScreen({ status, businessName, createdAt }: ScanLoadi
             animate={{ width: `${progress}%` }}
             transition={{ duration: 1, ease: "easeOut" }}
           >
-            {/* Shimmer overlay */}
             <div className="absolute inset-0 animate-shimmer rounded-full" />
           </motion.div>
         </div>
@@ -359,11 +321,14 @@ export function ScanLoadingScreen({ status, businessName, createdAt }: ScanLoadi
 
       {/* Bottom Info */}
       <p className="text-center text-sm text-muted-foreground mb-4">
-        Timp estimat: 8-22 minute • Poți părăsi această pagină în siguranță
+        Timp estimat: 3-5 minute • Poti parasi aceasta pagina in siguranta
       </p>
       <div className="text-center">
         <Button variant="outline" asChild>
-          <Link to="/dashboard">Înapoi la Dashboard</Link>
+          <Link to="/analyze">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Inapoi la Analiza
+          </Link>
         </Button>
       </div>
     </div>

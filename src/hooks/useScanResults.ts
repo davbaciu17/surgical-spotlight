@@ -27,7 +27,7 @@ export function useScanResults(requestId: string | undefined) {
       const { data, error } = await db
         .from("surgical_queries")
         .select(
-          "query_number, query_type, query_text, mentions_business, sentiment, position_rank, surgical_score_contribution"
+          "query_number, query_type, query_text, llm_response, mentions_business, sentiment, position_rank, surgical_score_contribution"
         )
         .eq("request_id", requestId!)
         .order("query_number");

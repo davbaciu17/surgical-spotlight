@@ -7,21 +7,14 @@ import { motion, AnimatePresence } from "framer-motion";
 export function Header() {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const isAuthPage = location.pathname === "/login" || location.pathname === "/signup";
-  const isDashboard = location.pathname.startsWith("/dashboard") || 
-                       location.pathname.startsWith("/scanner") ||
-                       location.pathname.startsWith("/companies") ||
-                       location.pathname.startsWith("/recommendations") ||
-                       location.pathname.startsWith("/settings");
+  const isLanding = location.pathname === "/";
 
-  if (isDashboard) return null;
-
-  const navLinks = [
-    { href: "#features", label: "Funcționalități" },
-    { href: "#how-it-works", label: "Cum funcționează" },
-    { href: "#pricing", label: "Prețuri" },
-    { href: "#faq", label: "FAQ" },
-  ];
+  const navLinks = isLanding
+    ? [
+        { href: "#how-it-works", label: "Cum functioneaza" },
+        { href: "#what-we-measure", label: "Ce Masuram" },
+      ]
+    : [];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
@@ -33,40 +26,37 @@ export function Header() {
           <span className="text-xl font-bold">Surgical.AI</span>
         </Link>
 
-        {!isAuthPage && (
-          <>
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-8">
-              {navLinks.map((link) => (
-                <a 
-                  key={link.href}
-                  href={link.href} 
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </nav>
-
-            {/* Desktop CTAs */}
-            <div className="hidden md:flex items-center gap-3">
-              <Button variant="ghost" asChild>
-                <Link to="/login">Conectare</Link>
-              </Button>
-              <Button variant="gold" asChild>
-                <Link to="/signup">Începe Gratuit</Link>
-              </Button>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              className="md:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center gap-8">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </>
-        )}
+              {link.label}
+            </a>
+          ))}
+        </nav>
+
+        {/* Desktop CTA */}
+        <div className="hidden md:flex items-center gap-3">
+          <Button variant="gold" asChild>
+            <Link to="/analyze">Analizeaza Gratuit</Link>
+          </Button>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          {mobileMenuOpen ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <Menu className="h-6 w-6" />
+          )}
+        </button>
       </div>
 
       {/* Mobile Menu */}
@@ -89,12 +79,9 @@ export function Header() {
                   {link.label}
                 </a>
               ))}
-              <div className="flex flex-col gap-2 pt-4 border-t border-border/50">
-                <Button variant="ghost" asChild>
-                  <Link to="/login">Conectare</Link>
-                </Button>
-                <Button variant="gold" asChild>
-                  <Link to="/signup">Începe Gratuit</Link>
+              <div className="pt-4 border-t border-border/50">
+                <Button variant="gold" className="w-full" asChild>
+                  <Link to="/analyze">Analizeaza Gratuit</Link>
                 </Button>
               </div>
             </nav>

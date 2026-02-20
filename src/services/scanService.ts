@@ -1,7 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
 
-const SUPABASE_URL = "https://hyavwkytezwjipyeggzf.supabase.co";
-
 export interface ScanRequest {
   business_name: string;
   niche: string;
@@ -11,20 +9,24 @@ export interface ScanRequest {
   competition: string;
 }
 
-export async function createScan(userId: string, data: ScanRequest): Promise<{ scanId: string; requestId: string }> {
-  const { data: sessionData } = await supabase.auth.getSession();
-  const token = sessionData?.session?.access_token;
+export async function createScan(data: ScanRequest): Promise<{ scanId: string; requestId: string }> {
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-  if (!token) {
-    throw new Error("Nu ești autentificat");
+  // Include auth token if user is logged in (optional)
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    apikey: anonKey,
+  };
+
+  const { data: sessionData } = await supabase.auth.getSession();
+  if (sessionData?.session?.access_token) {
+    headers.Authorization = `Bearer ${sessionData.session.access_token}`;
   }
 
-  const response = await fetch(`${SUPABASE_URL}/functions/v1/trigger-scan`, {
+  const response = await fetch(`${supabaseUrl}/functions/v1/start-scan`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+    headers,
     body: JSON.stringify({
       business_name: data.business_name,
       niche: data.niche,
