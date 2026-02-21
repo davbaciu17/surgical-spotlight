@@ -49,7 +49,7 @@ export default function Analyze() {
   const onSubmit = async (data: ScannerFormValues) => {
     setIsSubmitting(true);
     try {
-      const { requestId } = await createScan(data);
+      const { requestId } = await createScan(data as import("@/services/scanService").ScanRequest);
       toast({
         title: "Analiza a fost initiata!",
         description: "Procesarea dureaza 3-5 minute.",
