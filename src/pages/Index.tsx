@@ -4,7 +4,7 @@ import { HeroSection } from "@/components/landing/HeroSection";
 import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
 import { ScorePreviewSection } from "@/components/landing/ScorePreviewSection";
 import { PricingSection } from "@/components/landing/PricingSection";
-import { ScarcityBar } from "@/components/ui/ScarcityBar";
+import { FloatingCTA } from "@/components/ui/FloatingCTA";
 
 const Index = () => {
   return (
@@ -17,7 +17,7 @@ const Index = () => {
         <PricingSection />
       </main>
       <Footer />
-      <ScarcityBar />
+      <FloatingCTA />
     </div>
   );
 };
