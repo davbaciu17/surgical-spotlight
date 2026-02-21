@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { ScanLoadingState } from "@/components/dashboard/ScanLoadingState";
 import {
   TrendingUp,
   TrendingDown,
@@ -208,18 +209,7 @@ export default function DashboardOverview() {
   if (inProgressScans.length > 0 && completedScans.length === 0) {
     return (
       <AppLayout>
-        <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 text-center">
-          <div className="mb-8">
-            <ScoreGauge score={0} size="lg" loading />
-          </div>
-          <h2 className="text-2xl font-bold font-syne mb-3">Analiză în curs...</h2>
-          <p className="font-plex mb-2" style={{ color: "#6B6B75" }}>
-            Se testează vizibilitatea afacerii tale în AI.
-          </p>
-          <p className="text-sm font-plex" style={{ color: "#6B6B75" }}>
-            Poți închide pagina — te notificăm pe email când analiza este completă.
-          </p>
-        </div>
+        <ScanLoadingState />
       </AppLayout>
     );
   }
