@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { llms } from "@/data/llmData";
 import { LLMWindow } from "./LLMWindow";
@@ -10,18 +9,11 @@ interface LLMCarouselProps {
   onIndexChange: (index: number, direction: number) => void;
 }
 
-const variants = {
-  enter: (dir: number) => ({ x: dir > 0 ? "100%" : "-100%", opacity: 0 }),
-  center: { x: 0, opacity: 1 },
-  exit: (dir: number) => ({ x: dir > 0 ? "-100%" : "100%", opacity: 0 }),
-};
-
 export function LLMCarousel({ currentIndex, direction, onIndexChange }: LLMCarouselProps) {
   const [isPaused, setIsPaused] = useState(false);
   const indexRef = useRef(currentIndex);
   indexRef.current = currentIndex;
 
-  // Pointer tracking for swipe
   const swipeStartX = useRef<number | null>(null);
 
   const goNext = () => {
@@ -39,7 +31,7 @@ export function LLMCarousel({ currentIndex, direction, onIndexChange }: LLMCarou
     if (isPaused) return;
     const id = setInterval(goNext, 5000);
     return () => clearInterval(id);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPaused]);
 
   // Keyboard left/right
@@ -50,7 +42,7 @@ export function LLMCarousel({ currentIndex, direction, onIndexChange }: LLMCarou
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const currentLLM = llms[currentIndex];
@@ -89,9 +81,13 @@ export function LLMCarousel({ currentIndex, direction, onIndexChange }: LLMCarou
         <ChevronRight className="h-4 w-4" />
       </button>
 
-      {/* Window container — overflow hidden clips slide animation */}
+      {/*
+        Window container — all 4 windows rendered simultaneously with position:absolute.
+        Fixed min-height prevents layout shift from typing animation or mount/unmount.
+        Active window toggled via opacity + scale only (no layout-triggering properties).
+      */}
       <div
-        className="overflow-hidden rounded-xl"
+        className="rounded-xl relative overflow-hidden min-h-[370px] sm:min-h-[320px]"
         onPointerDown={(e) => { swipeStartX.current = e.clientX; }}
         onPointerUp={(e) => {
           if (swipeStartX.current === null) return;
@@ -101,19 +97,26 @@ export function LLMCarousel({ currentIndex, direction, onIndexChange }: LLMCarou
           swipeStartX.current = null;
         }}
       >
-        <AnimatePresence initial={false} custom={direction} mode="popLayout">
-          <motion.div
-            key={currentIndex}
-            custom={direction}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ type: "tween", duration: 0.4, ease: "easeInOut" }}
-          >
-            <LLMWindow llm={currentLLM} />
-          </motion.div>
-        </AnimatePresence>
+        {llms.map((llm, i) => {
+          const isActive = i === currentIndex;
+          return (
+            <div
+              key={llm.id}
+              style={{
+                position: "absolute",
+                inset: 0,
+                opacity: isActive ? 1 : 0,
+                transform: isActive ? "scale(1)" : "scale(0.985)",
+                transition: "opacity 0.38s ease, transform 0.38s ease",
+                pointerEvents: isActive ? "auto" : "none",
+                zIndex: isActive ? 1 : 0,
+                willChange: "opacity, transform",
+              }}
+            >
+              <LLMWindow llm={llm} isActive={isActive} />
+            </div>
+          );
+        })}
       </div>
 
       {/* Dot indicators */}
@@ -123,7 +126,7 @@ export function LLMCarousel({ currentIndex, direction, onIndexChange }: LLMCarou
             key={llm.id}
             onClick={() => onIndexChange(i, i > currentIndex ? 1 : -1)}
             aria-label={`Go to ${llm.name}`}
-            className="rounded-full transition-all duration-400"
+            className="rounded-full transition-all duration-300"
             style={{
               width: i === currentIndex ? "28px" : "8px",
               height: "8px",
@@ -134,21 +137,17 @@ export function LLMCarousel({ currentIndex, direction, onIndexChange }: LLMCarou
         ))}
       </div>
 
-      {/* LLM name labels under dots */}
+      {/* LLM name label */}
       <div className="flex justify-center mt-3">
-        <AnimatePresence mode="wait">
-          <motion.span
-            key={currentLLM.name}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="text-xs font-medium font-plex"
-            style={{ color: currentLLM.color }}
-          >
-            {currentLLM.name}
-          </motion.span>
-        </AnimatePresence>
+        <span
+          className="text-xs font-medium font-plex"
+          style={{
+            color: currentLLM.color,
+            transition: "color 0.3s ease",
+          }}
+        >
+          {currentLLM.name}
+        </span>
       </div>
     </div>
   );

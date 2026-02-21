@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { LLMConfig } from "@/data/llmData";
 
@@ -88,17 +88,30 @@ function ItemPrefix({ llm, index }: { llm: LLMConfig; index: number }) {
 
 interface LLMWindowProps {
   llm: LLMConfig;
+  isActive?: boolean;
 }
 
-export function LLMWindow({ llm }: LLMWindowProps) {
+export function LLMWindow({ llm, isActive = true }: LLMWindowProps) {
   const [phase, setPhase] = useState<"typing" | "response">("typing");
+  // Detect mobile once at mount — used to skip typing animation and item stagger
+  const isMobile = useRef(typeof window !== "undefined" && window.innerWidth < 768);
 
-  // Reset and show typing indicator on every mount (triggered by key change in carousel)
+  // Trigger typing → response sequence when window becomes active; reset when inactive
   useEffect(() => {
-    setPhase("typing");
-    const t = setTimeout(() => setPhase("response"), 1600);
-    return () => clearTimeout(t);
-  }, []);
+    if (isActive) {
+      if (isMobile.current) {
+        // On mobile: skip typing dots, show content immediately
+        setPhase("response");
+      } else {
+        setPhase("typing");
+        const t = setTimeout(() => setPhase("response"), 1600);
+        return () => clearTimeout(t);
+      }
+    } else {
+      // Reset so the sequence replays next time this window becomes active
+      setPhase("typing");
+    }
+  }, [isActive]);
 
   const textColor = "#ECECEC";
   const mutedColor = "#8E8EA0";
@@ -207,7 +220,7 @@ export function LLMWindow({ llm }: LLMWindowProps) {
                       key={i}
                       initial={{ opacity: 0, x: -4 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.14, duration: 0.28 }}
+                      transition={{ delay: isMobile.current ? 0 : i * 0.14, duration: 0.28 }}
                       className="flex items-start gap-2"
                     >
                       <ItemPrefix llm={llm} index={i} />
@@ -226,7 +239,7 @@ export function LLMWindow({ llm }: LLMWindowProps) {
                   <motion.div
                     initial={{ opacity: 0, x: -4 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: llm.items.length * 0.14 + 0.18, duration: 0.35 }}
+                    transition={{ delay: isMobile.current ? 0 : llm.items.length * 0.14 + 0.18, duration: 0.35 }}
                     className="flex items-start gap-2"
                   >
                     <ItemPrefix llm={llm} index={llm.items.length} />
@@ -261,7 +274,7 @@ export function LLMWindow({ llm }: LLMWindowProps) {
                     <motion.p
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      transition={{ delay: (llm.items.length + 1) * 0.14 + 0.3 }}
+                      transition={{ delay: isMobile.current ? 0 : (llm.items.length + 1) * 0.14 + 0.3 }}
                       className="text-xs pt-2 mt-1"
                       style={{
                         color: `${mutedColor}70`,
