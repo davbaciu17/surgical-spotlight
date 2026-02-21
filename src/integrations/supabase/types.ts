@@ -131,6 +131,45 @@ export type Database = {
         }
         Relationships: []
       }
+      surgical_results: {
+        Row: {
+          business_name: string | null
+          category_breakdown: Json | null
+          created_at: string
+          grade: string | null
+          id: string
+          request_id: string
+          surgical_score: number | null
+          top_competitors: Json | null
+          total_mentioned: number | null
+          total_recommended: number | null
+        }
+        Insert: {
+          business_name?: string | null
+          category_breakdown?: Json | null
+          created_at?: string
+          grade?: string | null
+          id?: string
+          request_id: string
+          surgical_score?: number | null
+          top_competitors?: Json | null
+          total_mentioned?: number | null
+          total_recommended?: number | null
+        }
+        Update: {
+          business_name?: string | null
+          category_breakdown?: Json | null
+          created_at?: string
+          grade?: string | null
+          id?: string
+          request_id?: string
+          surgical_score?: number | null
+          top_competitors?: Json | null
+          total_mentioned?: number | null
+          total_recommended?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
