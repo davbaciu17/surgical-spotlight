@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 serve(async (req) => {
@@ -18,38 +18,50 @@ serve(async (req) => {
     );
 
     const body = await req.json();
-    console.log("Received n8n callback:", JSON.stringify(body));
 
-    const {
-      request_id,
-      status,
-      surgical_score,
-      grade,
-      queries, // array of query objects
-    } = body;
+    const { request_id, status, surgical_score, grade, queries } = body;
 
-    if (!request_id) {
-      return new Response(JSON.stringify({ error: "Missing request_id" }), {
+    // Validate request_id
+    if (!request_id || typeof request_id !== "string" || request_id.length > 100) {
+      return new Response(JSON.stringify({ error: "Invalid request_id" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Accept "failed", "error", or "stopped" from n8n as a failure signal
+    // Verify request_id exists
+    const { data: existingScan } = await supabase
+      .from("scan_runs")
+      .select("id")
+      .eq("request_id", request_id)
+      .single();
+
+    if (!existingScan) {
+      return new Response(JSON.stringify({ error: "Unknown request_id" }), {
+        status: 404,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    console.log("Received callback for request_id:", request_id, "status:", status);
+
     const FAILURE_STATUSES = ["failed", "error", "stopped", "cancelled"];
     const isFailed = FAILURE_STATUSES.includes(status?.toLowerCase?.());
     const finalStatus = isFailed ? "failed" : (status ?? "completed");
 
-    // Update scan_runs
     const updatePayload: Record<string, unknown> = {
       status: finalStatus,
       updated_at: new Date().toISOString(),
     };
 
-    // Only set score/grade if not a failure
     if (!isFailed) {
-      updatePayload.surgical_score = surgical_score ?? null;
-      updatePayload.grade = grade ?? null;
+      // Validate surgical_score range
+      const score = typeof surgical_score === "number" ? Math.min(100, Math.max(0, surgical_score)) : null;
+      updatePayload.surgical_score = score;
+
+      // Validate grade
+      const validGrades = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "F"];
+      updatePayload.grade = (typeof grade === "string" && validGrades.includes(grade)) ? grade : null;
     }
 
     const { error: updateError } = await supabase
@@ -58,25 +70,28 @@ serve(async (req) => {
       .eq("request_id", request_id);
 
     if (updateError) {
-      console.error("Error updating scan_runs:", updateError);
-      return new Response(JSON.stringify({ error: updateError.message }), {
+      console.error("Error updating scan_runs for request_id:", request_id);
+      return new Response(JSON.stringify({ error: "Update failed" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Insert queries if provided
+    // Insert queries if provided (with validation)
     if (Array.isArray(queries) && queries.length > 0) {
-      // Try to insert into surgical_queries (table created by n8n or pre-existing)
-      const rows = queries.map((q: any, i: number) => ({
+      const maxQueries = 50;
+      const limitedQueries = queries.slice(0, maxQueries);
+
+      const rows = limitedQueries.map((q: Record<string, unknown>, i: number) => ({
         request_id,
-        query_number: q.query_number ?? i + 1,
-        query_type: q.query_type ?? "service_search",
-        query_text: q.query_text ?? "",
-        mentions_business: q.mentions_business ?? "none",
-        sentiment: q.sentiment ?? null,
-        position_rank: q.position_rank ?? 0,
-        surgical_score_contribution: q.surgical_score_contribution ?? 0,
+        query_number: typeof q.query_number === "number" ? q.query_number : i + 1,
+        query_type: typeof q.query_type === "string" ? q.query_type.slice(0, 100) : "service_search",
+        query_text: typeof q.query_text === "string" ? q.query_text.slice(0, 2000) : "",
+        mentions_business: typeof q.mentions_business === "string" ? q.mentions_business.slice(0, 50) : "none",
+        sentiment: typeof q.sentiment === "string" ? q.sentiment.slice(0, 50) : null,
+        position_rank: typeof q.position_rank === "number" ? Math.max(0, q.position_rank) : 0,
+        surgical_score_contribution: typeof q.surgical_score_contribution === "number"
+          ? Math.min(100, Math.max(0, q.surgical_score_contribution)) : 0,
       }));
 
       const { error: queriesError } = await supabase
@@ -84,21 +99,20 @@ serve(async (req) => {
         .upsert(rows, { onConflict: "request_id,query_number" });
 
       if (queriesError) {
-        console.warn("Could not insert surgical_queries:", queriesError.message);
-        // Non-fatal — the main score is already saved
+        console.warn("Could not insert queries for request_id:", request_id);
       }
     }
 
-    console.log(`Scan ${request_id} updated to status=${finalStatus}, score=${surgical_score}`);
+    console.log("Scan", request_id, "updated to status:", finalStatus);
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Unexpected error:", error);
+    console.error("Unexpected error in receive-scan-results");
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
+      JSON.stringify({ error: "Internal server error" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
