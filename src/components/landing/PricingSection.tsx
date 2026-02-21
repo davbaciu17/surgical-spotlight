@@ -19,7 +19,6 @@ const plans = [
     ctaSubtext: "Nu necesită card",
     ctaLink: "/signup",
     popular: false,
-    orderClass: "order-2 md:order-1",
     features: [
       { text: "1 scanare (o singură dată)", included: true },
       { text: "1 companie", included: true },
@@ -43,7 +42,6 @@ const plans = [
     ctaLink: "/signup",
     popular: true,
     badge: "Cel mai popular",
-    orderClass: "order-1 md:order-2",
     features: [
       { text: "5 scanări pe lună", included: true },
       { text: "Până la 3 companii", included: true },
@@ -68,7 +66,6 @@ const plans = [
     ctaSubtext: "Facturare în lei",
     ctaLink: "/contact",
     popular: false,
-    orderClass: "order-3 md:order-3",
     features: [
       { text: "Scanări nelimitate", included: true },
       { text: "Companii nelimitate", included: true },
@@ -190,7 +187,7 @@ export function PricingSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`relative flex flex-col rounded-2xl ${plan.orderClass} ${
+                className={`relative flex flex-col rounded-2xl ${
                   isTratament ? "md:-my-4" : ""
                 }`}
                 style={{
@@ -313,9 +310,9 @@ export function PricingSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <div className="overflow-x-auto rounded-xl" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
-            <table className="w-full min-w-[560px] border-collapse">
-              {/* Header row */}
+          {/* Desktop table */}
+          <div className="hidden md:block overflow-x-auto rounded-xl" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+            <table className="w-full border-collapse">
               <thead>
                 <tr style={{ background: "#1A1A1E" }}>
                   <th className="py-3 px-4 text-left text-xs font-semibold font-plex text-muted-foreground w-[40%]">
@@ -354,6 +351,47 @@ export function PricingSection() {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile stacked comparison */}
+          <div className="md:hidden space-y-3">
+            {tableRows.map((row, ri) => (
+              <div
+                key={ri}
+                className="rounded-lg p-3"
+                style={{
+                  background: "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(255,255,255,0.04)",
+                }}
+              >
+                <p className="text-xs font-plex font-semibold mb-2" style={{ color: "rgba(255,255,255,0.5)" }}>
+                  {row.label}
+                </p>
+                <div className="grid grid-cols-3 gap-2">
+                  {plans.map((plan, ci) => {
+                    const val = row.values[ci];
+                    return (
+                      <div key={plan.id} className="text-center">
+                        <p className="text-[10px] font-syne font-bold mb-1" style={{ color: plan.popular ? "#00E5A0" : "rgba(255,255,255,0.4)" }}>
+                          {plan.name}
+                        </p>
+                        {typeof val === "boolean" ? (
+                          val ? (
+                            <Check className="h-3.5 w-3.5 mx-auto" style={{ color: "#00E5A0" }} />
+                          ) : (
+                            <span className="text-muted-foreground/40 font-mono text-xs">—</span>
+                          )
+                        ) : (
+                          <span className="text-xs font-plex" style={{ color: plan.popular ? "#00E5A0" : "rgba(255,255,255,0.55)" }}>
+                            {val}
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         </motion.div>
       </div>
