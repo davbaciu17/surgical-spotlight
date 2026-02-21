@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   TrendingUp,
@@ -112,12 +111,7 @@ export default function DashboardOverview() {
   const latestScan = completedScans[0] ?? null;
   const previousScan = completedScans[1] ?? null;
 
-  // Redirect to onboarding if user has no scans
-  useEffect(() => {
-    if (!isLoading && scans.length === 0) {
-      navigate("/onboarding");
-    }
-  }, [isLoading, scans.length, navigate]);
+  // No longer auto-redirect to onboarding — dashboard always shows
 
   const { results, queries, isLoading: resultsLoading } = useScanResults(
     latestScan?.request_id
@@ -230,8 +224,35 @@ export default function DashboardOverview() {
     );
   }
 
-  // ── No scans (shouldn't happen — redirected by useEffect above) ──
-  if (!latestScan) return null;
+  // ── No completed scans — show empty state with CTA ──
+  if (!latestScan) {
+    return (
+      <AppLayout>
+        <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 text-center">
+          <div
+            className="flex h-20 w-20 items-center justify-center rounded-2xl mb-6"
+            style={{ background: "rgba(0,229,160,0.10)", border: "1px solid rgba(0,229,160,0.25)" }}
+          >
+            <Radar className="h-10 w-10" style={{ color: "#00E5A0" }} />
+          </div>
+          <h2 className="text-2xl font-bold font-syne mb-3">
+            Bine ai venit în Surgical!
+          </h2>
+          <p className="font-plex mb-6 max-w-md" style={{ color: "#6B6B75" }}>
+            {scans.length > 0
+              ? "Scanările tale anterioare nu au fost finalizate. Pornește o analiză nouă pentru a vedea rezultatele."
+              : "Pornește prima ta analiză de vizibilitate AI pentru a descoperi cum apare brandul tău în platformele AI."}
+          </p>
+          <Button variant="gold" size="lg" className="font-plex" asChild>
+            <Link to="/onboarding">
+              <Sparkles className="h-5 w-5 mr-2" />
+              {scans.length > 0 ? "Scanare Nouă" : "Începe Prima Scanare"}
+            </Link>
+          </Button>
+        </div>
+      </AppLayout>
+    );
+  }
 
   const lastScanDate = format(
     new Date(latestScan.created_at),
