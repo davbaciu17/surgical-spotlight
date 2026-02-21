@@ -51,11 +51,11 @@ export function ScoreGauge({
 
     const timer = setTimeout(() => {
       animate(dashOffset, targetOffset, {
-        duration: 1.8,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        duration: 1.2,
+        ease: "easeOut",
       });
       animate(opacity, 1, {
-        duration: 0.3,
+        duration: 0.2,
       });
     }, delay * 1000);
 
