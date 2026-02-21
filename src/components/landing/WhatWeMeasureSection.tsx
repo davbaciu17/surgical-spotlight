@@ -4,27 +4,27 @@ import { BarChart3, Hash, MessageCircle, Users } from "lucide-react";
 const metrics = [
   {
     icon: Hash,
-    title: "Rata de Mentionare",
+    title: "Rata de Menționaire",
     description:
-      "Cat de des mentioneaza AI-ul afacerea ta cand clientii pun intrebari relevante.",
+      "Cât de des menționează AI-ul afacerea ta când clienții pun întrebări relevante.",
   },
   {
     icon: BarChart3,
-    title: "Pozitia in Raspunsuri",
+    title: "Poziția în Răspunsuri",
     description:
-      "Pe ce pozitie apari cand esti mentionat — primul, al treilea sau ultimul.",
+      "Pe ce poziție apari când ești menționat — primul, al treilea sau ultimul.",
   },
   {
     icon: MessageCircle,
-    title: "Sentimentul Mentiunilor",
+    title: "Sentimentul Mențiunilor",
     description:
-      "Daca AI-ul te recomanda pozitiv, neutru sau iti asociaza recenzii negative.",
+      "Dacă AI-ul te recomandă pozitiv, neutru sau îți asociază recenzii negative.",
   },
   {
     icon: Users,
-    title: "Vizibilitate vs Competitie",
+    title: "Vizibilitate vs Competiție",
     description:
-      "Cum te compari cu competitorii tai in recomandarile ChatGPT.",
+      "Cum te compari cu competitorii tăi în recomandările ChatGPT.",
   },
 ];
 
@@ -33,9 +33,9 @@ export function WhatWeMeasureSection() {
     <section id="what-we-measure" className="py-24 border-t border-border/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight">Ce masuram</h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">
-            Analizam 4 dimensiuni ale vizibilitatii tale in raspunsurile AI
+          <h2 className="font-syne text-3xl md:text-4xl font-bold mb-4 tracking-tight">Ce măsurăm</h2>
+          <p className="text-muted-foreground max-w-xl mx-auto font-plex">
+            Analizăm 4 dimensiuni ale vizibilității tale în răspunsurile AI
           </p>
         </div>
 
@@ -49,11 +49,14 @@ export function WhatWeMeasureSection() {
               transition={{ duration: 0.5, delay: i * 0.1 }}
             >
               <div className="glass rounded-2xl p-6 h-full card-hover">
-                <div className="w-10 h-10 rounded-lg border border-foreground/10 bg-foreground/5 flex items-center justify-center mb-4">
-                  <metric.icon className="h-5 w-5 text-foreground/60" />
+                <div
+                  className="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
+                  style={{ background: "rgba(0,229,160,0.08)", border: "1px solid rgba(0,229,160,0.2)" }}
+                >
+                  <metric.icon className="h-5 w-5 text-gold" />
                 </div>
-                <h3 className="text-base font-semibold mb-2">{metric.title}</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-base font-semibold mb-2 font-plex">{metric.title}</h3>
+                <p className="text-sm text-muted-foreground font-plex">
                   {metric.description}
                 </p>
               </div>

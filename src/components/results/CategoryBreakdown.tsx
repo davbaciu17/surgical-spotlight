@@ -120,11 +120,11 @@ export function CategoryBreakdown({ queries }: CategoryBreakdownProps) {
                           className="flex items-start gap-2 p-2 rounded-lg bg-background/50"
                         >
                           <span
-                            className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 ${
-                              mentioned
-                                ? "bg-foreground/15 text-foreground"
-                                : "bg-foreground/10 text-foreground/30"
-                            }`}
+                            className="mt-0.5 w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0"
+                            style={{
+                              background: mentioned ? "rgba(0,229,160,0.15)" : "rgba(255,59,92,0.10)",
+                              color: mentioned ? "#00E5A0" : "#FF3B5C",
+                            }}
                           >
                             {mentioned ? "\u2713" : "\u2717"}
                           </span>
@@ -133,13 +133,12 @@ export function CategoryBreakdown({ queries }: CategoryBreakdownProps) {
                             <div className="flex items-center gap-3 mt-1">
                               {q.sentiment && (
                                 <span
-                                  className={`text-xs ${
-                                    q.sentiment === "positive"
-                                      ? "text-foreground/70"
-                                      : q.sentiment === "negative"
-                                      ? "text-foreground/35"
-                                      : "text-muted-foreground"
-                                  }`}
+                                  className="text-xs"
+                                  style={{
+                                    color: q.sentiment === "positive" ? "#00E5A0"
+                                      : q.sentiment === "negative" ? "#FF3B5C"
+                                      : "#A0A0AB"
+                                  }}
                                 >
                                   {q.sentiment === "positive"
                                     ? "Pozitiv"

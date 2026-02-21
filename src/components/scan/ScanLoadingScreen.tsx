@@ -68,7 +68,8 @@ const feedMessages: Record<string, string[]> = {
 function FloatingParticle({ delay, duration, x, y, size }: { delay: number; duration: number; x: number; y: number; size: number }) {
   return (
     <motion.div
-      className="absolute rounded-full bg-primary/30"
+      className="absolute rounded-full"
+    style={{ backgroundColor: "rgba(0,229,160,0.25)" }}
       style={{ width: size, height: size }}
       initial={{ x, y, opacity: 0 }}
       animate={{
@@ -144,17 +145,20 @@ export function ScanLoadingScreen({ status, businessName }: ScanLoadingScreenPro
 
           {/* Outer pulsing rings */}
           <motion.div
-            className="absolute inset-0 rounded-full border border-primary/20"
+            className="absolute inset-0 rounded-full"
+            style={{ border: "1px solid rgba(0,229,160,0.2)" }}
             animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.1, 0.3] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
-            className="absolute inset-4 rounded-full border border-primary/30"
+            className="absolute inset-4 rounded-full"
+            style={{ border: "1px solid rgba(0,229,160,0.3)" }}
             animate={{ scale: [1, 1.1, 1], opacity: [0.4, 0.15, 0.4] }}
             transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
           />
           <motion.div
-            className="absolute inset-8 rounded-full border border-accent/20"
+            className="absolute inset-8 rounded-full"
+            style={{ border: "1px solid rgba(0,184,212,0.15)" }}
             animate={{ scale: [1, 1.08, 1], opacity: [0.3, 0.1, 0.3] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
           />
@@ -164,7 +168,7 @@ export function ScanLoadingScreen({ status, businessName }: ScanLoadingScreenPro
             <motion.div
               className="absolute inset-0 rounded-full"
               style={{
-                background: `conic-gradient(from 0deg, transparent 0deg, hsl(0 0% 98% / 0.2) 40deg, transparent 80deg)`,
+                background: `conic-gradient(from 0deg, transparent 0deg, rgba(0,229,160,0.15) 40deg, transparent 80deg)`,
               }}
               animate={{ rotate: 360 }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
@@ -177,7 +181,7 @@ export function ScanLoadingScreen({ status, businessName }: ScanLoadingScreenPro
               animate={{ scale: [1, 1.1, 1] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
-              <Radar className="h-14 w-14 text-primary transition-colors duration-1000" />
+              <Radar className="h-14 w-14 text-gold transition-colors duration-1000" />
             </motion.div>
           </div>
 
@@ -185,7 +189,7 @@ export function ScanLoadingScreen({ status, businessName }: ScanLoadingScreenPro
           <motion.div
             className="absolute -inset-2 rounded-full pointer-events-none"
             style={{
-              background: "radial-gradient(circle, hsl(0 0% 98% / 0.06) 0%, transparent 70%)",
+              background: "radial-gradient(circle, rgba(0,229,160,0.06) 0%, transparent 70%)",
             }}
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity }}

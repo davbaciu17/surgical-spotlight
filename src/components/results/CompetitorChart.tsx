@@ -36,7 +36,7 @@ export function CompetitorChart({
       transition={{ duration: 0.5, delay: 0.3 }}
       className="glass rounded-2xl p-6 mb-8"
     >
-      <h2 className="text-xl font-bold mb-6">Tu vs. Competitie</h2>
+      <h2 className="text-xl font-semibold mb-6 font-plex">Tu vs. Competiție</h2>
       <div className="h-[280px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -69,11 +69,7 @@ export function CompetitorChart({
               {chartData.map((entry, index) => (
                 <Cell
                   key={index}
-                  fill={
-                    entry.isBusiness
-                      ? "hsl(0, 0%, 90%)"
-                      : "hsl(0, 0%, 30%)"
-                  }
+                  fill={entry.isBusiness ? "#00E5A0" : "#2A2A32"}
                 />
               ))}
             </Bar>
@@ -82,11 +78,11 @@ export function CompetitorChart({
       </div>
       <div className="flex items-center gap-4 mt-4 text-xs text-muted-foreground justify-center">
         <div className="flex items-center gap-1.5">
-          <div className="w-3 h-3 rounded-sm bg-foreground/90" />
+          <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: "#00E5A0" }} />
           <span>Afacerea ta</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-3 h-3 rounded-sm bg-foreground/30" />
+          <div className="w-3 h-3 rounded-sm bg-[#2A2A32]" />
           <span>Competitori</span>
         </div>
       </div>

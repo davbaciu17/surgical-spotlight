@@ -28,18 +28,18 @@ import { useUserScans } from "@/hooks/useUserScans";
 import { format } from "date-fns";
 import { ro } from "date-fns/locale";
 
-const gradeColor = (grade: string | null) => {
+const gradeColor = (grade: string | null): string => {
   switch (grade) {
     case "A":
     case "A+":
-      return "text-success";
+      return "text-[#00E5A0]";
     case "B":
     case "B+":
-      return "text-primary";
+      return "text-[#00B8D4]";
     case "C":
-      return "text-warning";
+      return "text-[#FFB020]";
     default:
-      return "text-error";
+      return "text-[#FF3B5C]";
   }
 };
 
@@ -119,7 +119,7 @@ export default function Dashboard() {
         {/* Welcome Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold">Bine ai revenit, {firstName}</h1>
+            <h1 className="text-3xl font-bold font-syne">Bine ai revenit, {firstName}</h1>
             {lastScanDate && (
               <p className="text-muted-foreground mt-1">
                 <span className="flex items-center gap-2">
@@ -167,15 +167,15 @@ export default function Dashboard() {
                     <div className="mt-6 flex items-center gap-2">
                       {scoreChange > 0 ? (
                         <>
-                          <TrendingUp className="h-4 w-4 text-success" />
-                          <span className="text-success font-medium">
+                          <TrendingUp className="h-4 w-4 text-[#00E5A0]" />
+                          <span className="text-[#00E5A0] font-medium">
                             +{scoreChange} față de ultima scanare
                           </span>
                         </>
                       ) : scoreChange < 0 ? (
                         <>
-                          <TrendingUp className="h-4 w-4 text-error rotate-180" />
-                          <span className="text-error font-medium">
+                          <TrendingUp className="h-4 w-4 text-[#FF3B5C] rotate-180" />
+                          <span className="text-[#FF3B5C] font-medium">
                             {scoreChange} față de ultima scanare
                           </span>
                         </>
@@ -238,14 +238,14 @@ export default function Dashboard() {
                       <Line
                         type="monotone"
                         dataKey="score"
-                        stroke="hsl(var(--primary))"
+                        stroke="#00E5A0"
                         strokeWidth={3}
                         dot={{
-                          fill: "hsl(var(--gold))",
+                          fill: "#00E5A0",
                           strokeWidth: 2,
                           r: 5,
                         }}
-                        activeDot={{ r: 8, fill: "hsl(var(--gold))" }}
+                        activeDot={{ r: 8, fill: "#00E5A0" }}
                       />
                     </LineChart>
                   </ResponsiveContainer>
@@ -266,10 +266,11 @@ export default function Dashboard() {
               <div className="space-y-3">
                 <Link
                   to="/scanner"
-                  className="flex items-center justify-between p-3 rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors group"
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-gold/10 transition-colors group"
+                  style={{ background: "rgba(0,229,160,0.07)" }}
                 >
                   <span className="flex items-center gap-3">
-                    <Radar className="h-5 w-5 text-primary" />
+                    <Radar className="h-5 w-5 text-gold" />
                     <span className="font-medium">Scanare Completă</span>
                   </span>
                   <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
@@ -305,12 +306,12 @@ export default function Dashboard() {
                         })}
                         {scan.status !== "completed" &&
                           scan.status !== "failed" && (
-                            <span className="ml-2 text-primary">
+                            <span className="ml-2 text-[#00B8D4]">
                               • În progres
                             </span>
                           )}
                         {scan.status === "failed" && (
-                          <span className="ml-2 text-error">• Eșuat</span>
+                          <span className="ml-2 text-[#FF3B5C]">• Eșuat</span>
                         )}
                       </p>
                     </div>
