@@ -1,14 +1,11 @@
-import { useEffect } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState, useEffect, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useScanResults } from "./useScanResults";
 
-export type ScanStatus =
-  | "pending"
-  | "generating"
-  | "testing"
-  | "completed"
-  | "failed";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const db = supabase as any;
+
+export type ScanStatus = "pending" | "generating" | "testing" | "completed" | "failed" | "timeout";
 
 export interface ScanRunData {
   id: string;
@@ -20,114 +17,91 @@ export interface ScanRunData {
   created_at: string;
 }
 
-function mapDbStatus(dbStatus: string): ScanStatus {
-  switch (dbStatus) {
-    case "pending":
-      return "pending";
-    case "running":
-    case "generating_queries":
-      return "generating";
-    case "testing":
-      return "testing";
-    case "completed":
-      return "completed";
-    case "failed":
-      return "failed";
-    default:
-      return "pending";
-  }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const db = supabase as any;
+const TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes
 
 export function useAnalysisPolling(requestId: string | undefined) {
-  const queryClient = useQueryClient();
+  const [timedOut, setTimedOut] = useState(false);
 
-  // Poll scan_runs by request_id
-  const statusQuery = useQuery({
-    queryKey: ["analysis-status", requestId],
+  // 1) Fetch scan_runs row for metadata (business_name, created_at)
+  const scanQuery = useQuery({
+    queryKey: ["analysis-scan", requestId],
     queryFn: async () => {
       const { data, error } = await db
         .from("scan_runs")
-        .select(
-          "id, request_id, status, business_name, surgical_score, grade, created_at"
-        )
+        .select("id, request_id, status, business_name, surgical_score, grade, created_at")
         .eq("request_id", requestId!)
-        .single();
+        .maybeSingle();
       if (error) throw error;
-
-      let status = mapDbStatus(data.status ?? "pending");
-
-      // Timeout after 10 minutes
-      const TIMEOUT_MS = 10 * 60 * 1000;
-      const inProgress = status !== "completed" && status !== "failed";
-      if (inProgress) {
-        const age = Date.now() - new Date(data.created_at).getTime();
-        if (age > TIMEOUT_MS) {
-          status = "failed";
-        }
-      }
-
-      return {
-        ...data,
-        business_name: data.business_name ?? "Analiza",
-        status,
-      } as ScanRunData;
+      return data as ScanRunData | null;
     },
     enabled: !!requestId,
+  });
+
+  // 2) Poll surgical_results every 5s until data appears
+  const resultsQuery = useQuery({
+    queryKey: ["scan-results-poll", requestId],
+    queryFn: async () => {
+      const { data, error } = await db
+        .from("surgical_results")
+        .select("id, request_id, business_name, surgical_score, grade, category_breakdown, top_competitors, total_mentioned, total_recommended")
+        .eq("request_id", requestId!)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!requestId && !timedOut,
     refetchInterval: (query) => {
-      const status = query.state.data?.status;
-      if (status === "completed" || status === "failed") return false;
-      return 5_000; // Poll every 5s while in progress
+      if (query.state.data) return false; // stop polling once we have results
+      return 5_000;
     },
   });
 
-  // Supabase Realtime for instant updates
+  // 3) Fetch surgical_queries once results exist
+  const queriesQuery = useQuery({
+    queryKey: ["scan-queries", requestId],
+    queryFn: async () => {
+      const { data, error } = await db
+        .from("surgical_queries")
+        .select("query_number, query_type, query_text, llm_response, mentions_business, sentiment, position_rank, surgical_score_contribution")
+        .eq("request_id", requestId!)
+        .order("query_number");
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!requestId && !!resultsQuery.data,
+  });
+
+  // Timeout logic
   useEffect(() => {
-    if (!requestId) return;
-    const scanId = statusQuery.data?.id;
-    if (!scanId) return;
+    if (!requestId || resultsQuery.data) return;
 
-    const channel = supabase
-      .channel(`analysis-${scanId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "scan_runs",
-          filter: `id=eq.${scanId}`,
-        },
-        () => {
-          queryClient.invalidateQueries({
-            queryKey: ["analysis-status", requestId],
-          });
-        }
-      )
-      .subscribe();
+    const createdAt = scanQuery.data?.created_at;
+    if (!createdAt) return;
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [requestId, statusQuery.data?.id, queryClient]);
+    const age = Date.now() - new Date(createdAt).getTime();
+    if (age > TIMEOUT_MS) {
+      setTimedOut(true);
+      return;
+    }
 
-  const isCompleted = statusQuery.data?.status === "completed";
-  const isFailed = statusQuery.data?.status === "failed";
+    const remaining = TIMEOUT_MS - age;
+    const timer = setTimeout(() => setTimedOut(true), remaining);
+    return () => clearTimeout(timer);
+  }, [requestId, scanQuery.data?.created_at, resultsQuery.data]);
 
-  // Fetch results only when scan is completed
-  const { results, queries, isLoading: resultsLoading } = useScanResults(
-    isCompleted ? requestId : undefined
-  );
+  const hasResults = !!resultsQuery.data;
+  const isCompleted = hasResults;
+  const isFailed = scanQuery.data?.status === "failed";
 
   return {
-    scan: statusQuery.data,
-    results,
-    queries,
-    isLoading: statusQuery.isLoading,
-    isResultsLoading: resultsLoading && isCompleted,
-    isWaiting: !isCompleted && !isFailed,
+    scan: scanQuery.data,
+    results: resultsQuery.data,
+    queries: queriesQuery.data ?? [],
+    isLoading: scanQuery.isLoading,
+    isWaiting: !hasResults && !timedOut && !isFailed,
     isCompleted,
     isFailed,
+    isTimedOut: timedOut && !hasResults,
+    requestId,
   };
 }

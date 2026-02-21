@@ -24,6 +24,8 @@ export default function ScanResults() {
     isWaiting,
     isCompleted,
     isFailed,
+    isTimedOut,
+    requestId: reqId,
   } = useAnalysisPolling(requestId);
 
   // Initial loading
@@ -85,6 +87,31 @@ export default function ScanResults() {
                 </Link>
               </Button>
             </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Timed out
+  if (isTimedOut) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="pt-24 pb-16">
+          <div className="container mx-auto px-4 py-16 text-center max-w-lg">
+            <AlertTriangle className="h-12 w-12 text-foreground/40 mx-auto mb-4" />
+            <h1 className="text-2xl font-bold mb-2">Analiza durează mai mult decât de obicei</h1>
+            <p className="text-muted-foreground mb-4">
+              Reveniți mai târziu. Puteți salva acest link pentru a verifica rezultatele.
+            </p>
+            <p className="text-xs text-muted-foreground/60 font-mono mb-6">
+              Request ID: {requestId}
+            </p>
+            <Button variant="outline" asChild>
+              <Link to="/analyze">Încearcă o analiză nouă</Link>
+            </Button>
           </div>
         </main>
         <Footer />

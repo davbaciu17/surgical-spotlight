@@ -3,8 +3,5 @@ project_id = "tjjuruhrrggxvuczvmxp"
 [functions.trigger-scan]
 verify_jwt = false
 
-[functions.receive-scan-results]
-verify_jwt = false
-
 [auth.email]
 enable_confirmations = false
