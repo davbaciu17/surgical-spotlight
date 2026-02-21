@@ -97,7 +97,7 @@
     background-color: #0A0A0B;
   }
 
-  /* Subtle noise grain overlay for depth — fixed position over entire app */
+  /* Film grain overlay — more visible, navarro-style */
   body::before {
     content: '';
     position: fixed;
@@ -107,10 +107,10 @@
     height: 100%;
     pointer-events: none;
     z-index: 9999;
-    opacity: 0.028;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C%2Fsvg%3E");
+    opacity: 0.048;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C%2Fsvg%3E");
     background-repeat: repeat;
-    background-size: 128px 128px;
+    background-size: 160px 160px;
   }
 
   /* Display headlines — Syne */
@@ -158,13 +158,15 @@
 }
 
 @layer components {
-  /* Glass Morphism — subtle on dark surfaces */
+  /* Solid dark cards — navarro-style, no frosted blur */
   .glass {
-    @apply bg-card/60 backdrop-blur-xl border border-border/60;
+    background: rgba(14, 14, 16, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.06);
   }
 
   .glass-strong {
-    @apply bg-card/80 backdrop-blur-2xl border border-border/80;
+    background: rgba(17, 17, 19, 0.99);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   /* Clinical green glow effects */
@@ -207,17 +209,26 @@
     background-clip: text;
   }
 
-  /* Faint grid — very subtle, adds texture to sections */
+  /* Faint grid — barely visible, pure texture */
   .bg-grid {
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-    background-size: 60px 60px;
+      linear-gradient(rgba(255, 255, 255, 0.008) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.008) 1px, transparent 1px);
+    background-size: 72px 72px;
   }
 
-  /* Hero glow — accent green radial light behind content */
+  /* Hero glow — very faint, navarro-style clean dark */
   .bg-hero-glow {
-    background: radial-gradient(ellipse 70% 50% at 50% -10%, rgba(0, 229, 160, 0.07) 0%, transparent 70%);
+    background: radial-gradient(ellipse 60% 35% at 50% -5%, rgba(0, 229, 160, 0.035) 0%, transparent 65%);
+  }
+
+  /* Floating CTA pulse ring */
+  @keyframes float-cta-ring {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.18); opacity: 0; }
+  }
+  .animate-float-cta-ring {
+    animation: float-cta-ring 2s ease-out infinite;
   }
 
   /* Generic radial glow */

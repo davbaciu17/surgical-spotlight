@@ -7,6 +7,7 @@ import { WhatWeMeasureSection } from "@/components/landing/WhatWeMeasureSection"
 import { ScorePreviewSection } from "@/components/landing/ScorePreviewSection";
 import { PricingSection } from "@/components/landing/PricingSection";
 import { FAQSection } from "@/components/landing/FAQSection";
+import { FloatingCTA } from "@/components/ui/FloatingCTA";
 
 const Index = () => {
   return (
@@ -22,6 +23,7 @@ const Index = () => {
         <FAQSection />
       </main>
       <Footer />
+      <FloatingCTA />
     </div>
   );
 };

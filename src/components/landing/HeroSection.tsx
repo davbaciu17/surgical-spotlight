@@ -6,25 +6,8 @@ import { motion } from "framer-motion";
 export function HeroSection() {
   return (
     <section className="relative pt-32 pb-24 overflow-hidden">
-      {/* Atmospheric background — radial hero glow from top */}
+      {/* Very faint top glow — navarro-style minimal */}
       <div className="absolute inset-0 bg-hero-glow pointer-events-none" />
-
-      {/* Very faint grid for texture */}
-      <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" />
-
-      {/* Ambient green light blob — behind headline area */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          top: "-10%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "900px",
-          height: "600px",
-          background: "radial-gradient(ellipse at center, rgba(0,229,160,0.055) 0%, rgba(0,184,212,0.02) 40%, transparent 70%)",
-          filter: "blur(40px)",
-        }}
-      />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
