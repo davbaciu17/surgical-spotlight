@@ -58,9 +58,9 @@ export function ScorePreviewSection() {
 
   return (
     <section id="score-preview" className="py-24 relative overflow-hidden bg-section-spotlight scalpel-top">
-      {/* Green spotlight blob — center */}
+      {/* Green spotlight blob — center (simplified for perf) */}
       <div
-        className="absolute pointer-events-none"
+        className="absolute pointer-events-none hidden md:block"
         style={{
           width: "700px",
           height: "500px",
@@ -71,9 +71,9 @@ export function ScorePreviewSection() {
           filter: "blur(60px)",
         }}
       />
-      {/* Cyan secondary blob — top right */}
+      {/* Cyan secondary blob — top right (hidden on mobile for perf) */}
       <div
-        className="absolute pointer-events-none"
+        className="absolute pointer-events-none hidden md:block"
         style={{
           width: "400px",
           height: "300px",
@@ -88,10 +88,10 @@ export function ScorePreviewSection() {
         {/* Headline */}
         <motion.div
           className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.4 }}
         >
           <h2 className="font-syne text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             Ce vei afla după{" "}
@@ -105,13 +105,12 @@ export function ScorePreviewSection() {
         {/* Preview card — ref triggers all score animations */}
         <motion.div
           ref={cardRef}
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="max-w-3xl mx-auto relative"
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="max-w-3xl mx-auto relative will-change-transform"
         >
-          {/* The mock results panel */}
           <div className="glass rounded-2xl border border-white/8 p-6 md:p-8">
             {/* Score hero row */}
             <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 pb-8 border-b border-white/6">
@@ -212,9 +211,9 @@ export function ScorePreviewSection() {
             </div>
           </div>
 
-          {/* Decorative glow behind card */}
+          {/* Decorative glow behind card (hidden on mobile) */}
           <div
-            className="absolute -inset-8 -z-10 pointer-events-none"
+            className="absolute -inset-8 -z-10 pointer-events-none hidden md:block"
             style={{
               background: "radial-gradient(ellipse at center, rgba(0,229,160,0.04) 0%, transparent 70%)",
               filter: "blur(30px)",

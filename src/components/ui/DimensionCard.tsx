@@ -47,10 +47,10 @@ export function DimensionCard({
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay }}
-      className={`bg-[#1A1A1E] border border-white/6 rounded-xl p-4 flex flex-col gap-3 ${className}`}
+      transition={{ duration: 0.3, delay }}
+      className={`bg-[#1A1A1E] border border-white/6 rounded-xl p-4 flex flex-col gap-3 will-change-transform ${className}`}
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-2">
