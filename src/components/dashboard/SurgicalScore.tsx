@@ -33,11 +33,10 @@ export function SurgicalScore({ score, size = "md", animated = true }: SurgicalS
   }, [score, animated]);
 
   const getScoreColor = () => {
-    if (score >= 90) return { stroke: "url(#goldGradient)", text: "text-gradient-gold", label: "Surgical Precision" };
-    if (score >= 70) return { stroke: "hsl(var(--success))", text: "text-success", label: "Excellent" };
-    if (score >= 50) return { stroke: "hsl(var(--primary))", text: "text-primary", label: "Good" };
-    if (score >= 30) return { stroke: "hsl(var(--warning))", text: "text-warning", label: "Fair" };
-    return { stroke: "hsl(var(--error))", text: "text-error", label: "Poor" };
+    if (score >= 70) return { stroke: "hsl(0, 0%, 98%)", text: "text-foreground", label: "Excelent" };
+    if (score >= 50) return { stroke: "hsl(0, 0%, 70%)", text: "text-foreground/80", label: "Bun" };
+    if (score >= 30) return { stroke: "hsl(0, 0%, 45%)", text: "text-muted-foreground", label: "Mediu" };
+    return { stroke: "hsl(0, 0%, 30%)", text: "text-muted-foreground/70", label: "Slab" };
   };
 
   const { stroke, text, label } = getScoreColor();
@@ -62,7 +61,7 @@ export function SurgicalScore({ score, size = "md", animated = true }: SurgicalS
             cy="50%"
             r={radius}
             stroke="currentColor"
-            strokeWidth={size === "lg" ? 10 : size === "md" ? 8 : 6}
+            strokeWidth={size === "lg" ? 6 : size === "md" ? 5 : 4}
             fill="none"
             className="text-border"
           />
@@ -71,31 +70,24 @@ export function SurgicalScore({ score, size = "md", animated = true }: SurgicalS
             cy="50%"
             r={radius}
             stroke={stroke}
-            strokeWidth={size === "lg" ? 10 : size === "md" ? 8 : 6}
+            strokeWidth={size === "lg" ? 6 : size === "md" ? 5 : 4}
             fill="none"
             strokeLinecap="round"
             strokeDasharray={circumference}
             strokeDashoffset={offset}
             className="transition-all duration-1000 ease-out"
             style={{
-              filter: score >= 70 ? "drop-shadow(0 0 10px rgba(255, 184, 0, 0.4))" : undefined,
+              filter: score >= 70 ? "drop-shadow(0 0 12px rgba(255, 255, 255, 0.15))" : undefined,
             }}
           />
-          <defs>
-            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="hsl(43, 100%, 50%)" />
-              <stop offset="50%" stopColor="hsl(30, 100%, 50%)" />
-              <stop offset="100%" stopColor="hsl(43, 100%, 50%)" />
-            </linearGradient>
-          </defs>
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className={`font-bold font-mono ${textSize} ${score >= 90 ? "text-gradient-gold" : text}`}>
+          <span className={`font-bold font-mono ${textSize} ${text}`}>
             {displayScore}
           </span>
         </div>
       </div>
-      <p className={`font-medium ${labelSize} ${score >= 90 ? "text-gradient-gold" : text}`}>
+      <p className={`font-medium ${labelSize} ${text}`}>
         {label}
       </p>
     </div>

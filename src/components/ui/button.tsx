@@ -9,16 +9,16 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]",
+        default: "bg-foreground text-background hover:bg-foreground/90 hover:shadow-lg hover:shadow-white/10 hover:scale-[1.02] active:scale-[0.98]",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline: "border border-border bg-transparent hover:bg-card hover:border-primary/50 hover:text-primary",
+        outline: "border border-border bg-transparent hover:bg-foreground/5 hover:border-foreground/30",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-card hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
-        gold: "bg-gradient-to-r from-gold to-gold-muted text-gold-foreground font-bold hover:shadow-lg hover:shadow-gold/30 hover:scale-[1.02] active:scale-[0.98]",
-        goldOutline: "border-2 border-gold text-gold hover:bg-gold/10 hover:shadow-lg hover:shadow-gold/20",
+        ghost: "hover:bg-card hover:text-foreground",
+        link: "text-foreground underline-offset-4 hover:underline",
+        gold: "bg-foreground text-background font-bold hover:bg-foreground/90 hover:shadow-lg hover:shadow-white/10 hover:scale-[1.02] active:scale-[0.98]",
+        goldOutline: "border border-foreground/30 text-foreground hover:bg-foreground/5 hover:border-foreground/60",
         hero: "bg-transparent border border-foreground/20 text-foreground hover:bg-foreground/5 hover:border-foreground/40",
-        accent: "bg-accent text-accent-foreground hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/25",
+        accent: "bg-foreground/10 text-foreground border border-foreground/20 hover:bg-foreground/15 hover:border-foreground/30",
       },
       size: {
         default: "h-10 px-5 py-2",

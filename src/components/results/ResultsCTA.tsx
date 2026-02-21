@@ -66,8 +66,8 @@ export function ResultsCTA({ shareUrl }: ResultsCTAProps) {
         >
           {copied ? (
             <>
-              <Check className="h-4 w-4 text-emerald-500" />
-              <span className="text-emerald-500">Link copiat!</span>
+              <Check className="h-4 w-4 text-foreground" />
+              <span className="text-foreground">Link copiat!</span>
             </>
           ) : (
             <>

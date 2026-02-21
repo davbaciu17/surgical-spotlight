@@ -21,13 +21,13 @@ export const GRADE_INTERPRETATIONS: Record<string, string> = {
   A: "Vizibilitate excelenta — AI-ul te recomanda activ",
 };
 
-// Score color classes by grade
+// Score color classes by grade (monochrome)
 export const GRADE_COLORS: Record<string, { text: string; bg: string; border: string; ring: string }> = {
-  F: { text: "text-red-500", bg: "bg-red-500", border: "border-red-500/30", ring: "text-red-500" },
-  D: { text: "text-orange-500", bg: "bg-orange-500", border: "border-orange-500/30", ring: "text-orange-500" },
-  C: { text: "text-yellow-500", bg: "bg-yellow-500", border: "border-yellow-500/30", ring: "text-yellow-500" },
-  B: { text: "text-blue-500", bg: "bg-blue-500", border: "border-blue-500/30", ring: "text-blue-500" },
-  A: { text: "text-emerald-500", bg: "bg-emerald-500", border: "border-emerald-500/30", ring: "text-emerald-500" },
+  F: { text: "text-foreground/30", bg: "bg-foreground/20", border: "border-foreground/10", ring: "text-foreground/30" },
+  D: { text: "text-foreground/40", bg: "bg-foreground/25", border: "border-foreground/15", ring: "text-foreground/40" },
+  C: { text: "text-foreground/55", bg: "bg-foreground/35", border: "border-foreground/20", ring: "text-foreground/55" },
+  B: { text: "text-foreground/75", bg: "bg-foreground/55", border: "border-foreground/30", ring: "text-foreground/75" },
+  A: { text: "text-foreground", bg: "bg-foreground", border: "border-foreground/40", ring: "text-foreground" },
 };
 
 // Get grade from score
@@ -39,12 +39,12 @@ export function getGradeFromScore(score: number): string {
   return "F";
 }
 
-// Get color for a percentage (progress bars)
+// Get color for a percentage (progress bars — monochrome)
 export function getPercentageColor(pct: number): string {
-  if (pct >= 80) return "bg-emerald-500";
-  if (pct >= 60) return "bg-yellow-500";
-  if (pct >= 20) return "bg-orange-500";
-  return "bg-red-500";
+  if (pct >= 80) return "bg-foreground";
+  if (pct >= 60) return "bg-foreground/70";
+  if (pct >= 20) return "bg-foreground/45";
+  return "bg-foreground/25";
 }
 
 // Check if business is mentioned

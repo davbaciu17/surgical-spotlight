@@ -40,7 +40,7 @@ function ResponseBubble({
       regex.test(part) ? (
         <mark
           key={i}
-          className="bg-emerald-500/20 text-emerald-400 rounded px-0.5"
+          className="bg-foreground/15 text-foreground rounded px-0.5"
         >
           {part}
         </mark>
@@ -54,21 +54,21 @@ function ResponseBubble({
     <div
       className={`rounded-xl border p-4 ${
         mentioned
-          ? "border-emerald-500/30 bg-emerald-500/5"
-          : "border-red-500/20 bg-red-500/5"
+          ? "border-foreground/20 bg-foreground/5"
+          : "border-border bg-background/50"
       }`}
     >
       {/* Status badge */}
       <div className="flex items-center gap-2 mb-3">
         {mentioned ? (
-          <div className="flex items-center gap-1.5 text-emerald-500">
+          <div className="flex items-center gap-1.5 text-foreground">
             <CheckCircle2 className="h-4 w-4" />
             <span className="text-xs font-medium">
               Mentionat{query.position_rank ? ` pe pozitia #${query.position_rank}` : ""}
             </span>
           </div>
         ) : (
-          <div className="flex items-center gap-1.5 text-red-400">
+          <div className="flex items-center gap-1.5 text-foreground/40">
             <AlertTriangle className="h-4 w-4" />
             <span className="text-xs font-medium">
               Nu apari in acest raspuns

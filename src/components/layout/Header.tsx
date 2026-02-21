@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Target, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -17,13 +17,13 @@ export function Header() {
     : [];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-gold">
-            <Target className="h-5 w-5 text-gold-foreground" />
+        <Link to="/" className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-md border border-foreground/20 bg-foreground/5">
+            <span className="text-sm font-bold">S</span>
           </div>
-          <span className="text-xl font-bold">Surgical.AI</span>
+          <span className="text-lg font-bold tracking-tight">Surgical.AI</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -41,7 +41,7 @@ export function Header() {
 
         {/* Desktop CTA */}
         <div className="hidden md:flex items-center gap-3">
-          <Button variant="gold" asChild>
+          <Button variant="gold" size="sm" asChild>
             <Link to="/analyze">Analizeaza Gratuit</Link>
           </Button>
         </div>
@@ -51,11 +51,7 @@ export function Header() {
           className="md:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
-          {mobileMenuOpen ? (
-            <X className="h-6 w-6" />
-          ) : (
-            <Menu className="h-6 w-6" />
-          )}
+          {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
@@ -66,7 +62,7 @@ export function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur-xl"
+            className="md:hidden border-t border-border/40 bg-background/95 backdrop-blur-xl"
           >
             <nav className="container mx-auto px-4 py-4 space-y-4">
               {navLinks.map((link) => (
@@ -79,7 +75,7 @@ export function Header() {
                   {link.label}
                 </a>
               ))}
-              <div className="pt-4 border-t border-border/50">
+              <div className="pt-4 border-t border-border/40">
                 <Button variant="gold" className="w-full" asChild>
                   <Link to="/analyze">Analizeaza Gratuit</Link>
                 </Button>

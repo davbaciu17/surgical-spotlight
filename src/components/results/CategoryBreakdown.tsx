@@ -122,8 +122,8 @@ export function CategoryBreakdown({ queries }: CategoryBreakdownProps) {
                           <span
                             className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 ${
                               mentioned
-                                ? "bg-emerald-500/20 text-emerald-500"
-                                : "bg-red-500/20 text-red-500"
+                                ? "bg-foreground/15 text-foreground"
+                                : "bg-foreground/10 text-foreground/30"
                             }`}
                           >
                             {mentioned ? "\u2713" : "\u2717"}
@@ -135,9 +135,9 @@ export function CategoryBreakdown({ queries }: CategoryBreakdownProps) {
                                 <span
                                   className={`text-xs ${
                                     q.sentiment === "positive"
-                                      ? "text-emerald-500"
+                                      ? "text-foreground/70"
                                       : q.sentiment === "negative"
-                                      ? "text-red-500"
+                                      ? "text-foreground/35"
                                       : "text-muted-foreground"
                                   }`}
                                 >

@@ -71,8 +71,8 @@ export function CompetitorChart({
                   key={index}
                   fill={
                     entry.isBusiness
-                      ? "hsl(217, 100%, 55%)"
-                      : "hsl(var(--muted-foreground) / 0.3)"
+                      ? "hsl(0, 0%, 90%)"
+                      : "hsl(0, 0%, 30%)"
                   }
                 />
               ))}
@@ -82,11 +82,11 @@ export function CompetitorChart({
       </div>
       <div className="flex items-center gap-4 mt-4 text-xs text-muted-foreground justify-center">
         <div className="flex items-center gap-1.5">
-          <div className="w-3 h-3 rounded-sm bg-[hsl(217,100%,55%)]" />
+          <div className="w-3 h-3 rounded-sm bg-foreground/90" />
           <span>Afacerea ta</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-3 h-3 rounded-sm bg-muted-foreground/30" />
+          <div className="w-3 h-3 rounded-sm bg-foreground/30" />
           <span>Competitori</span>
         </div>
       </div>

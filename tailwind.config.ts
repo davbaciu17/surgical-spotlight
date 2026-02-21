@@ -114,8 +114,8 @@ export default {
           "50%": { opacity: "0.7" },
         },
         "glow-pulse": {
-          "0%, 100%": { boxShadow: "0 0 20px rgba(0, 102, 255, 0.3)" },
-          "50%": { boxShadow: "0 0 40px rgba(0, 102, 255, 0.5)" },
+          "0%, 100%": { boxShadow: "0 0 20px rgba(255, 255, 255, 0.15)" },
+          "50%": { boxShadow: "0 0 40px rgba(255, 255, 255, 0.25)" },
         },
       },
       animation: {
@@ -129,10 +129,10 @@ export default {
         "glow-pulse": "glow-pulse 2s ease-in-out infinite",
       },
       backgroundImage: {
-        "gradient-gold": "linear-gradient(135deg, hsl(43, 100%, 50%) 0%, hsl(30, 100%, 50%) 50%, hsl(43, 100%, 50%) 100%)",
-        "gradient-blue": "linear-gradient(135deg, hsl(217, 100%, 50%) 0%, hsl(189, 100%, 50%) 100%)",
-        "gradient-dark": "linear-gradient(180deg, hsl(222, 47%, 6%) 0%, hsl(222, 47%, 11%) 100%)",
-        "gradient-radial": "radial-gradient(ellipse at top, hsl(217, 100%, 50%, 0.15) 0%, transparent 50%)",
+        "gradient-gold": "linear-gradient(135deg, hsl(0, 0%, 95%) 0%, hsl(0, 0%, 80%) 50%, hsl(0, 0%, 95%) 100%)",
+        "gradient-blue": "linear-gradient(135deg, hsl(0, 0%, 85%) 0%, hsl(0, 0%, 65%) 100%)",
+        "gradient-dark": "linear-gradient(180deg, hsl(0, 0%, 2%) 0%, hsl(0, 0%, 6%) 100%)",
+        "gradient-radial": "radial-gradient(ellipse at top, hsl(0, 0%, 98%, 0.08) 0%, transparent 50%)",
       },
     },
   },

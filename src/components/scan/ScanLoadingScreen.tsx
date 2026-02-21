@@ -164,7 +164,7 @@ export function ScanLoadingScreen({ status, businessName }: ScanLoadingScreenPro
             <motion.div
               className="absolute inset-0 rounded-full"
               style={{
-                background: `conic-gradient(from 0deg, transparent 0deg, hsl(217 100% 50% / 0.25) 40deg, transparent 80deg)`,
+                background: `conic-gradient(from 0deg, transparent 0deg, hsl(0 0% 98% / 0.2) 40deg, transparent 80deg)`,
               }}
               animate={{ rotate: 360 }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
@@ -172,7 +172,7 @@ export function ScanLoadingScreen({ status, businessName }: ScanLoadingScreenPro
           </div>
 
           {/* Inner glow circle */}
-          <div className="absolute inset-12 rounded-full bg-card border border-border/50 flex items-center justify-center glow-blue">
+          <div className="absolute inset-12 rounded-full bg-card border border-border/50 flex items-center justify-center">
             <motion.div
               animate={{ scale: [1, 1.1, 1] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -185,7 +185,7 @@ export function ScanLoadingScreen({ status, businessName }: ScanLoadingScreenPro
           <motion.div
             className="absolute -inset-2 rounded-full pointer-events-none"
             style={{
-              background: "radial-gradient(circle, hsl(217 100% 50% / 0.08) 0%, transparent 70%)",
+              background: "radial-gradient(circle, hsl(0 0% 98% / 0.06) 0%, transparent 70%)",
             }}
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity }}
@@ -221,7 +221,7 @@ export function ScanLoadingScreen({ status, businessName }: ScanLoadingScreenPro
           <motion.div
             className="h-full rounded-full relative"
             style={{
-              background: "linear-gradient(90deg, hsl(217 100% 50%), hsl(189 100% 50%), hsl(43 100% 50%))",
+              background: "linear-gradient(90deg, hsl(0 0% 50%), hsl(0 0% 70%), hsl(0 0% 90%))",
             }}
             initial={{ width: "0%" }}
             animate={{ width: `${progress}%` }}
@@ -285,8 +285,8 @@ export function ScanLoadingScreen({ status, businessName }: ScanLoadingScreenPro
                 <div className="relative z-10">
                   {isCurrent ? (
                     <motion.div
-                      className="w-8 h-8 rounded-full bg-primary flex items-center justify-center glow-blue"
-                      animate={{ boxShadow: ["0 0 10px hsl(217 100% 50% / 0.4)", "0 0 25px hsl(217 100% 50% / 0.6)", "0 0 10px hsl(217 100% 50% / 0.4)"] }}
+                      className="w-8 h-8 rounded-full bg-foreground flex items-center justify-center"
+                      animate={{ boxShadow: ["0 0 10px hsl(0 0% 98% / 0.3)", "0 0 20px hsl(0 0% 98% / 0.5)", "0 0 10px hsl(0 0% 98% / 0.3)"] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     >
                       <div className="w-2.5 h-2.5 rounded-full bg-primary-foreground" />

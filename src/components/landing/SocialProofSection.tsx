@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { CheckCircle2 } from "lucide-react";
 
 export function SocialProofSection() {
   return (
@@ -13,13 +12,13 @@ export function SocialProofSection() {
           className="glass rounded-2xl p-8 max-w-2xl mx-auto text-center"
         >
           <div className="flex items-center justify-center gap-2 mb-3">
-            <CheckCircle2 className="h-5 w-5 text-success" />
-            <span className="text-sm font-medium text-success">
+            <div className="w-2 h-2 rounded-full bg-foreground/40" />
+            <span className="text-sm font-medium text-muted-foreground">
               Verificat
             </span>
           </div>
           <p className="text-2xl md:text-3xl font-bold mb-2">
-            Testat pe <span className="text-gradient-gold">500+</span> afaceri
+            Testat pe <span className="text-foreground/60">500+</span> afaceri
             din Romania
           </p>
           <p className="text-muted-foreground">

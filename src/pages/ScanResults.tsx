@@ -70,7 +70,7 @@ export default function ScanResults() {
         <Header />
         <main className="pt-24 pb-16">
           <div className="container mx-auto px-4 py-16 text-center max-w-lg">
-            <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+            <AlertTriangle className="h-12 w-12 text-foreground/40 mx-auto mb-4" />
             <h1 className="text-2xl font-bold mb-2">Analiza esuata</h1>
             <p className="text-muted-foreground mb-6">
               A aparut o eroare la procesarea analizei pentru{" "}

@@ -20,7 +20,7 @@ import {
   Target,
   Users,
   Swords,
-  Sparkles,
+  ArrowRight,
   Loader2,
   MapPin,
 } from "lucide-react";
@@ -75,11 +75,11 @@ export default function Analyze() {
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-2xl">
           {/* Header */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-gold mb-4">
-              <Target className="h-8 w-8 text-gold-foreground" />
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl border border-foreground/10 bg-foreground/5 mb-4">
+              <Target className="h-7 w-7 text-foreground/70" />
             </div>
-            <h1 className="text-3xl font-bold mb-2">
+            <h1 className="text-3xl font-bold mb-2 tracking-tight">
               Analiza de Vizibilitate AI
             </h1>
             <p className="text-muted-foreground">
@@ -100,14 +100,14 @@ export default function Analyze() {
                   name="business_name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2">
-                        <Building2 className="h-4 w-4 text-primary" />
+                      <FormLabel className="flex items-center gap-2 text-foreground/80">
+                        <Building2 className="h-4 w-4 text-foreground/50" />
                         Numele Afacerii
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="ex: Restaurant Bella Italia"
-                          className="h-12 text-base"
+                          className="h-12 text-base bg-background/50 border-border/60 focus:border-foreground/30"
                           {...field}
                         />
                       </FormControl>
@@ -121,14 +121,14 @@ export default function Analyze() {
                   name="niche"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2">
-                        <Target className="h-4 w-4 text-primary" />
+                      <FormLabel className="flex items-center gap-2 text-foreground/80">
+                        <Target className="h-4 w-4 text-foreground/50" />
                         Industrie / Nisa
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="ex: Restaurant italian, Cabinet stomatologic, Salon auto"
-                          className="h-12 text-base"
+                          className="h-12 text-base bg-background/50 border-border/60 focus:border-foreground/30"
                           {...field}
                         />
                       </FormControl>
@@ -142,14 +142,14 @@ export default function Analyze() {
                   name="website"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2">
-                        <Globe className="h-4 w-4 text-primary" />
+                      <FormLabel className="flex items-center gap-2 text-foreground/80">
+                        <Globe className="h-4 w-4 text-foreground/50" />
                         Website
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="ex: https://bellaitalia.ro"
-                          className="h-12 text-base"
+                          className="h-12 text-base bg-background/50 border-border/60 focus:border-foreground/30"
                           {...field}
                         />
                       </FormControl>
@@ -163,14 +163,14 @@ export default function Analyze() {
                   name="target_market"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-primary" />
+                      <FormLabel className="flex items-center gap-2 text-foreground/80">
+                        <MapPin className="h-4 w-4 text-foreground/50" />
                         Piata Tinta / Oras
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="ex: Brasov, Romania"
-                          className="h-12 text-base"
+                          className="h-12 text-base bg-background/50 border-border/60 focus:border-foreground/30"
                           {...field}
                         />
                       </FormControl>
@@ -184,14 +184,14 @@ export default function Analyze() {
                   name="ideal_client"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2">
-                        <Users className="h-4 w-4 text-primary" />
+                      <FormLabel className="flex items-center gap-2 text-foreground/80">
+                        <Users className="h-4 w-4 text-foreground/50" />
                         Clientul Ideal
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="ex: Localnici 25-55 ani care cauta mancare italiana"
-                          className="h-12 text-base"
+                          className="h-12 text-base bg-background/50 border-border/60 focus:border-foreground/30"
                           {...field}
                         />
                       </FormControl>
@@ -205,14 +205,14 @@ export default function Analyze() {
                   name="competition"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2">
-                        <Swords className="h-4 w-4 text-primary" />
+                      <FormLabel className="flex items-center gap-2 text-foreground/80">
+                        <Swords className="h-4 w-4 text-foreground/50" />
                         Competitie (separate prin virgula)
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="ex: La Famiglia, Trattoria, Bella Italia"
-                          className="h-12 text-base"
+                          className="h-12 text-base bg-background/50 border-border/60 focus:border-foreground/30"
                           {...field}
                         />
                       </FormControl>
@@ -236,8 +236,8 @@ export default function Analyze() {
                       </>
                     ) : (
                       <>
-                        <Sparkles className="h-5 w-5 mr-2" />
                         Incepe Analiza Gratuita
+                        <ArrowRight className="h-5 w-5 ml-2" />
                       </>
                     )}
                   </Button>

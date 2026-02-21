@@ -51,8 +51,8 @@ export function MetricsGrid({ queries, topCompetitors }: MetricsGridProps) {
       label: "Rata de Mentionare",
       value: `${mentionRate}%`,
       detail: `${mentionedQueries.length} din ${totalQueries} intrebari`,
-      color: "text-primary",
-      bgColor: "bg-primary/10",
+      color: "text-foreground",
+      bgColor: "bg-foreground/10",
     },
     {
       icon: BarChart3,
@@ -62,8 +62,8 @@ export function MetricsGrid({ queries, topCompetitors }: MetricsGridProps) {
         avgPosition === "—"
           ? "Nicio mentiune cu pozitie"
           : `Din ${positionedQueries.length} mentiuni`,
-      color: "text-accent",
-      bgColor: "bg-accent/10",
+      color: "text-foreground/70",
+      bgColor: "bg-foreground/10",
     },
     {
       icon: MessageCircle,
@@ -79,9 +79,8 @@ export function MetricsGrid({ queries, topCompetitors }: MetricsGridProps) {
           ? `${positiveCount} pozitive, ${neutralCount} neutre, ${negativeCount} negative`
           : "Nicio mentiune analizata",
       color:
-        positiveCount >= negativeCount ? "text-emerald-500" : "text-red-500",
-      bgColor:
-        positiveCount >= negativeCount ? "bg-emerald-500/10" : "bg-red-500/10",
+        positiveCount >= negativeCount ? "text-foreground" : "text-foreground/40",
+      bgColor: "bg-foreground/10",
     },
     {
       icon: Users,
@@ -90,8 +89,8 @@ export function MetricsGrid({ queries, topCompetitors }: MetricsGridProps) {
       detail: topCompetitor
         ? `${topCompetitor.mentions} mentiuni detectate`
         : "Niciun competitor detectat",
-      color: "text-orange-500",
-      bgColor: "bg-orange-500/10",
+      color: "text-foreground/60",
+      bgColor: "bg-foreground/10",
     },
   ];
 
