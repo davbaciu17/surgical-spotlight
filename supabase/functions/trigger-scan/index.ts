@@ -3,15 +3,12 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-// Use env var, but strip "webhook-test" -> "webhook" to ensure production URL is used
-const rawUrl = Deno.env.get("VITE_N8N_WEBHOOK_URL") || "https://cnick.app.n8n.cloud/webhook/surgical-aeo-analysis-v3";
-const N8N_WEBHOOK_URL = rawUrl.replace("/webhook-test/", "/webhook/");
+const N8N_WEBHOOK_URL = (Deno.env.get("VITE_N8N_WEBHOOK_URL") || "https://cnick.app.n8n.cloud/webhook/surgical-aeo-analysis-v3").replace("/webhook-test/", "/webhook/");
 
 serve(async (req) => {
-  console.log("N8N_WEBHOOK_URL being used:", N8N_WEBHOOK_URL);
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -43,7 +40,30 @@ serve(async (req) => {
     const userId = user.id;
     const body = await req.json();
 
+    // Input validation
     const { business_name, niche, website, target_market, ideal_client, competition } = body;
+
+    if (!business_name || typeof business_name !== "string" || business_name.trim().length === 0) {
+      return new Response(JSON.stringify({ error: "business_name is required" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const sanitize = (val: unknown, maxLen: number): string | null => {
+      if (val == null) return null;
+      if (typeof val !== "string") return null;
+      return val.slice(0, maxLen).trim() || null;
+    };
+
+    const validatedData = {
+      business_name: business_name.slice(0, 200).trim(),
+      niche: sanitize(niche, 500),
+      website: sanitize(website, 500),
+      target_market: sanitize(target_market, 1000),
+      ideal_client: sanitize(ideal_client, 1000),
+      competition: sanitize(competition, 1000),
+    };
 
     // Create scan record
     const requestId = `scan-${userId.slice(0, 8)}-${Date.now()}`;
@@ -52,19 +72,14 @@ serve(async (req) => {
       .insert({
         user_id: userId,
         request_id: requestId,
-        business_name,
-        niche,
-        website,
-        target_market,
-        ideal_client,
-        competition,
+        ...validatedData,
         status: "pending",
       })
       .select("id")
       .single();
 
     if (insertError) {
-      return new Response(JSON.stringify({ error: `DB insert failed: ${insertError.message}` }), {
+      return new Response(JSON.stringify({ error: "Failed to create scan" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -77,12 +92,7 @@ serve(async (req) => {
       body: JSON.stringify({
         request_id: requestId,
         user_id: userId,
-        business_name,
-        niche,
-        website,
-        target_market,
-        ideal_client,
-        competition,
+        ...validatedData,
         callback_url: `${Deno.env.get("SUPABASE_URL")}/functions/v1/receive-scan-results`,
       }),
     });
@@ -90,18 +100,21 @@ serve(async (req) => {
     if (!n8nResponse.ok) {
       await supabase.from("scan_runs").update({ status: "failed" }).eq("id", scan.id);
       return new Response(
-        JSON.stringify({ error: `n8n webhook failed: ${n8nResponse.status}` }),
+        JSON.stringify({ error: "Scan workflow failed to start" }),
         { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    console.log("Scan triggered successfully:", requestId);
 
     return new Response(
       JSON.stringify({ scanId: scan.id, requestId }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {
+    console.error("Unexpected error in trigger-scan");
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
+      JSON.stringify({ error: "Internal server error" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
