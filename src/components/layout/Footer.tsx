@@ -23,7 +23,12 @@ export function Footer() {
               <ul className="space-y-2 text-sm">
                 <li>
                   <Link to="/analyze" className="text-muted-foreground hover:text-foreground transition-colors">
-                    Analizeaza
+                    Analizează
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/despre-aeo" className="text-muted-foreground hover:text-foreground transition-colors">
+                    Despre AEO
                   </Link>
                 </li>
                 <li>

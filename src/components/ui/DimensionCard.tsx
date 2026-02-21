@@ -1,5 +1,5 @@
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion, useInView, useMotionValue, useTransform, animate } from "framer-motion";
+import { useRef, useEffect } from "react";
 
 interface DimensionCardProps {
   name: string;
@@ -31,6 +31,19 @@ export function DimensionCard({
   const inView = useInView(ref, { once: true, margin: "-50px" });
   const color = getScoreColor(score);
 
+  const count = useMotionValue(0);
+  const displayScore = useTransform(count, (v) => Math.round(v));
+
+  useEffect(() => {
+    if (!inView) return;
+    const controls = animate(count, score, {
+      duration: 1.0,
+      delay: delay + 0.15,
+      ease: [0.25, 0.46, 0.45, 0.94],
+    });
+    return controls.stop;
+  }, [inView, score, delay]);
+
   return (
     <motion.div
       ref={ref}
@@ -56,12 +69,12 @@ export function DimensionCard({
 
       {/* Score number */}
       <div className="flex items-baseline gap-1">
-        <span
+        <motion.span
           className="text-2xl font-syne font-bold tabular-nums"
           style={{ color }}
         >
-          {score}
-        </span>
+          {displayScore}
+        </motion.span>
         <span className="text-xs text-muted-foreground">/100</span>
       </div>
 

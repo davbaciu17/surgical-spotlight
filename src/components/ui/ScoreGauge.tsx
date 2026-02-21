@@ -6,6 +6,7 @@ interface ScoreGaugeProps {
   size?: "sm" | "md" | "lg" | "xl";
   loading?: boolean;   // show pulsing loading state
   delay?: number;      // animation start delay in seconds
+  triggered?: boolean; // when provided, starts animation only when true
   className?: string;
 }
 
@@ -29,6 +30,7 @@ export function ScoreGauge({
   size = "md",
   loading = false,
   delay = 0,
+  triggered,
   className = "",
 }: ScoreGaugeProps) {
   const { svg: svgSize, stroke, r } = sizeMap[size];
@@ -44,6 +46,8 @@ export function ScoreGauge({
 
   useEffect(() => {
     if (loading) return;
+    // If triggered is explicitly false, wait until it's true
+    if (triggered === false) return;
 
     const timer = setTimeout(() => {
       animate(dashOffset, targetOffset, {
@@ -56,7 +60,7 @@ export function ScoreGauge({
     }, delay * 1000);
 
     return () => clearTimeout(timer);
-  }, [score, loading, delay]);
+  }, [score, loading, delay, triggered]);
 
   if (loading) {
     return (

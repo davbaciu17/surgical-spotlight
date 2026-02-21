@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { useRef, useEffect } from "react";
+import { motion, useInView, useMotionValue, useTransform, animate } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ScoreGauge } from "@/components/ui/ScoreGauge";
@@ -41,6 +42,24 @@ const SAMPLE_DIMENSIONS = [
 ];
 
 export function ScorePreviewSection() {
+  // Trigger all score animations when the card enters the viewport
+  const cardRef = useRef(null);
+  const inView = useInView(cardRef, { once: true, margin: "-80px" });
+
+  // Animated score count-up
+  const scoreCount = useMotionValue(0);
+  const displayScore = useTransform(scoreCount, (v) => Math.round(v));
+
+  useEffect(() => {
+    if (!inView) return;
+    const controls = animate(scoreCount, SAMPLE_SCORE, {
+      duration: 1.5,
+      delay: 0.5,
+      ease: [0.25, 0.46, 0.45, 0.94],
+    });
+    return controls.stop;
+  }, [inView]);
+
   return (
     <section id="score-preview" className="py-24 relative overflow-hidden bg-section-spotlight scalpel-top">
       {/* Green spotlight blob — center */}
@@ -87,8 +106,9 @@ export function ScorePreviewSection() {
           </p>
         </motion.div>
 
-        {/* Preview card */}
+        {/* Preview card — ref triggers all score animations */}
         <motion.div
+          ref={cardRef}
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -100,32 +120,55 @@ export function ScorePreviewSection() {
             {/* Score hero row */}
             <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 pb-8 border-b border-white/6">
               <div className="relative flex-shrink-0">
-                <ScoreGauge score={SAMPLE_SCORE} size="lg" delay={0.3} />
+                <ScoreGauge
+                  score={SAMPLE_SCORE}
+                  size="lg"
+                  delay={0.3}
+                  triggered={inView}
+                />
                 {/* Score number centered inside gauge */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="font-syne text-3xl font-bold" style={{ color: "#FFB020" }}>
-                    {SAMPLE_SCORE}
-                  </span>
+                  <motion.span
+                    className="font-syne text-3xl font-bold tabular-nums"
+                    style={{ color: "#FFB020" }}
+                  >
+                    {displayScore}
+                  </motion.span>
                   <span className="text-xs text-muted-foreground">/ 100</span>
                 </div>
               </div>
               <div className="text-center sm:text-left">
-                <div className="flex items-center gap-3 mb-2 justify-center sm:justify-start">
+                <motion.div
+                  className="flex items-center gap-3 mb-2 justify-center sm:justify-start"
+                  initial={{ opacity: 0 }}
+                  animate={inView ? { opacity: 1 } : {}}
+                  transition={{ duration: 0.4, delay: 1.2 }}
+                >
                   <span className="font-syne text-4xl font-bold" style={{ color: "#FFB020" }}>C</span>
                   <span className="text-muted-foreground font-plex">Vizibilitate moderată</span>
-                </div>
-                <p className="text-sm text-muted-foreground max-w-xs font-plex">
+                </motion.div>
+                <motion.p
+                  className="text-sm text-muted-foreground max-w-xs font-plex"
+                  initial={{ opacity: 0 }}
+                  animate={inView ? { opacity: 1 } : {}}
+                  transition={{ duration: 0.4, delay: 1.4 }}
+                >
                   Afacerea ta apare în AI, dar competitorii câștigă mai mult teren. Există oportunități clare de îmbunătățire.
-                </p>
+                </motion.p>
                 {/* Sample business badge */}
-                <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/8">
+                <motion.div
+                  className="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/8"
+                  initial={{ opacity: 0 }}
+                  animate={inView ? { opacity: 1 } : {}}
+                  transition={{ duration: 0.4, delay: 1.5 }}
+                >
                   <div className="w-2 h-2 rounded-full bg-muted-foreground/40" />
                   <span className="text-xs text-muted-foreground font-mono">Restaurant Bella Italia, Brașov</span>
-                </div>
+                </motion.div>
               </div>
             </div>
 
-            {/* Dimensions grid */}
+            {/* Dimensions grid — each card has its own inView via DimensionCard */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-8">
               {SAMPLE_DIMENSIONS.map((dim, i) => (
                 <DimensionCard
@@ -134,33 +177,41 @@ export function ScorePreviewSection() {
                   score={dim.score}
                   weight={dim.weight}
                   description={dim.description}
-                  delay={i * 0.08}
+                  delay={i * 0.1}
                 />
               ))}
             </div>
 
-            {/* Sample query row (blurred) */}
+            {/* Sample query rows (blurred) */}
             <div className="space-y-2 relative">
               <div className="h-8 bg-white/4 rounded-lg" />
               <div className="h-8 bg-white/3 rounded-lg" />
               <div className="h-8 bg-white/3 rounded-lg" />
 
               {/* Blur + CTA overlay */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-xl"
+              <div
+                className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-xl"
                 style={{
                   background: "linear-gradient(to top, rgba(10,10,11,0.95) 0%, rgba(10,10,11,0.6) 50%, transparent 100%)",
                   backdropFilter: "blur(2px)",
-                }}>
+                }}
+              >
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Lock className="h-4 w-4" />
                   <span className="text-sm font-plex">50 de interogări detaliate — disponibile după analiză</span>
                 </div>
-                <Button variant="gold" asChild>
-                  <Link to="/analyze">
-                    Obțin Analiza Mea
-                    <ArrowRight className="h-4 w-4 ml-1" />
-                  </Link>
-                </Button>
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.4, delay: 1.8 }}
+                >
+                  <Button variant="gold" asChild>
+                    <Link to="/analyze">
+                      Obțin Analiza Mea
+                      <ArrowRight className="h-4 w-4 ml-1" />
+                    </Link>
+                  </Button>
+                </motion.div>
               </div>
             </div>
           </div>

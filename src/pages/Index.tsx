@@ -1,13 +1,10 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/landing/HeroSection";
-import { ProblemSection } from "@/components/landing/ProblemSection";
 import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
-import { WhatWeMeasureSection } from "@/components/landing/WhatWeMeasureSection";
 import { ScorePreviewSection } from "@/components/landing/ScorePreviewSection";
 import { PricingSection } from "@/components/landing/PricingSection";
-import { FAQSection } from "@/components/landing/FAQSection";
-import { FloatingCTA } from "@/components/ui/FloatingCTA";
+import { ScarcityBar } from "@/components/ui/ScarcityBar";
 
 const Index = () => {
   return (
@@ -15,15 +12,12 @@ const Index = () => {
       <Header />
       <main>
         <HeroSection />
-        <ProblemSection />
         <HowItWorksSection />
-        <WhatWeMeasureSection />
         <ScorePreviewSection />
         <PricingSection />
-        <FAQSection />
       </main>
       <Footer />
-      <FloatingCTA />
+      <ScarcityBar />
     </div>
   );
 };

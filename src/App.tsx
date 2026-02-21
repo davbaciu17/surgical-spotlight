@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import GDPR from "./pages/GDPR";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
+import DespreAEO from "./pages/DespreAEO";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/gdpr" element={<GDPR />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
+            <Route path="/despre-aeo" element={<DespreAEO />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
