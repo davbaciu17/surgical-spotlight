@@ -106,7 +106,7 @@ export default function DashboardResults() {
     mentionedCount > 0 ? Math.round((positiveCount / mentionedCount) * 100) : 0;
 
   // Unique query types for filter
-  const queryTypes = Array.from(new Set(queries.map((q) => q.query_type).filter(Boolean)));
+  const queryTypes = Array.from(new Set(queries.map((q) => q.query_type).filter(Boolean))) as string[];
 
   return (
     <AppLayout>
