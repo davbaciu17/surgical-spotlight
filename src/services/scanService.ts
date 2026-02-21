@@ -24,7 +24,7 @@ export async function createScan(data: ScanRequest): Promise<{ scanId: string; r
     headers.Authorization = `Bearer ${sessionData.session.access_token}`;
   }
 
-  const response = await fetch(`${supabaseUrl}/functions/v1/start-scan`, {
+  const response = await fetch(`${supabaseUrl}/functions/v1/trigger-scan`, {
     method: "POST",
     headers,
     body: JSON.stringify({
