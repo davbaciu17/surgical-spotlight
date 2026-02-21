@@ -1,10 +1,12 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/landing/HeroSection";
+import { ProblemSection } from "@/components/landing/ProblemSection";
 import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
 import { WhatWeMeasureSection } from "@/components/landing/WhatWeMeasureSection";
-import { SocialProofSection } from "@/components/landing/SocialProofSection";
-import { CTASection } from "@/components/landing/CTASection";
+import { ScorePreviewSection } from "@/components/landing/ScorePreviewSection";
+import { PricingSection } from "@/components/landing/PricingSection";
+import { FAQSection } from "@/components/landing/FAQSection";
 
 const Index = () => {
   return (
@@ -12,10 +14,12 @@ const Index = () => {
       <Header />
       <main>
         <HeroSection />
+        <ProblemSection />
         <HowItWorksSection />
         <WhatWeMeasureSection />
-        <SocialProofSection />
-        <CTASection />
+        <ScorePreviewSection />
+        <PricingSection />
+        <FAQSection />
       </main>
       <Footer />
     </div>

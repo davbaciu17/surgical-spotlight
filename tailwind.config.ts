@@ -47,11 +47,22 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Clinical green — primary CTA, scores, success states
         gold: {
           DEFAULT: "hsl(var(--gold))",
           foreground: "hsl(var(--gold-foreground))",
           muted: "hsl(var(--gold-muted))",
         },
+        // Surgical-specific named tokens
+        "surgical-green": "#00E5A0",
+        "surgical-cyan": "#00B8D4",
+        "surgical-red": "#FF3B5C",
+        "surgical-amber": "#FFB020",
+        // Surface scale for layered depth
+        "surface-0": "#0A0A0B",
+        "surface-1": "#111113",
+        "surface-2": "#1A1A1E",
+        "surface-3": "#222228",
         success: {
           DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success-foreground))",
@@ -81,7 +92,12 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        // Display / Headlines — geometric, distinctive
+        syne: ['Syne', 'sans-serif'],
+        // Body / UI — clinical precision
+        plex: ['IBM Plex Sans', '-apple-system', 'sans-serif'],
+        // Legacy fallback
+        sans: ['IBM Plex Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       keyframes: {
@@ -114,8 +130,24 @@ export default {
           "50%": { opacity: "0.7" },
         },
         "glow-pulse": {
-          "0%, 100%": { boxShadow: "0 0 20px rgba(255, 255, 255, 0.15)" },
-          "50%": { boxShadow: "0 0 40px rgba(255, 255, 255, 0.25)" },
+          "0%, 100%": { boxShadow: "0 0 20px rgba(0, 229, 160, 0.15)" },
+          "50%": { boxShadow: "0 0 40px rgba(0, 229, 160, 0.30)" },
+        },
+        // Score ring fill — used by ScoreGauge
+        "score-ring-fill": {
+          from: { strokeDashoffset: "283" },
+          to: { strokeDashoffset: "var(--target-offset, 0)" },
+        },
+        // Pulsing dashed ring for loading state
+        "ring-pulse": {
+          "0%, 100%": { opacity: "0.4" },
+          "50%": { opacity: "1" },
+        },
+        // Ambient drift for background blobs
+        "drift": {
+          "0%, 100%": { transform: "translate(0, 0) scale(1)" },
+          "33%": { transform: "translate(30px, -20px) scale(1.05)" },
+          "66%": { transform: "translate(-20px, 15px) scale(0.95)" },
         },
       },
       animation: {
@@ -126,13 +158,20 @@ export default {
         "scale-in": "scale-in 0.2s ease-out",
         "slide-in-right": "slide-in-right 0.3s ease-out",
         "pulse-soft": "pulse-soft 2s ease-in-out infinite",
-        "glow-pulse": "glow-pulse 2s ease-in-out infinite",
+        "glow-pulse": "glow-pulse 2.5s ease-in-out infinite",
+        "ring-pulse": "ring-pulse 1.8s ease-in-out infinite",
+        "drift": "drift 12s ease-in-out infinite",
+        "drift-slow": "drift 18s ease-in-out infinite reverse",
       },
       backgroundImage: {
-        "gradient-gold": "linear-gradient(135deg, hsl(0, 0%, 95%) 0%, hsl(0, 0%, 80%) 50%, hsl(0, 0%, 95%) 100%)",
-        "gradient-blue": "linear-gradient(135deg, hsl(0, 0%, 85%) 0%, hsl(0, 0%, 65%) 100%)",
+        // Clinical green gradient (was gold)
+        "gradient-gold": "linear-gradient(135deg, #00E5A0 0%, #00B8D4 100%)",
+        "gradient-green": "linear-gradient(135deg, #00E5A0 0%, #00c17d 100%)",
+        "gradient-cyan": "linear-gradient(135deg, #00B8D4 0%, #0080a0 100%)",
         "gradient-dark": "linear-gradient(180deg, hsl(0, 0%, 2%) 0%, hsl(0, 0%, 6%) 100%)",
-        "gradient-radial": "radial-gradient(ellipse at top, hsl(0, 0%, 98%, 0.08) 0%, transparent 50%)",
+        "gradient-radial": "radial-gradient(ellipse at top, rgba(0, 229, 160, 0.05) 0%, transparent 60%)",
+        // Hero glow — placed behind headline
+        "gradient-hero-glow": "radial-gradient(ellipse 70% 50% at 50% -10%, rgba(0, 229, 160, 0.08) 0%, transparent 70%)",
       },
     },
   },

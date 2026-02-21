@@ -33,13 +33,14 @@ export function SurgicalScore({ score, size = "md", animated = true }: SurgicalS
   }, [score, animated]);
 
   const getScoreColor = () => {
-    if (score >= 70) return { stroke: "hsl(0, 0%, 98%)", text: "text-foreground", label: "Excelent" };
-    if (score >= 50) return { stroke: "hsl(0, 0%, 70%)", text: "text-foreground/80", label: "Bun" };
-    if (score >= 30) return { stroke: "hsl(0, 0%, 45%)", text: "text-muted-foreground", label: "Mediu" };
-    return { stroke: "hsl(0, 0%, 30%)", text: "text-muted-foreground/70", label: "Slab" };
+    if (score >= 75) return { stroke: "#00E5A0", text: "text-[#00E5A0]", label: "Excelent", glow: "rgba(0,229,160,0.25)" };
+    if (score >= 55) return { stroke: "#00B8D4", text: "text-[#00B8D4]", label: "Bun", glow: "rgba(0,184,212,0.2)" };
+    if (score >= 35) return { stroke: "#FFB020", text: "text-[#FFB020]", label: "Moderat", glow: "rgba(255,176,32,0.2)" };
+    if (score >= 18) return { stroke: "#FF3B5C", text: "text-[#FF3B5C]", label: "Slab", glow: "rgba(255,59,92,0.2)" };
+    return { stroke: "#FF3B5C", text: "text-[#FF3B5C]", label: "Critic", glow: "rgba(255,59,92,0.2)" };
   };
 
-  const { stroke, text, label } = getScoreColor();
+  const { stroke, text, label, glow } = getScoreColor();
 
   const sizeClasses = {
     sm: { container: "w-20 h-20", text: "text-xl", label: "text-xs" },
@@ -77,12 +78,12 @@ export function SurgicalScore({ score, size = "md", animated = true }: SurgicalS
             strokeDashoffset={offset}
             className="transition-all duration-1000 ease-out"
             style={{
-              filter: score >= 70 ? "drop-shadow(0 0 12px rgba(255, 255, 255, 0.15))" : undefined,
+              filter: `drop-shadow(0 0 8px ${glow})`,
             }}
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className={`font-bold font-mono ${textSize} ${text}`}>
+          <span className={`font-syne font-bold tabular-nums ${textSize} ${text}`}>
             {displayScore}
           </span>
         </div>

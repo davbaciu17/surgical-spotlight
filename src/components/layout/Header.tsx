@@ -20,10 +20,10 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md border border-foreground/20 bg-foreground/5">
-            <span className="text-sm font-bold">S</span>
+          <div className="flex h-8 w-8 items-center justify-center rounded-md border border-gold/30 bg-gold/8" style={{ background: "rgba(0,229,160,0.08)" }}>
+            <span className="text-sm font-bold text-gold font-syne">S</span>
           </div>
-          <span className="text-lg font-bold tracking-tight">Surgical.AI</span>
+          <span className="text-lg font-bold tracking-tight font-syne">Surgical.AI</span>
         </Link>
 
         {/* Desktop Navigation */}
