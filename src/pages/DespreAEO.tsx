@@ -354,7 +354,7 @@ export default function DespreAEO() {
             className="py-16 text-center"
           >
             <div
-              className="glass rounded-2xl p-10 border border-gold/15"
+              className="glass rounded-2xl p-6 md:p-10 border border-gold/15"
               style={{
                 background: "linear-gradient(135deg, rgba(0,229,160,0.04) 0%, rgba(0,184,212,0.02) 100%)",
               }}
