@@ -67,7 +67,7 @@ const faqs = [
   {
     question: "Cum se calculează Surgical Score™?",
     answer:
-      "Scorul de la 0 la 100 ia în considerare: prezența brandului pe fiecare platformă (40%), sentimentul mențiunilor (20%), acuratețea informațiilor (20%), proeminența în răspuns (10%) și consistența cross-platform (10%).",
+      "Scorul de la 0 la 100 este calculat din 4 dimensiuni ponderate: Rata de Menționare (50%) — ce % din cele 50 de interogări au menționat afacerea ta; Poziție (20%) — locul median când ești menționat (1st=100pts, 2nd=89pts etc.); Sentiment (15%) — Pozitiv=1pt, Neutru=0.5pt, Negativ=0pt; Competiție (15%) — menționările tale vs. competitorul principal. Note: Poziția și Sentimentul sunt scalate de un factor de confidență = min(1, totalMentioned / 5), deci cu cât ești menționat mai des, cu atât scorul e mai precis. Grade: A>=75, B>=55, C>=35, D>=15, F<15.",
   },
   {
     question: "Funcționează pentru orice industrie?",
@@ -299,11 +299,10 @@ export default function DespreAEO() {
               </p>
               <ul className="list-none space-y-2 pl-0">
                 {[
-                  "Rata de menționare — cât de des apari în răspunsuri",
-                  "Poziția în răspunsuri — primul, al treilea sau ultimul",
-                  "Sentimentul mențiunilor — pozitiv, neutru sau negativ",
-                  "Vizibilitate vs. competiție — cum te compari cu rivalii tăi",
-                  "Autoritate de nișă — cât de consistent ești recomandat",
+                  "Rata de Menționare (50%) — din 50 de interogări, câte % au menționat afacerea ta",
+                  "Poziție (20%) — poziția medie când ești menționat (1st = 100pts, 2nd = 89pts…)",
+                  "Sentiment (15%) — Pozitiv=1pt, Neutru=0.5pt, Negativ=0pt, mediat pe toate mențiunile",
+                  "Competiție (15%) — menționările tale vs. menționările competitorului principal (max 100%)",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
                     <span

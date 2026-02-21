@@ -20,7 +20,7 @@ function getGrade(score: number): { letter: string; label: string } {
   if (score >= 75) return { letter: "A", label: "Excelent" };
   if (score >= 55) return { letter: "B", label: "Bun" };
   if (score >= 35) return { letter: "C", label: "Moderat" };
-  if (score >= 18) return { letter: "D", label: "Slab" };
+  if (score >= 15) return { letter: "D", label: "Slab" };
   return { letter: "F", label: "Critic" };
 }
 

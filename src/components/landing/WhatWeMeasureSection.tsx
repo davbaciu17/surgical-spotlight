@@ -4,27 +4,31 @@ import { BarChart3, Hash, MessageCircle, Users } from "lucide-react";
 const metrics = [
   {
     icon: Hash,
-    title: "Rata de Menționaire",
+    title: "Rata de Menționare",
+    weight: "50%",
     description:
-      "Cât de des menționează AI-ul afacerea ta când clienții pun întrebări relevante.",
+      "Din 50 de interogări reale, câte procente au menționat afacerea ta.",
   },
   {
     icon: BarChart3,
-    title: "Poziția în Răspunsuri",
+    title: "Poziție",
+    weight: "20%",
     description:
-      "Pe ce poziție apari când ești menționat — primul, al treilea sau ultimul.",
+      "Poziția medie când ești menționat — 1st = 100pts, 2nd = 89pts etc.",
   },
   {
     icon: MessageCircle,
-    title: "Sentimentul Mențiunilor",
+    title: "Sentiment",
+    weight: "15%",
     description:
-      "Dacă AI-ul te recomandă pozitiv, neutru sau îți asociază recenzii negative.",
+      "Pozitiv = 1pt, Neutru = 0.5pt, Negativ = 0pt, mediat pe toate mențiunile.",
   },
   {
     icon: Users,
-    title: "Vizibilitate vs Competiție",
+    title: "Competiție",
+    weight: "15%",
     description:
-      "Cum te compari cu competitorii tăi în recomandările ChatGPT.",
+      "Menționările tale împărțit la menționările competitorului principal (max 100%).",
   },
 ];
 
@@ -50,11 +54,14 @@ export function WhatWeMeasureSection() {
               transition={{ duration: 0.5, delay: i * 0.1 }}
             >
               <div className="glass rounded-2xl p-6 h-full card-hover">
-                <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
-                  style={{ background: "rgba(0,229,160,0.08)", border: "1px solid rgba(0,229,160,0.2)" }}
-                >
-                  <metric.icon className="h-5 w-5 text-gold" />
+                <div className="flex items-start justify-between mb-4">
+                  <div
+                    className="w-10 h-10 rounded-lg flex items-center justify-center"
+                    style={{ background: "rgba(0,229,160,0.08)", border: "1px solid rgba(0,229,160,0.2)" }}
+                  >
+                    <metric.icon className="h-5 w-5 text-gold" />
+                  </div>
+                  <span className="text-xs font-mono font-bold text-gold/70 mt-1">{metric.weight}</span>
                 </div>
                 <h3 className="text-base font-semibold mb-2 font-plex">{metric.title}</h3>
                 <p className="text-sm text-muted-foreground font-plex">

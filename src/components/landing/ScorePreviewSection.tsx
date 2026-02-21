@@ -8,36 +8,32 @@ import { ArrowRight, Lock } from "lucide-react";
 
 const SAMPLE_SCORE = 42;
 
+// Weights: Rata de Menționare 50%, Poziție 20%, Sentiment 15%, Competiție 15%
+// Weighted check: 0.5×36 + 0.2×58 + 0.15×63 + 0.15×22 = 18+11.6+9.45+3.3 = 42.35 ≈ 42
 const SAMPLE_DIMENSIONS = [
   {
-    name: "Vizibilitate Directă",
-    score: 38,
-    weight: 40,
-    description: "Cât de des apari în răspunsurile AI",
+    name: "Rata de Menționare",
+    score: 36,
+    weight: 50,
+    description: "Din 50 de interogări, 36% au menționat afacerea ta",
   },
   {
-    name: "Poziție Competitivă",
-    score: 55,
+    name: "Poziție",
+    score: 58,
     weight: 20,
-    description: "Ranking față de competitori",
+    description: "Poziția medie când ești menționat (1st=100pts, 2nd=89pts…)",
   },
   {
-    name: "Autoritate Nișă",
-    score: 48,
+    name: "Sentiment",
+    score: 63,
     weight: 15,
-    description: "Acoperire AI în domeniu",
+    description: "Pozitiv=1pt, Neutru=0.5pt, Negativ=0pt, mediat",
   },
   {
-    name: "Sănătate Sentiment",
-    score: 62,
+    name: "Competiție",
+    score: 22,
     weight: 15,
-    description: "Tonul mențiunilor tale",
-  },
-  {
-    name: "Calitate Răspuns",
-    score: 30,
-    weight: 10,
-    description: "Detaliile din răspunsurile AI",
+    description: "Menționările tale vs. competitorul principal (max 100%)",
   },
 ];
 
@@ -169,7 +165,7 @@ export function ScorePreviewSection() {
             </div>
 
             {/* Dimensions grid — each card has its own inView via DimensionCard */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
               {SAMPLE_DIMENSIONS.map((dim, i) => (
                 <DimensionCard
                   key={dim.name}
