@@ -1,6 +1,7 @@
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Check, X, Sparkles } from "lucide-react";
+import { Check, X, Sparkles, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface Feature {
@@ -130,6 +131,8 @@ function TableCell({ value, colIdx }: { value: CellValue; colIdx: number }) {
 }
 
 export function PricingSection() {
+  const [tableOpen, setTableOpen] = useState(false);
+
   return (
     <section id="pricing" className="py-24 relative overflow-hidden bg-section-commercial scalpel-top">
       {/* Large decorative circle — bottom decoration */}
@@ -302,98 +305,119 @@ export function PricingSection() {
           })}
         </div>
 
-        {/* Comparison table */}
-        <motion.div
-          className="max-w-5xl mx-auto mt-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          {/* Desktop table */}
-          <div className="hidden md:block overflow-x-auto rounded-xl" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
-            <table className="w-full border-collapse">
-              <thead>
-                <tr style={{ background: "#1A1A1E" }}>
-                  <th className="py-3 px-4 text-left text-xs font-semibold font-plex text-muted-foreground w-[40%]">
-                    Funcționalitate
-                  </th>
-                  {plans.map((plan) => (
-                    <th
-                      key={plan.id}
-                      className="py-3 px-4 text-center text-xs font-bold font-syne"
-                      style={{
-                        color: plan.popular ? "#00E5A0" : "rgba(255,255,255,0.6)",
-                        background: plan.popular ? "rgba(0,229,160,0.06)" : undefined,
-                      }}
-                    >
-                      {plan.name}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
+        {/* Toggle button */}
+        <div className="max-w-5xl mx-auto mt-10 text-center">
+          <button
+            onClick={() => setTableOpen(!tableOpen)}
+            className="inline-flex items-center gap-2 text-sm font-plex text-muted-foreground hover:text-foreground transition-colors group"
+          >
+            <span>{tableOpen ? "Ascunde comparația" : "Vezi comparația detaliată"}</span>
+            <motion.span
+              animate={{ rotate: tableOpen ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ChevronDown className="h-4 w-4" />
+            </motion.span>
+          </button>
+        </div>
+
+        {/* Comparison table — collapsible */}
+        <AnimatePresence>
+          {tableOpen && (
+            <motion.div
+              className="max-w-5xl mx-auto mt-6"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              style={{ overflow: "hidden" }}
+            >
+              {/* Desktop table */}
+              <div className="hidden md:block overflow-x-auto rounded-xl" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr style={{ background: "#1A1A1E" }}>
+                      <th className="py-3 px-4 text-left text-xs font-semibold font-plex text-muted-foreground w-[40%]">
+                        Funcționalitate
+                      </th>
+                      {plans.map((plan) => (
+                        <th
+                          key={plan.id}
+                          className="py-3 px-4 text-center text-xs font-bold font-syne"
+                          style={{
+                            color: plan.popular ? "#00E5A0" : "rgba(255,255,255,0.6)",
+                            background: plan.popular ? "rgba(0,229,160,0.06)" : undefined,
+                          }}
+                        >
+                          {plan.name}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tableRows.map((row, ri) => (
+                      <tr
+                        key={ri}
+                        style={{
+                          background: ri % 2 === 0 ? "rgba(255,255,255,0.01)" : "transparent",
+                          borderTop: "1px solid rgba(255,255,255,0.04)",
+                        }}
+                      >
+                        <td className="py-2.5 px-4 text-sm font-plex" style={{ color: "rgba(255,255,255,0.6)" }}>
+                          {row.label}
+                        </td>
+                        {row.values.map((val, ci) => (
+                          <TableCell key={ci} value={val} colIdx={ci} />
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile stacked comparison */}
+              <div className="md:hidden space-y-3">
                 {tableRows.map((row, ri) => (
-                  <tr
+                  <div
                     key={ri}
+                    className="rounded-lg p-3"
                     style={{
-                      background: ri % 2 === 0 ? "rgba(255,255,255,0.01)" : "transparent",
-                      borderTop: "1px solid rgba(255,255,255,0.04)",
+                      background: "rgba(255,255,255,0.02)",
+                      border: "1px solid rgba(255,255,255,0.04)",
                     }}
                   >
-                    <td className="py-2.5 px-4 text-sm font-plex" style={{ color: "rgba(255,255,255,0.6)" }}>
+                    <p className="text-xs font-plex font-semibold mb-2" style={{ color: "rgba(255,255,255,0.5)" }}>
                       {row.label}
-                    </td>
-                    {row.values.map((val, ci) => (
-                      <TableCell key={ci} value={val} colIdx={ci} />
-                    ))}
-                  </tr>
+                    </p>
+                    <div className="grid grid-cols-3 gap-2">
+                      {plans.map((plan, ci) => {
+                        const val = row.values[ci];
+                        return (
+                          <div key={plan.id} className="text-center">
+                            <p className="text-[10px] font-syne font-bold mb-1" style={{ color: plan.popular ? "#00E5A0" : "rgba(255,255,255,0.4)" }}>
+                              {plan.name}
+                            </p>
+                            {typeof val === "boolean" ? (
+                              val ? (
+                                <Check className="h-3.5 w-3.5 mx-auto" style={{ color: "#00E5A0" }} />
+                              ) : (
+                                <span className="text-muted-foreground/40 font-mono text-xs">—</span>
+                              )
+                            ) : (
+                              <span className="text-xs font-plex" style={{ color: plan.popular ? "#00E5A0" : "rgba(255,255,255,0.55)" }}>
+                                {val}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Mobile stacked comparison */}
-          <div className="md:hidden space-y-3">
-            {tableRows.map((row, ri) => (
-              <div
-                key={ri}
-                className="rounded-lg p-3"
-                style={{
-                  background: "rgba(255,255,255,0.02)",
-                  border: "1px solid rgba(255,255,255,0.04)",
-                }}
-              >
-                <p className="text-xs font-plex font-semibold mb-2" style={{ color: "rgba(255,255,255,0.5)" }}>
-                  {row.label}
-                </p>
-                <div className="grid grid-cols-3 gap-2">
-                  {plans.map((plan, ci) => {
-                    const val = row.values[ci];
-                    return (
-                      <div key={plan.id} className="text-center">
-                        <p className="text-[10px] font-syne font-bold mb-1" style={{ color: plan.popular ? "#00E5A0" : "rgba(255,255,255,0.4)" }}>
-                          {plan.name}
-                        </p>
-                        {typeof val === "boolean" ? (
-                          val ? (
-                            <Check className="h-3.5 w-3.5 mx-auto" style={{ color: "#00E5A0" }} />
-                          ) : (
-                            <span className="text-muted-foreground/40 font-mono text-xs">—</span>
-                          )
-                        ) : (
-                          <span className="text-xs font-plex" style={{ color: plan.popular ? "#00E5A0" : "rgba(255,255,255,0.55)" }}>
-                            {val}
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
               </div>
-            ))}
-          </div>
-        </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
