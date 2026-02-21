@@ -9,7 +9,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isLanding = location.pathname === "/";
 
-  // Anchor links (smooth scroll) — only shown on landing page
+  // Anchor links (smooth scroll) — only used on landing page
   const anchorLinks = isLanding
     ? [
         { href: "#how-it-works", label: "Cum funcționează" },
@@ -19,6 +19,13 @@ export function Header() {
 
   // Router links shown on all pages
   const routerLinks = [
+    // When not on landing, link back to landing sections
+    ...(!isLanding
+      ? [
+          { to: "/#how-it-works", label: "Cum funcționează" },
+          { to: "/#pricing", label: "Prețuri" },
+        ]
+      : []),
     { to: "/despre-aeo", label: "Despre AEO" },
   ];
 
