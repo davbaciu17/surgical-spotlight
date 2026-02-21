@@ -83,6 +83,7 @@ serve(async (req) => {
         target_market,
         ideal_client,
         competition,
+        callback_url: `${Deno.env.get("SUPABASE_URL")}/functions/v1/receive-scan-results`,
       }),
     });
 
