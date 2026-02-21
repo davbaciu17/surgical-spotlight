@@ -69,8 +69,7 @@ function FloatingParticle({ delay, duration, x, y, size }: { delay: number; dura
   return (
     <motion.div
       className="absolute rounded-full"
-    style={{ backgroundColor: "rgba(0,229,160,0.25)" }}
-      style={{ width: size, height: size }}
+      style={{ backgroundColor: "rgba(0,229,160,0.25)", width: size, height: size }}
       initial={{ x, y, opacity: 0 }}
       animate={{
         x: [x, x + (Math.random() - 0.5) * 60, x],

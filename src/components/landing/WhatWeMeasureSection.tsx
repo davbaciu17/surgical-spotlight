@@ -30,7 +30,8 @@ const metrics = [
 
 export function WhatWeMeasureSection() {
   return (
-    <section id="what-we-measure" className="py-24 border-t border-border/30">
+    <section id="what-we-measure" className="py-24 relative bg-section-dots">
+      <div className="absolute inset-x-0 top-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)" }} />
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="font-syne text-3xl md:text-4xl font-bold mb-4 tracking-tight">Ce măsurăm</h2>

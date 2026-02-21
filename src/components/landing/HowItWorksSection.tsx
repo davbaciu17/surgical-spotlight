@@ -30,8 +30,8 @@ const steps = [
 
 export function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="py-24 relative">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/6 to-transparent" />
+    <section id="how-it-works" className="py-24 relative bg-section-dots">
+      <div className="absolute inset-x-0 top-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,160,0.10), transparent)" }} />
 
       <div className="container mx-auto px-4">
         <motion.div

@@ -19,6 +19,8 @@ export function HeroSection() {
 
   return (
     <section className="relative pt-32 pb-24 overflow-hidden">
+      {/* Scan lines — subtle horizontal repeating texture */}
+      <div className="absolute inset-0 bg-scan-lines pointer-events-none" />
       {/* Very faint top glow */}
       <div className="absolute inset-0 bg-hero-glow pointer-events-none" />
 

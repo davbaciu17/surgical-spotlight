@@ -158,6 +158,75 @@
 }
 
 @layer components {
+  /* =============================================
+     SECTION BACKGROUND SYSTEM
+     Each landing section gets a distinct treatment.
+     Backgrounds are felt, not seen — subtlety first.
+  ============================================== */
+
+  /* S2: Problem section — faint vertical curtain stripes on #0F0F12 */
+  .bg-section-stripes {
+    background-color: #0F0F12;
+    background-image: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 47px,
+      rgba(255, 255, 255, 0.013) 47px,
+      rgba(255, 255, 255, 0.013) 48px
+    );
+  }
+
+  /* S3: How It Works / WhatWeMeasure — dot grid, clinical/diagnostic feel */
+  .bg-section-dots {
+    background-color: #0A0A0B;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* S4: Score Preview — operating room spotlight, #0C0C10 base */
+  .bg-section-spotlight {
+    background-color: #0C0C10;
+  }
+
+  /* S5: Pricing — commercial, cleaner, #111114 */
+  .bg-section-commercial {
+    background-color: #111114;
+  }
+
+  /* S6: FAQ — minimal void */
+  .bg-section-minimal {
+    background-color: #0A0A0B;
+  }
+
+  /* S7: Footer — darkest, grounding */
+  .bg-section-footer {
+    background-color: #050507;
+  }
+
+  /* Hero scan lines — optional horizontal lines for "digital screen" feel */
+  .bg-scan-lines {
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 4px,
+      rgba(255, 255, 255, 0.007) 4px,
+      rgba(255, 255, 255, 0.007) 5px
+    );
+  }
+
+  /* Scalpel line — thin gradient divider, on-brand */
+  .scalpel-top::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(640px, 80%);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 229, 160, 0.13), transparent);
+    pointer-events: none;
+  }
+
   /* Solid dark cards — navarro-style, no frosted blur */
   .glass {
     background: rgba(14, 14, 16, 0.98);

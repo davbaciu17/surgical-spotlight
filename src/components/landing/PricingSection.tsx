@@ -61,8 +61,33 @@ const plans = [
 
 export function PricingSection() {
   return (
-    <section id="pricing" className="py-24 bg-card/30 border-y border-border/50">
-      <div className="container mx-auto px-4">
+    <section id="pricing" className="py-24 relative overflow-hidden bg-section-commercial scalpel-top">
+      {/* Large decorative circle — bottom decoration */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          width: "600px",
+          height: "600px",
+          bottom: "-200px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          borderRadius: "50%",
+          border: "1px solid rgba(255,255,255,0.012)",
+          filter: "blur(40px)",
+        }}
+      />
+      {/* Green gradient sweep */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse 80% 40% at 50% 100%, rgba(0,229,160,0.02) 0%, transparent 70%)",
+        }}
+      />
+      {/* Top scalpel — stronger green */}
+      <div className="absolute inset-x-0 top-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,160,0.15), transparent)" }} />
+      {/* Bottom scalpel */}
+      <div className="absolute inset-x-0 bottom-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,160,0.07), transparent)" }} />
+      <div className="container mx-auto px-4 relative z-10">
         <motion.div 
           className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}

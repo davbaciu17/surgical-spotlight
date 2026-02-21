@@ -22,10 +22,10 @@ const problems = [
 
 export function ProblemSection() {
   return (
-    <section className="py-24 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[#0A0A0B]" />
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+    <section className="py-24 relative overflow-hidden bg-section-stripes">
+      {/* Scalpel line top — accent green divider */}
+      <div className="absolute inset-x-0 top-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,160,0.13), transparent)" }} />
+      <div className="absolute inset-x-0 bottom-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,160,0.08), transparent)" }} />
 
       <div className="container mx-auto px-4 relative z-10">
         <motion.div

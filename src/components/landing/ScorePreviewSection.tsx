@@ -42,10 +42,32 @@ const SAMPLE_DIMENSIONS = [
 
 export function ScorePreviewSection() {
   return (
-    <section id="score-preview" className="py-24 relative overflow-hidden">
-      {/* Subtle background depth */}
-      <div className="absolute inset-0 bg-[#0D0D0F] pointer-events-none" />
-      <div className="absolute inset-0 bg-glow opacity-30 pointer-events-none" />
+    <section id="score-preview" className="py-24 relative overflow-hidden bg-section-spotlight scalpel-top">
+      {/* Green spotlight blob — center */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          width: "700px",
+          height: "500px",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          background: "radial-gradient(ellipse at center, rgba(0,229,160,0.03) 0%, transparent 70%)",
+          filter: "blur(60px)",
+        }}
+      />
+      {/* Cyan secondary blob — top right */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          width: "400px",
+          height: "300px",
+          top: "-60px",
+          right: "-80px",
+          background: "radial-gradient(ellipse at center, rgba(0,184,212,0.02) 0%, transparent 70%)",
+          filter: "blur(50px)",
+        }}
+      />
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Headline */}

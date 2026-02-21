@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border/40 py-12">
+    <footer className="bg-section-footer border-t border-white/[0.04] py-12">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-8">
           <div className="space-y-3">
@@ -44,7 +44,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-border/40 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-white/[0.04] pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground/60">&copy; 2026 Surgical.AI</p>
           <p className="text-sm text-muted-foreground/60">Facut in Romania</p>
         </div>

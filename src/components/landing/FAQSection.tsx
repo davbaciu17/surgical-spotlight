@@ -47,8 +47,9 @@ const faqs = [
 
 export function FAQSection() {
   return (
-    <section id="faq" className="py-24 relative">
-      <div className="absolute inset-0 bg-glow opacity-20" />
+    <section id="faq" className="py-24 relative bg-section-minimal">
+      {/* Faint white scalpel top */}
+      <div className="absolute inset-x-0 top-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)" }} />
       
       <div className="container mx-auto px-4 relative z-10">
         <motion.div 
@@ -58,8 +59,8 @@ export function FAQSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-            Întrebări <span className="text-gradient-blue">Frecvente</span>
+          <h2 className="font-syne text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            Întrebări <span className="text-gradient-gold">Frecvente</span>
           </h2>
         </motion.div>
 
