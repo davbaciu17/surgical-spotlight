@@ -1,5 +1,5 @@
-import { useRef, useEffect } from "react";
-import { motion, useInView, useMotionValue, useTransform, animate } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ScoreGauge } from "@/components/ui/ScoreGauge";
@@ -42,19 +42,8 @@ export function ScorePreviewSection() {
   const cardRef = useRef(null);
   const inView = useInView(cardRef, { once: true, margin: "-80px" });
 
-  // Animated score count-up
-  const scoreCount = useMotionValue(0);
-  const displayScore = useTransform(scoreCount, (v) => Math.round(v));
 
-  useEffect(() => {
-    if (!inView) return;
-    const controls = animate(scoreCount, SAMPLE_SCORE, {
-      duration: 1.5,
-      delay: 0.5,
-      ease: [0.25, 0.46, 0.45, 0.94],
-    });
-    return controls.stop;
-  }, [inView]);
+
 
   return (
     <section id="score-preview" className="py-24 relative overflow-hidden bg-section-spotlight scalpel-top">
@@ -115,22 +104,12 @@ export function ScorePreviewSection() {
             {/* Score hero row */}
             <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 pb-8 border-b border-white/6">
               <div className="relative flex-shrink-0">
-                <ScoreGauge
+              <ScoreGauge
                   score={SAMPLE_SCORE}
                   size="lg"
                   delay={0.3}
                   triggered={inView}
                 />
-                {/* Score number centered inside gauge */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <motion.span
-                    className="font-syne text-3xl font-bold tabular-nums"
-                    style={{ color: "#FFB020" }}
-                  >
-                    {displayScore}
-                  </motion.span>
-                  <span className="text-xs text-muted-foreground">/ 100</span>
-                </div>
               </div>
               <div className="text-center sm:text-left">
                 <motion.div
