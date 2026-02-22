@@ -453,6 +453,7 @@ function DashboardPreviewMockup() {
                 size="md"
                 triggered={inView}
                 delay={0.3}
+                hideValue={true}
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                 <motion.span
