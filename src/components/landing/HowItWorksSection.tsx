@@ -734,7 +734,7 @@ export function HowItWorksSection() {
           {/* 03 */}
           <Step
             number="03"
-            title="Primești Scorul tău Chirurgical"
+            title={<>Primești <span style={{ color: "#00E5A0" }}>Surgical Score</span><sup style={{ fontSize: "0.5em", verticalAlign: "super" }}>™</sup></>}
             description="Vezi cât de des apari, pe ce poziție, cum te compari cu competiția, și un plan concret de îmbunătățire."
             textSide="left"
           >
