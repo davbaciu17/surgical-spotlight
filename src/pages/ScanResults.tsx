@@ -43,20 +43,41 @@ export default function ScanResults() {
     );
   }
 
-  // Not found
-  if (!scan) {
+  // No scan found yet — show loading/polling state (not "not found")
+  // The scan_runs row may not exist yet if polling started before the edge function finished
+  if (!scan && !isTimedOut) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
         <main className="pt-24 pb-16">
-          <div className="container mx-auto px-4 py-16 text-center">
-            <AlertTriangle className="h-12 w-12 text-warning mx-auto mb-4" />
-            <h1 className="text-2xl font-bold mb-2">Analiza negasita</h1>
-            <p className="text-muted-foreground mb-6">
-              Analiza cu acest ID nu a fost gasita.
+          <ScanLoadingScreen
+            status="pending"
+            businessName="afacerea ta"
+            createdAt={new Date().toISOString()}
+          />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Timed out without any scan data
+  if (!scan && isTimedOut) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="pt-24 pb-16">
+          <div className="container mx-auto px-4 py-16 text-center max-w-lg">
+            <AlertTriangle className="h-12 w-12 text-foreground/40 mx-auto mb-4" />
+            <h1 className="text-2xl font-bold mb-2">Analiza negăsită</h1>
+            <p className="text-muted-foreground mb-4">
+              Nu am putut găsi rezultatele. Verifică link-ul sau încearcă o analiză nouă.
+            </p>
+            <p className="text-xs text-muted-foreground/60 font-mono mb-6">
+              Request ID: {requestId}
             </p>
             <Button variant="outline" asChild>
-              <Link to="/analyze">Incepe o analiza noua</Link>
+              <Link to="/analyze">Începe o analiză nouă</Link>
             </Button>
           </div>
         </main>
