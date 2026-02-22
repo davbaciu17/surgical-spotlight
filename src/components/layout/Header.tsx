@@ -49,7 +49,7 @@ export function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-7 whitespace-nowrap">
+        <nav className="hidden lg:flex items-center gap-7 whitespace-nowrap">
           {anchorLinks.map((link) => (
             <a
               key={link.href}
@@ -86,7 +86,7 @@ export function Header() {
         </nav>
 
         {/* Desktop CTA */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-3">
           <Button variant="goldOutline" size="sm" asChild>
             <Link to="/login">
               Autentificare
@@ -107,7 +107,7 @@ export function Header() {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
+          className="lg:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Meniu"
         >
@@ -122,7 +122,7 @@ export function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-border/40 bg-background/95 backdrop-blur-xl overflow-hidden"
+            className="lg:hidden border-t border-border/40 bg-background/95 backdrop-blur-xl overflow-hidden"
           >
             <nav className="container mx-auto px-4 py-4 space-y-1">
               {anchorLinks.map((link) => (
