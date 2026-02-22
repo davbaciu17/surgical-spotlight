@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -29,6 +30,11 @@ export function Header() {
     { to: "/despre-aeo", label: "Despre AEO" },
   ];
 
+  // Anchor/router link for Solutions
+  const solutionsLink = isLanding
+    ? { type: "anchor" as const, href: "#solutii", label: "Soluții" }
+    : { type: "router" as const, to: "/#solutii", label: "Soluții" };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -53,6 +59,21 @@ export function Header() {
               {link.label}
             </a>
           ))}
+          {solutionsLink.type === "anchor" ? (
+            <a
+              href={solutionsLink.href}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {solutionsLink.label}
+            </a>
+          ) : (
+            <Link
+              to={solutionsLink.to}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {solutionsLink.label}
+            </Link>
+          )}
           {routerLinks.map((link) => (
             <Link
               key={link.to}
@@ -62,22 +83,26 @@ export function Header() {
               {link.label}
             </Link>
           ))}
-          <Link
-            to="/login"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Autentificare
-          </Link>
         </nav>
 
         {/* Desktop CTA */}
-        <div className="hidden md:flex items-center">
-          <Button variant="gold" size="sm" asChild>
-            <Link to="/analyze" className="flex items-center gap-1.5">
-              Analizează-ți Afacerea
-              <ArrowRight className="h-3.5 w-3.5" />
+        <div className="hidden md:flex items-center gap-3">
+          <Button variant="goldOutline" size="sm" asChild>
+            <Link to="/login">
+              Autentificare
             </Link>
           </Button>
+          <Link to="/analyze">
+            <ShimmerButton
+              shimmerColor="#00E5A0"
+              background="linear-gradient(135deg, #00E5A0 0%, #00B8D4 100%)"
+              borderRadius="8px"
+              className="h-9 px-4 text-sm font-bold text-black"
+            >
+              Analizează-ți Afacerea
+              <ArrowRight className="h-3.5 w-3.5 ml-1" />
+            </ShimmerButton>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -110,6 +135,23 @@ export function Header() {
                   {link.label}
                 </a>
               ))}
+              {solutionsLink.type === "anchor" ? (
+                <a
+                  href={solutionsLink.href}
+                  className="block text-muted-foreground hover:text-foreground transition-colors py-2.5 border-b border-border/20 text-sm"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {solutionsLink.label}
+                </a>
+              ) : (
+                <Link
+                  to={solutionsLink.to}
+                  className="block text-muted-foreground hover:text-foreground transition-colors py-2.5 border-b border-border/20 text-sm"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {solutionsLink.label}
+                </Link>
+              )}
               {routerLinks.map((link) => (
                 <Link
                   key={link.to}
@@ -120,14 +162,12 @@ export function Header() {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                to="/login"
-                className="block text-muted-foreground hover:text-foreground transition-colors py-2.5 border-b border-border/20 text-sm"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Autentificare
-              </Link>
-              <div className="pt-4">
+              <div className="pt-4 flex flex-col gap-3">
+                <Button variant="goldOutline" className="w-full" asChild>
+                  <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
+                    Autentificare
+                  </Link>
+                </Button>
                 <Button variant="gold" className="w-full" asChild>
                   <Link to="/analyze" onClick={() => setMobileMenuOpen(false)}>
                     Analizează-ți Afacerea

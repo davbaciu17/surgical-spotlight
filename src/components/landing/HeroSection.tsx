@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -83,12 +84,17 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <Button variant="gold" size="xl" asChild>
-              <Link to="/analyze">
+            <Link to="/analyze">
+              <ShimmerButton
+                shimmerColor="#00E5A0"
+                background="linear-gradient(135deg, #00E5A0 0%, #00B8D4 100%)"
+                borderRadius="12px"
+                className="h-14 px-10 text-lg font-bold text-black"
+              >
                 Analizează-ți Afacerea
                 <ArrowRight className="h-5 w-5 ml-1" />
-              </Link>
-            </Button>
+              </ShimmerButton>
+            </Link>
             <Button variant="hero" size="xl" asChild>
               <a href="#how-it-works">Cum funcționează</a>
             </Button>

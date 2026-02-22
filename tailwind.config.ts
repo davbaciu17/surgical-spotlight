@@ -149,6 +149,10 @@ export default {
           "33%": { transform: "translate(30px, -20px) scale(1.05)" },
           "66%": { transform: "translate(-20px, 15px) scale(0.95)" },
         },
+        "shimmer-sweep": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
