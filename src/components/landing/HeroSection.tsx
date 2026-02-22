@@ -84,7 +84,7 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
-            <Link to="/analyze" className="w-full sm:w-auto">
+            <Link to="/analyze" className="sm:w-auto">
               <ShimmerButton
                 shimmerColor="#00E5A0"
                 background="linear-gradient(135deg, #00E5A0 0%, #00B8D4 100%)"
