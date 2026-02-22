@@ -10,8 +10,8 @@ export interface ScanRequest {
 }
 
 export async function createScan(data: ScanRequest): Promise<{ scanId: string; requestId: string }> {
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://hyavwkytezwjipyeggzf.supabase.co";
-  const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5YXZ3a3l0ZXp3amlweWVnZ3pmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyMDc1MDgsImV4cCI6MjA4NTc4MzUwOH0.jgv0Ys_o5Y40BGS_uLdZQ93rJh7VzZuYOgp1lml0I4Q";
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://tjjuruhrrggxvuczvmxp.supabase.co";
+  const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqanVydWhycmdneHZ1Y3p2bXhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4MTYxNTQsImV4cCI6MjA4NjM5MjE1NH0.jWh_pvWhRSxtt4zwwl9yqZdAEK6s85Y0PcNVBb3CGZo";
 
   // Include auth token if user is logged in (optional)
   const headers: Record<string, string> = {
