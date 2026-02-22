@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
 
 export default {
   darkMode: ["class"],
@@ -153,6 +154,10 @@ export default {
           "0%": { transform: "translateX(-100%)" },
           "100%": { transform: "translateX(100%)" },
         },
+        aurora: {
+          from: { backgroundPosition: "50% 50%, 50% 50%" },
+          to: { backgroundPosition: "350% 50%, 350% 50%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -166,6 +171,7 @@ export default {
         "ring-pulse": "ring-pulse 1.8s ease-in-out infinite",
         "drift": "drift 12s ease-in-out infinite",
         "drift-slow": "drift 18s ease-in-out infinite reverse",
+        aurora: "aurora 60s linear infinite",
       },
       backgroundImage: {
         // Clinical green gradient (was gold)
@@ -179,5 +185,14 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), addVariablesForColors],
 } satisfies Config;
+
+// Adds each Tailwind color as a global CSS variable, e.g. var(--blue-500)
+function addVariablesForColors({ addBase, theme }: Parameters<Parameters<Config["plugins"]>[0]>[0]) {
+  const allColors = flattenColorPalette(theme("colors"));
+  const newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+  addBase({ ":root": newVars });
+}
