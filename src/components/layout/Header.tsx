@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -91,12 +92,17 @@ export function Header() {
               Autentificare
             </Link>
           </Button>
-          <Button variant="gold" size="sm" asChild>
-            <Link to="/analyze" className="flex items-center gap-1.5">
+          <Link to="/analyze">
+            <ShimmerButton
+              shimmerColor="#00E5A0"
+              background="linear-gradient(135deg, #00E5A0 0%, #00B8D4 100%)"
+              borderRadius="8px"
+              className="h-9 px-4 text-sm font-bold text-black"
+            >
               Analizează-ți Afacerea
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </Button>
+              <ArrowRight className="h-3.5 w-3.5 ml-1" />
+            </ShimmerButton>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
