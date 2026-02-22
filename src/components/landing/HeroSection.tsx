@@ -18,6 +18,23 @@ const LLM_LOGOS: Record<string, string> = {
   claude: claudeLogo,
 };
 
+// ChatGPT SVG is an icon mark — needs the text label alongside it.
+// Gemini, Perplexity, Claude SVGs are full wordmarks (icon + name) — show logo only.
+const LLM_LOGO_TEXT: Record<string, boolean> = {
+  chatgpt: true,
+  gemini: false,
+  perplexity: false,
+  claude: false,
+};
+
+// Icon marks (square) sit at 0.85em; wide wordmarks scale by height alone.
+const LLM_LOGO_HEIGHT: Record<string, string> = {
+  chatgpt: "0.85em",
+  gemini: "0.85em",
+  perplexity: "0.85em",
+  claude: "0.85em",
+};
+
 export function HeroSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -66,15 +83,19 @@ export function HeroSection() {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
                   style={{ color: currentLLM.color }}
-                  className="inline-flex items-center gap-[0.25em]"
+                  className="inline-flex items-center gap-[0.25em] align-middle"
                 >
                   <img
                     src={LLM_LOGOS[currentLLM.id]}
                     alt={currentLLM.name}
-                    style={{ height: "0.85em", width: "auto" }}
-                    className="inline-block flex-shrink-0 translate-y-[-0.05em]"
+                    style={{
+                      height: LLM_LOGO_HEIGHT[currentLLM.id],
+                      width: "auto",
+                      verticalAlign: "middle",
+                    }}
+                    className="inline-block flex-shrink-0"
                   />
-                  {currentLLM.name}
+                  {LLM_LOGO_TEXT[currentLLM.id] && currentLLM.name}
                 </motion.span>
               </AnimatePresence>
               ?
