@@ -21,8 +21,10 @@ const TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes
 
 export function useAnalysisPolling(requestId: string | undefined) {
   const [timedOut, setTimedOut] = useState(false);
+  const [startTime] = useState(() => Date.now());
 
   // 1) Fetch scan_runs row for metadata (business_name, created_at)
+  // Keep polling every 5s if scan not found yet (n8n may not have written it)
   const scanQuery = useQuery({
     queryKey: ["analysis-scan", requestId],
     queryFn: async () => {
@@ -31,10 +33,17 @@ export function useAnalysisPolling(requestId: string | undefined) {
         .select("id, request_id, status, business_name, surgical_score, grade, created_at")
         .eq("request_id", requestId!)
         .maybeSingle();
-      if (error) throw error;
+      if (error) {
+        console.error("Scan poll error:", error.message, error.details, error.hint);
+        throw error;
+      }
       return data as ScanRunData | null;
     },
     enabled: !!requestId,
+    refetchInterval: (query) => {
+      if (query.state.data) return false; // stop once found
+      return 5_000; // keep looking
+    },
   });
 
   // 2) Poll surgical_results every 5s until data appears
@@ -46,7 +55,10 @@ export function useAnalysisPolling(requestId: string | undefined) {
         .select("id, request_id, business_name, surgical_score, grade, category_breakdown, top_competitors, total_mentioned, total_recommended")
         .eq("request_id", requestId!)
         .maybeSingle();
-      if (error) throw error;
+      if (error) {
+        console.error("Results poll error:", error.message, error.details, error.hint);
+        throw error;
+      }
       return data;
     },
     enabled: !!requestId && !timedOut,
@@ -65,20 +77,23 @@ export function useAnalysisPolling(requestId: string | undefined) {
         .select("query_number, query_type, query_text, llm_response, mentions_business, sentiment, position_rank, surgical_score_contribution")
         .eq("request_id", requestId!)
         .order("query_number");
-      if (error) throw error;
+      if (error) {
+        console.error("Queries fetch error:", error.message, error.details, error.hint);
+        throw error;
+      }
       return data;
     },
     enabled: !!requestId && !!resultsQuery.data,
   });
 
-  // Timeout logic
+  // Timeout logic — use scan created_at if available, otherwise use page load time
   useEffect(() => {
     if (!requestId || resultsQuery.data) return;
 
     const createdAt = scanQuery.data?.created_at;
-    if (!createdAt) return;
+    const referenceTime = createdAt ? new Date(createdAt).getTime() : startTime;
 
-    const age = Date.now() - new Date(createdAt).getTime();
+    const age = Date.now() - referenceTime;
     if (age > TIMEOUT_MS) {
       setTimedOut(true);
       return;
@@ -87,7 +102,7 @@ export function useAnalysisPolling(requestId: string | undefined) {
     const remaining = TIMEOUT_MS - age;
     const timer = setTimeout(() => setTimedOut(true), remaining);
     return () => clearTimeout(timer);
-  }, [requestId, scanQuery.data?.created_at, resultsQuery.data]);
+  }, [requestId, scanQuery.data?.created_at, resultsQuery.data, startTime]);
 
   const hasResults = !!resultsQuery.data;
   const isCompleted = hasResults;

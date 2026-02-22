@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useAuth } from "@/contexts/AuthContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -32,6 +33,14 @@ export default function Analyze() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, isLoading: authLoading } = useAuth();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/login?redirect=/analyze", { replace: true });
+    }
+  }, [user, authLoading, navigate]);
 
   const form = useForm<ScannerFormValues>({
     resolver: zodResolver(scannerFormSchema),
@@ -47,6 +56,10 @@ export default function Analyze() {
   });
 
   const onSubmit = async (data: ScannerFormValues) => {
+    if (!user) {
+      navigate("/login?redirect=/analyze", { replace: true });
+      return;
+    }
     setIsSubmitting(true);
     try {
       const { requestId } = await createScan(data as import("@/services/scanService").ScanRequest);
