@@ -1,12 +1,10 @@
-import React, { CSSProperties } from "react";
+import React from "react";
 import { cn } from "@/lib/utils";
 
 export interface ShimmerButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   shimmerColor?: string;
-  shimmerSize?: string;
   borderRadius?: string;
-  shimmerDuration?: string;
   background?: string;
   className?: string;
   children?: React.ReactNode;
@@ -15,9 +13,7 @@ export interface ShimmerButtonProps
 const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonProps>(
   (
     {
-      shimmerColor = "#ffffff",
-      shimmerSize = "0.05em",
-      shimmerDuration = "3s",
+      shimmerColor = "rgba(255,255,255,0.4)",
       borderRadius = "100px",
       background = "rgba(0, 0, 0, 1)",
       className,
@@ -28,57 +24,30 @@ const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonProps>(
   ) => {
     return (
       <button
-        style={
-          {
-            "--spread": "90deg",
-            "--shimmer-color": shimmerColor,
-            "--radius": borderRadius,
-            "--speed": shimmerDuration,
-            "--cut": shimmerSize,
-            "--bg": background,
-          } as CSSProperties
-        }
+        ref={ref}
         className={cn(
-          "group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap border border-white/10 px-6 py-3 text-white [background:var(--bg)] [border-radius:var(--radius)]",
+          "group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap px-6 py-3",
           "transform-gpu transition-transform duration-300 ease-in-out active:translate-y-px",
           className,
         )}
-        ref={ref}
+        style={{ background, borderRadius }}
         {...props}
       >
-        {/* spark container */}
-        <div
-          className={cn(
-            "-z-30 blur-[2px]",
-            "absolute inset-0 overflow-visible [container-type:size]",
-          )}
+        {/* Shimmer sweep */}
+        <span
+          className="pointer-events-none absolute inset-0"
+          style={{ borderRadius }}
         >
-          {/* spark */}
-          <div className="absolute inset-0 h-[100cqh] animate-spin-around [aspect-ratio:1] [border-radius:0] [mask:none]">
-            {/* spark before */}
-            <div className="absolute inset-[-100%] w-auto rotate-0 animate-shimmer-slide [background:conic-gradient(from_calc(270deg-(var(--spread)*0.5)),transparent_0,var(--shimmer-color)_var(--spread),transparent_var(--spread))] [translate:0_0]" />
-          </div>
-        </div>
+          <span
+            className="absolute inset-0 -translate-x-full animate-[shimmer-sweep_3s_ease-in-out_infinite]"
+            style={{
+              background: `linear-gradient(90deg, transparent 0%, ${shimmerColor} 50%, transparent 100%)`,
+            }}
+          />
+        </span>
 
-        {children}
-
-        {/* Highlight */}
-        <div
-          className={cn(
-            "insert-0 absolute size-full",
-            "rounded-2xl px-4 py-1.5 text-sm font-medium shadow-[inset_0_-8px_10px_#ffffff1f]",
-            "transform-gpu transition-all duration-300 ease-in-out",
-            "group-hover:shadow-[inset_0_-6px_10px_#ffffff3f]",
-            "group-active:shadow-[inset_0_-10px_10px_#ffffff1f]",
-          )}
-        />
-
-        {/* backdrop */}
-        <div
-          className={cn(
-            "absolute -z-20 [background:var(--bg)] [border-radius:var(--radius)] [inset:var(--cut)]",
-          )}
-        />
+        {/* Content */}
+        <span className="relative z-10 flex items-center gap-1">{children}</span>
       </button>
     );
   },
