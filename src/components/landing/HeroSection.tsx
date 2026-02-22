@@ -6,6 +6,17 @@ import { ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { llms } from "@/data/llmData";
 import { LLMCarousel } from "./LLMCarousel";
+import chatgptLogo from "@/assets/logos/chatgpt.svg";
+import geminiLogo from "@/assets/logos/gemini.svg";
+import perplexityLogo from "@/assets/logos/perplexity.svg";
+import claudeLogo from "@/assets/logos/claude.svg";
+
+const LLM_LOGOS: Record<string, string> = {
+  chatgpt: chatgptLogo,
+  gemini: geminiLogo,
+  perplexity: perplexityLogo,
+  claude: claudeLogo,
+};
 
 export function HeroSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -55,7 +66,14 @@ export function HeroSection() {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
                   style={{ color: currentLLM.color }}
+                  className="inline-flex items-center gap-[0.25em]"
                 >
+                  <img
+                    src={LLM_LOGOS[currentLLM.id]}
+                    alt={currentLLM.name}
+                    style={{ height: "0.85em", width: "auto" }}
+                    className="inline-block flex-shrink-0 translate-y-[-0.05em]"
+                  />
                   {currentLLM.name}
                 </motion.span>
               </AnimatePresence>
