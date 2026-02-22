@@ -2,7 +2,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
-import { ScorePreviewSection } from "@/components/landing/ScorePreviewSection";
+import { SolutionsSection } from "@/components/landing/SolutionsSection";
 import { PricingSection } from "@/components/landing/PricingSection";
 import { FloatingCTA } from "@/components/ui/FloatingCTA";
 
@@ -13,8 +13,8 @@ const Index = () => {
       <main>
         <HeroSection />
         <HowItWorksSection />
+        <SolutionsSection />
         <PricingSection />
-        <ScorePreviewSection />
       </main>
       <Footer />
       <FloatingCTA />
