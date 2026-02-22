@@ -7,6 +7,7 @@ interface ScoreGaugeProps {
   loading?: boolean;   // show pulsing loading state
   delay?: number;      // animation start delay in seconds
   triggered?: boolean; // when provided, starts animation only when true
+  hideValue?: boolean; // hide the centered score number
   className?: string;
 }
 
@@ -31,6 +32,7 @@ export function ScoreGauge({
   loading = false,
   delay = 0,
   triggered,
+  hideValue = false,
   className = "",
 }: ScoreGaugeProps) {
   const { svg: svgSize, stroke, r } = sizeMap[size];
@@ -126,26 +128,27 @@ export function ScoreGauge({
         />
       </svg>
 
-      {/* Score number in center */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <motion.span
-          className="font-syne font-bold"
-          style={{
-            fontSize: size === "xl" ? 48 : size === "lg" ? 40 : size === "md" ? 28 : 20,
-            color,
-            opacity,
-            lineHeight: 1,
-          }}
-        >
-          {score}
-        </motion.span>
-        <motion.span
-          className="font-plex text-[10px] uppercase tracking-wider mt-1"
-          style={{ color: "rgba(255,255,255,0.4)", opacity }}
-        >
-          / 100
-        </motion.span>
-      </div>
+      {!hideValue && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <motion.span
+            className="font-syne font-bold"
+            style={{
+              fontSize: size === "xl" ? 48 : size === "lg" ? 40 : size === "md" ? 28 : 20,
+              color,
+              opacity,
+              lineHeight: 1,
+            }}
+          >
+            {score}
+          </motion.span>
+          <motion.span
+            className="font-plex text-[10px] uppercase tracking-wider mt-1"
+            style={{ color: "rgba(255,255,255,0.4)", opacity }}
+          >
+            / 100
+          </motion.span>
+        </div>
+      )}
     </div>
   );
 }
