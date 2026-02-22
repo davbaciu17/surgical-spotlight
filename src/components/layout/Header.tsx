@@ -49,7 +49,7 @@ export function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-7">
+        <nav className="hidden md:flex items-center gap-7 whitespace-nowrap">
           {anchorLinks.map((link) => (
             <a
               key={link.href}
