@@ -19,20 +19,12 @@ const LLM_LOGOS: Record<string, string> = {
 };
 
 // ChatGPT SVG is an icon mark — needs the text label alongside it.
-// Gemini, Perplexity, Claude SVGs are full wordmarks (icon + name) — show logo only.
+// Gemini, Perplexity, Claude SVGs are full wordmarks (icon + name baked in).
 const LLM_LOGO_TEXT: Record<string, boolean> = {
   chatgpt: true,
   gemini: false,
   perplexity: false,
   claude: false,
-};
-
-// Icon marks (square) sit at 0.85em; wide wordmarks scale by height alone.
-const LLM_LOGO_HEIGHT: Record<string, string> = {
-  chatgpt: "0.85em",
-  gemini: "0.85em",
-  perplexity: "0.85em",
-  claude: "0.85em",
 };
 
 export function HeroSection() {
@@ -70,35 +62,39 @@ export function HeroSection() {
               </span>
             </div>
 
-            {/* Dynamic headline — LLM name swaps with brand color */}
-            <h1 className="font-syne text-5xl md:text-7xl font-bold mb-6 leading-[1.1] tracking-tight">
-              Afacerea ta este
-              <br />
-              vizibilă în{" "}
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={currentLLM.name}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                  style={{ color: currentLLM.color }}
-                  className="inline-flex items-center gap-[0.25em] align-middle"
-                >
-                  <img
-                    src={LLM_LOGOS[currentLLM.id]}
-                    alt={currentLLM.name}
-                    style={{
-                      height: LLM_LOGO_HEIGHT[currentLLM.id],
-                      width: "auto",
-                      verticalAlign: "middle",
-                    }}
-                    className="inline-block flex-shrink-0"
-                  />
-                  {LLM_LOGO_TEXT[currentLLM.id] && currentLLM.name}
-                </motion.span>
-              </AnimatePresence>
-              ?
+            {/* Dynamic headline — static first line, LLM on its own fixed-height row */}
+            <h1 className="font-syne text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-none">
+              {/* Line 1 — completely static, never reflows */}
+              <span className="block mb-[0.15em]">
+                Afacerea ta este vizibilă în
+              </span>
+
+              {/* Line 2 — fixed height so nothing above/below ever shifts */}
+              <span
+                className="flex items-center justify-center"
+                style={{ height: "1.15em" }}
+              >
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={currentLLM.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    style={{ color: currentLLM.color }}
+                    className="inline-flex items-center gap-[0.2em]"
+                  >
+                    <img
+                      src={LLM_LOGOS[currentLLM.id]}
+                      alt={currentLLM.name}
+                      style={{ height: "0.82em", width: "auto" }}
+                      className="inline-block flex-shrink-0"
+                    />
+                    {LLM_LOGO_TEXT[currentLLM.id] && currentLLM.name}
+                    ?
+                  </motion.span>
+                </AnimatePresence>
+              </span>
             </h1>
 
             {/* Dynamic subtitle */}
