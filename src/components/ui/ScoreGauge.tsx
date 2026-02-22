@@ -99,7 +99,8 @@ export function ScoreGauge({
         width={svgSize}
         height={svgSize}
         viewBox={`0 0 ${svgSize} ${svgSize}`}
-        style={{ transform: "rotate(-90deg)" }}
+        style={{ transform: "rotate(-90deg)", willChange: "auto" }}
+        shapeRendering="geometricPrecision"
       >
         {/* Track ring */}
         <circle

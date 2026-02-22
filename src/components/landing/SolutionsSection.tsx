@@ -537,7 +537,7 @@ function PlatformStackContent() {
                     {platform.meta}
                   </span>
                 </div>
-                {platform.desc !== "" && (
+                {platform.desc && (
                   <p
                     className="text-[11px] font-plex leading-relaxed mb-2"
                     style={{ color: "#4A4A55" }}
