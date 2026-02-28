@@ -632,7 +632,7 @@ function ProgressTab({ plan }: { plan: Tables<"content_plans"> }) {
 
 // ── Main Page ──
 export default function ContentPlan() {
-  const { plan, pieces, articlePieces, faqPiece, isLoading, isGenerating, publishedCount, markPublished } = useContentPlan();
+  const { plan, pieces, articlePieces, faqPiece, isLoading, isGenerating, publishedCount, markPublished, generatePlan, scanReady, error } = useContentPlan();
   const [activeTab, setActiveTab] = useState<"calendar" | "articole" | "faq" | "progres">("calendar");
   const [selectedPiece, setSelectedPiece] = useState<ContentPiece | null>(null);
 
@@ -665,11 +665,27 @@ export default function ContentPlan() {
             </div>
             <h2 className="text-2xl font-syne font-bold mb-3">Plan de Vizibilitate AI</h2>
             <p className="text-sm font-plex max-w-md mb-6" style={{ color: "#6B6B75" }}>
-              Ruleaz&#259; mai \u00eent\u00e2i o analiz&#259; complet&#259;, apoi genereaz&#259; planul de con\u021binut bazat pe rezultate. 30 de articole optimizate pentru a te face vizibil \u00een r&#259;spunsurile AI.
+              {scanReady
+                ? `Analiza pentru "${scanReady.businessName}" este complet\u0103. Genereaz\u0103 30 de articole optimizate pentru vizibilitate AI.`
+                : "Ruleaz\u0103 mai \u00eent\u00e2i o analiz\u0103 complet\u0103, apoi genereaz\u0103 planul de con\u021binut bazat pe rezultate."}
             </p>
-            <p className="text-xs font-plex" style={{ color: "rgba(255,255,255,0.3)" }}>
-              Planul se genereaz&#259; automat dup&#259; finalizarea analizei.
-            </p>
+            {error && (
+              <p className="text-sm font-plex mb-4" style={{ color: "#FF3B5C" }}>{error}</p>
+            )}
+            {scanReady ? (
+              <button
+                onClick={() => generatePlan(scanReady.businessId, scanReady.scanRunId)}
+                className="flex items-center gap-2 text-sm font-plex font-semibold px-6 py-3 rounded-xl transition-opacity hover:opacity-90"
+                style={{ background: "#00E5A0", color: "#0A0A0B" }}
+              >
+                <Sparkles className="w-4 h-4" />
+                Genereaz\u0103 Plan de Con\u021binut
+              </button>
+            ) : (
+              <p className="text-xs font-plex" style={{ color: "rgba(255,255,255,0.3)" }}>
+                Mergi la Prezentare General\u0103 pentru a rula o analiz\u0103.
+              </p>
+            )}
           </div>
         </div>
       </AppLayout>

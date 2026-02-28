@@ -6,6 +6,12 @@ import { useAuth } from "@/contexts/AuthContext";
 type ContentPlan = Tables<"content_plans">;
 type ContentPiece = Tables<"content_pieces">;
 
+interface ScanReady {
+  businessId: string;
+  businessName: string;
+  scanRunId: string;
+}
+
 export function useContentPlan() {
   const { user } = useAuth();
   const [plan, setPlan] = useState<ContentPlan | null>(null);
@@ -13,6 +19,7 @@ export function useContentPlan() {
   const [isLoading, setIsLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [scanReady, setScanReady] = useState<ScanReady | null>(null);
 
   const fetchPlan = useCallback(async () => {
     if (!user) return;
@@ -41,6 +48,29 @@ export function useContentPlan() {
 
         if (piecesError) throw piecesError;
         setPieces(piecesData || []);
+      } else {
+        // No plan yet — check if user has a business with a completed scan
+        const { data: biz } = await supabase
+          .from("businesses")
+          .select("id, name")
+          .eq("user_id", user.id)
+          .limit(1)
+          .maybeSingle();
+
+        if (biz) {
+          const { data: scan } = await supabase
+            .from("scan_runs")
+            .select("id")
+            .eq("business_id", biz.id)
+            .eq("status", "completed")
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+          if (scan) {
+            setScanReady({ businessId: biz.id, businessName: biz.name, scanRunId: scan.id });
+          }
+        }
       }
     } catch (e: any) {
       setError(e.message);
@@ -154,6 +184,7 @@ export function useContentPlan() {
     generatePlan,
     markPublished,
     publishedCount,
+    scanReady,
     refetch: fetchPlan,
   };
 }
