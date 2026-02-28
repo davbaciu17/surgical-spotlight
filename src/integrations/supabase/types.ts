@@ -142,8 +142,10 @@ export type Database = {
           content_type: string | null
           created_at: string | null
           day_number: number | null
+          hero_image_url: string | null
           id: string
           key_phrases: string[] | null
+          keyword_difficulty: number | null
           meta_description: string | null
           pillar: string | null
           plan_id: string | null
@@ -153,6 +155,7 @@ export type Database = {
           published_url: string | null
           schema_json: Json | null
           score_breakdown: Json | null
+          search_volume: number | null
           slug: string | null
           status: string | null
           strategy: string | null
@@ -172,8 +175,10 @@ export type Database = {
           content_type?: string | null
           created_at?: string | null
           day_number?: number | null
+          hero_image_url?: string | null
           id?: string
           key_phrases?: string[] | null
+          keyword_difficulty?: number | null
           meta_description?: string | null
           pillar?: string | null
           plan_id?: string | null
@@ -183,6 +188,7 @@ export type Database = {
           published_url?: string | null
           schema_json?: Json | null
           score_breakdown?: Json | null
+          search_volume?: number | null
           slug?: string | null
           status?: string | null
           strategy?: string | null
@@ -202,8 +208,10 @@ export type Database = {
           content_type?: string | null
           created_at?: string | null
           day_number?: number | null
+          hero_image_url?: string | null
           id?: string
           key_phrases?: string[] | null
+          keyword_difficulty?: number | null
           meta_description?: string | null
           pillar?: string | null
           plan_id?: string | null
@@ -213,6 +221,7 @@ export type Database = {
           published_url?: string | null
           schema_json?: Json | null
           score_breakdown?: Json | null
+          search_volume?: number | null
           slug?: string | null
           status?: string | null
           strategy?: string | null
@@ -314,6 +323,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "businesses"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_plans_scan_run_id_fkey"
+            columns: ["scan_run_id"]
+            isOneToOne: false
+            referencedRelation: "scan_history"
+            referencedColumns: ["scan_run_id"]
           },
           {
             foreignKeyName: "content_plans_scan_run_id_fkey"
@@ -616,7 +632,56 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      latest_scan_per_business: {
+        Row: {
+          business_id: string | null
+          business_name: string | null
+          category_breakdown: Json | null
+          grade: string | null
+          request_id: string | null
+          scanned_at: string | null
+          surgical_score: number | null
+          top_competitors: Json | null
+          total_mentioned: number | null
+          total_recommended: number | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "businesses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      scan_history: {
+        Row: {
+          business_id: string | null
+          business_name: string | null
+          completed_at: string | null
+          grade: string | null
+          queries_tested: number | null
+          queries_total: number | null
+          request_id: string | null
+          scan_run_id: string | null
+          started_at: string | null
+          status: string | null
+          surgical_score: number | null
+          total_mentioned: number | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scan_runs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never

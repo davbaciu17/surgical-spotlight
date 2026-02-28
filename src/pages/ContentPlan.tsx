@@ -11,6 +11,9 @@ import {
   X,
   Loader2,
   Sparkles,
+  Search,
+  BarChart3,
+  ImageIcon,
 } from "lucide-react";
 import { AppLayout } from "@/components/dashboard/AppLayout";
 import { useContentPlan } from "@/hooks/useContentPlan";
@@ -45,6 +48,25 @@ function getScoreColor(score: number) {
   if (score >= 80) return "#00E5A0";
   if (score >= 65) return "#FFB020";
   return "#FF3B5C";
+}
+
+function getKdColor(kd: number) {
+  if (kd <= 30) return "#00E5A0";
+  if (kd <= 60) return "#FFB020";
+  return "#FF3B5C";
+}
+
+function getKdLabel(kd: number) {
+  if (kd <= 15) return "Foarte Ușor";
+  if (kd <= 30) return "Ușor";
+  if (kd <= 60) return "Mediu";
+  if (kd <= 80) return "Dificil";
+  return "Foarte Dificil";
+}
+
+function formatVolume(vol: number) {
+  if (vol >= 1000) return `${(vol / 1000).toFixed(1)}K`;
+  return vol.toString();
 }
 
 function copyToClipboard(text: string) {
@@ -198,9 +220,21 @@ function CalendarTab({ pieces, onSelectPiece }: { pieces: ContentPiece[]; onSele
                           <p className="text-[11px] font-plex leading-snug line-clamp-2" style={{ color: "rgba(255,255,255,0.75)" }}>
                             {piece.title}
                           </p>
-                          {piece.priority && (
-                            <div className="w-1.5 h-1.5 rounded-full mt-1" style={{ background: PRIORITY_COLORS[piece.priority] || "#6B6B75" }} />
-                          )}
+                          <div className="flex items-center gap-1.5 mt-1">
+                            {piece.keyword_difficulty != null && (
+                              <span className="text-[8px] font-mono font-bold px-1 rounded" style={{ background: `${getKdColor(piece.keyword_difficulty)}20`, color: getKdColor(piece.keyword_difficulty) }}>
+                                KD {piece.keyword_difficulty}
+                              </span>
+                            )}
+                            {piece.search_volume != null && piece.search_volume > 0 && (
+                              <span className="text-[8px] font-mono px-1 rounded" style={{ background: "rgba(0,184,212,0.15)", color: "#00B8D4" }}>
+                                {formatVolume(piece.search_volume)}
+                              </span>
+                            )}
+                            {piece.priority && !piece.keyword_difficulty && (
+                              <div className="w-1.5 h-1.5 rounded-full" style={{ background: PRIORITY_COLORS[piece.priority] || "#6B6B75" }} />
+                            )}
+                          </div>
                         </button>
                       );
                     })}
@@ -255,6 +289,17 @@ function ArticleDetail({ piece, onClose, onMarkPublished }: {
         </div>
 
         <div className="p-6 space-y-6">
+          {/* Hero Image */}
+          {piece.hero_image_url && (
+            <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+              <img
+                src={piece.hero_image_url}
+                alt={piece.title}
+                className="w-full h-48 object-cover"
+              />
+            </div>
+          )}
+
           {/* Title + Score */}
           <div>
             <h2 className="text-xl font-syne font-bold mb-3">{piece.title}</h2>
@@ -266,6 +311,42 @@ function ArticleDetail({ piece, onClose, onMarkPublished }: {
               <span className="text-sm font-mono font-bold" style={{ color: getScoreColor(score) }}>{score}</span>
             </div>
           </div>
+
+          {/* SEO Metrics */}
+          {(piece.keyword_difficulty != null || (piece.search_volume != null && piece.search_volume > 0) || piece.word_count) && (
+            <div className="flex gap-3">
+              {piece.keyword_difficulty != null && (
+                <div className="flex-1 rounded-lg p-3" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <BarChart3 className="w-3.5 h-3.5" style={{ color: getKdColor(piece.keyword_difficulty) }} />
+                    <span className="text-[10px] font-plex uppercase" style={{ color: "#6B6B75" }}>Dificultate</span>
+                  </div>
+                  <p className="text-lg font-mono font-bold" style={{ color: getKdColor(piece.keyword_difficulty) }}>{piece.keyword_difficulty}</p>
+                  <p className="text-[10px] font-plex" style={{ color: getKdColor(piece.keyword_difficulty) }}>{getKdLabel(piece.keyword_difficulty)}</p>
+                </div>
+              )}
+              {piece.search_volume != null && piece.search_volume > 0 && (
+                <div className="flex-1 rounded-lg p-3" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <Search className="w-3.5 h-3.5" style={{ color: "#00B8D4" }} />
+                    <span className="text-[10px] font-plex uppercase" style={{ color: "#6B6B75" }}>Volum</span>
+                  </div>
+                  <p className="text-lg font-mono font-bold" style={{ color: "#00B8D4" }}>{piece.search_volume.toLocaleString()}</p>
+                  <p className="text-[10px] font-plex" style={{ color: "#6B6B75" }}>cautari/luna</p>
+                </div>
+              )}
+              {piece.word_count != null && piece.word_count > 0 && (
+                <div className="flex-1 rounded-lg p-3" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <FileText className="w-3.5 h-3.5" style={{ color: "#A78BFA" }} />
+                    <span className="text-[10px] font-plex uppercase" style={{ color: "#6B6B75" }}>Cuvinte</span>
+                  </div>
+                  <p className="text-lg font-mono font-bold" style={{ color: "#A78BFA" }}>{piece.word_count.toLocaleString()}</p>
+                  <p className="text-[10px] font-plex" style={{ color: "#6B6B75" }}>lungime articol</p>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Target Queries */}
           {piece.target_queries_text && piece.target_queries_text.length > 0 && (
@@ -431,14 +512,15 @@ function ArticlesTab({ pieces, onSelectPiece }: { pieces: ContentPiece[]; onSele
 
       {/* Table */}
       <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
-        <div className="grid grid-cols-[50px_1fr_120px_100px_80px_80px_60px] gap-0 text-xs font-plex font-semibold uppercase tracking-wide" style={{ background: "#1A1A1E", color: "#6B6B75" }}>
+        <div className="grid grid-cols-[50px_1fr_110px_80px_70px_60px_50px_50px] gap-0 text-xs font-plex font-semibold uppercase tracking-wide" style={{ background: "#1A1A1E", color: "#6B6B75" }}>
           <div className="px-3 py-2.5">Zi</div>
           <div className="px-3 py-2.5">Titlu</div>
           <div className="px-3 py-2.5">Strategie</div>
-          <div className="px-3 py-2.5">Tip</div>
           <div className="px-3 py-2.5">Scor AI</div>
-          <div className="px-3 py-2.5">Priorit.</div>
-          <div className="px-3 py-2.5">Status</div>
+          <div className="px-3 py-2.5">KD</div>
+          <div className="px-3 py-2.5">Vol.</div>
+          <div className="px-3 py-2.5">Img</div>
+          <div className="px-3 py-2.5"></div>
         </div>
         {filtered.map((piece) => {
           const sc = STRATEGY_CONFIG[piece.strategy || ""] || STRATEGY_CONFIG.captura;
@@ -447,7 +529,7 @@ function ArticlesTab({ pieces, onSelectPiece }: { pieces: ContentPiece[]; onSele
             <button
               key={piece.id}
               onClick={() => onSelectPiece(piece)}
-              className="grid grid-cols-[50px_1fr_120px_100px_80px_80px_60px] gap-0 w-full text-left transition-colors hover:bg-white/[0.02]"
+              className="grid grid-cols-[50px_1fr_110px_80px_70px_60px_50px_50px] gap-0 w-full text-left transition-colors hover:bg-white/[0.02]"
               style={{ borderBottom: "1px solid rgba(255,255,255,0.04)", background: "#141416" }}
             >
               <div className="px-3 py-3 text-sm font-mono" style={{ color: "#6B6B75" }}>{piece.day_number}</div>
@@ -455,15 +537,32 @@ function ArticlesTab({ pieces, onSelectPiece }: { pieces: ContentPiece[]; onSele
               <div className="px-3 py-3">
                 <span className="text-[10px] font-plex font-semibold px-2 py-0.5 rounded-full" style={{ background: sc.bg, color: sc.text }}>{sc.label}</span>
               </div>
-              <div className="px-3 py-3 text-xs font-plex" style={{ color: "#6B6B75" }}>{CONTENT_TYPE_LABELS[piece.content_type || ""] || piece.content_type}</div>
               <div className="px-3 py-3 flex items-center gap-1.5">
-                <div className="w-12 h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+                <div className="w-10 h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
                   <div className="h-full rounded-full" style={{ width: `${score}%`, background: getScoreColor(score) }} />
                 </div>
                 <span className="text-xs font-mono" style={{ color: getScoreColor(score) }}>{score}</span>
               </div>
               <div className="px-3 py-3">
-                {piece.priority && <div className="w-2 h-2 rounded-full" style={{ background: PRIORITY_COLORS[piece.priority] || "#6B6B75" }} />}
+                {piece.keyword_difficulty != null ? (
+                  <span className="text-xs font-mono font-bold" style={{ color: getKdColor(piece.keyword_difficulty) }}>{piece.keyword_difficulty}</span>
+                ) : (
+                  <span className="text-xs" style={{ color: "#3A3A3F" }}>—</span>
+                )}
+              </div>
+              <div className="px-3 py-3">
+                {piece.search_volume != null && piece.search_volume > 0 ? (
+                  <span className="text-xs font-mono" style={{ color: "#00B8D4" }}>{formatVolume(piece.search_volume)}</span>
+                ) : (
+                  <span className="text-xs" style={{ color: "#3A3A3F" }}>—</span>
+                )}
+              </div>
+              <div className="px-3 py-3 flex items-center justify-center">
+                {piece.hero_image_url ? (
+                  <ImageIcon className="w-3.5 h-3.5" style={{ color: "#00E5A0" }} />
+                ) : (
+                  <span className="text-xs" style={{ color: "#3A3A3F" }}>—</span>
+                )}
               </div>
               <div className="px-3 py-3">
                 {piece.status === "published" ? (
